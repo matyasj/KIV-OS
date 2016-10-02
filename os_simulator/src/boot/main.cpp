@@ -11,6 +11,7 @@ int main() {
 	FreeLibrary(kernel);
 	
 	std::cout << "Hello World!";
+	std::cout << "For test commit: Maty, ..."; 
 	std::cin.get();
 	return (EXIT_SUCCESS);
 }
