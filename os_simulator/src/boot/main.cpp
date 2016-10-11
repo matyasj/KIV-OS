@@ -10,8 +10,7 @@ int main() {
 	if (vm) vm();
 	FreeLibrary(kernel);
 	
-	std::cout << "Hello World!";
-	std::cout << "For test commit: Maty, ..."; 
+	std::cout << "End!";
 	std::cin.get();
 	return (EXIT_SUCCESS);
 }
