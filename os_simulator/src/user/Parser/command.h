@@ -21,7 +21,6 @@ public:
 	std::vector<std::string> arguments;	  // argumenty
 	Redirect_file redirect_files;	      // presmerovani
 	int type_command = -1;			      // druh instrukce jako int - viz instruction.h
-
 	Command(std::string name);
 	Command();
 	~Command();
@@ -39,6 +38,7 @@ public:
 	void set_values(std::string name, int type_command);
 	//void add_child(Command added, int type_extra_char);
 	/*
+	* prida argument 
 	*/
 	void add_argument(std::string argument);
 	/* 

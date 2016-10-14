@@ -1,8 +1,6 @@
 #include"parser.h"
 #include"my_string.h"
 #include"instruction.h"
-#include"error.h"
-#include"command.h"
 #include<iostream>
 #include <vector>
 
@@ -10,16 +8,15 @@ std::string delimiters[] = { "\""," "};
 const int SPACE_INDEX = 1;
 const int MARKS_INDEX = 0;
 //const int WAS_PARSED = 9;
-const int ERROR_STRING = NULL;
 
-int end = 1;
+
 
 /*
 * rozparsuje argument
 * muze byt jednoslovny - zatim pouze jeden argument. Vice je error
 * nebo viceslovny - musi zacinat a koncit uvozovkami - jinak error
 */
-std::string parse_argument(std::string argument) {
+std::string Parser::parse_argument(std::string argument) {
 	if (argument == "") return argument;
 	char first = argument.at(0);
 	char marks = delimiters[MARKS_INDEX].at(0);
@@ -27,21 +24,21 @@ std::string parse_argument(std::string argument) {
 		size_t last_char_index = argument.length() - 1;
 		char last = argument.at(last_char_index);// vezmu posledni znak 
 		if (last != delimiters[MARKS_INDEX].at(0)) {
-			parser_error(ONE_MARKS);
-			return ERROR_STRING;
+			error_class.parser_error(error_class.ONE_MARKS);
+			return "";
 		}
 		std::vector<std::string> data = split_string(argument, delimiters[MARKS_INDEX]); // rozdelit dle uvozovek
 		if (data.size() != 3) {  // spravne dvoje uvozovky => velikost 3
-			parser_error(MORE_MARKS);
-			return ERROR_STRING;
+			error_class.parser_error(error_class.MORE_MARKS);
+			return "";
 		}
 		return (data.at(1)); // vezmu druhou cast => mezi uvozovkami  
 	}
 	else { // argument jako jedno slovo. Zatim povolen jen jeden argument
 		std::vector<std::string> data = split_string(argument, delimiters[SPACE_INDEX]); // rozdelit dle mezer
 		if (data.size() != 1) {
-			parser_error(MORE_WORDS_ARGUMENT);
-			return ERROR_STRING;
+			error_class.parser_error(error_class.MORE_WORDS_ARGUMENT);
+			return "";
 		}
 		else {
 			return (data.at(0));
@@ -52,14 +49,14 @@ std::string parse_argument(std::string argument) {
 /*
 rozparsuje presmerovani - ve str je: 
 */
-Command parse_redirect(std::string str) {
+Command Parser::parse_redirect(std::string str) {
 	Command command;
 	std::vector<std::string> add = split_first_string_more(str, { RED_IN_ADD_CHAR,RED_IN_CHAR,RED_OUT_CHAR});
 	/*prvni je argument*/
 	std::string old = add.at(add.size()-1);
 	std::string return_value = parse_argument(add.at(0));
-	if (parser_has_error()) {
-		parser_error(COUNT_OF_ARGUMENT);
+	if (error_class.parser_has_error()) {
+		error_class.parser_error(error_class.COUNT_OF_ARGUMENT);
 		return command;
 	}
 	command.add_argument(return_value);
@@ -67,13 +64,13 @@ Command parse_redirect(std::string str) {
 		/* dale jen soubory*/
 		add = split_first_string_more(add.at(1), { RED_IN_ADD_CHAR,RED_IN_CHAR,RED_OUT_CHAR });
 		return_value = parse_argument(add.at(0));
-		if (parser_has_error()) {
-			parser_error(REDIRECT_ERROR);
+		if (error_class.parser_has_error()) {
+			error_class.parser_error(error_class.REDIRECT_ERROR);
 			return command;
 		}
 		bool was_added = command.add_redirect_file(return_value, old);
 		if (!was_added){
-			parser_error(TOO_MANY_REDIRECT);
+			error_class.parser_error(error_class.TOO_MANY_REDIRECT);
 			return command;
 		}
 		old = add.at(add.size() - 1);
@@ -81,14 +78,14 @@ Command parse_redirect(std::string str) {
 	return command;
 }
 
-Command parse_instruction_arg(std::string instruction) {
+Command Parser::parse_instruction_arg(std::string instruction) {
 	size_t pos = 0;
 	std::vector<std::string> data = split_first_string(instruction, delimiters[SPACE_INDEX]); // rozdelit podle prvni mezery => prikaz a zbytek
-	int command_type = ERROR;
+	int command_type = error_class.ERROR;
 	const std::string com = data.at(0);
 	if (com == EXIT_CHAR) {
 		command_type = EXIT;
-		end = 0;
+		this->end = 0;
 	}
 	if (com == SHELL_CHAR) {
 		command_type = SHELL;
@@ -120,8 +117,8 @@ Command parse_instruction_arg(std::string instruction) {
 	if (com == CD_CHAR) {
 		command_type = CD;
 	}
-	if (command_type == ERROR) {
-		parser_error(UNKNOWN_COMMAND);
+	if (command_type == error_class.ERROR) {
+		error_class.parser_error(error_class.UNKNOWN_COMMAND);
 		return Command();
 	}
 	Command comand;
@@ -132,30 +129,52 @@ Command parse_instruction_arg(std::string instruction) {
 	return comand;
 }
 
-std::vector<Command> parse_line(std::string line) {
+std::vector<Command> Parser::parse_line(std::string line) {
 	std::vector<std::string> data = split_string(line, PIPE_CHAR); // rozdelit dle pipe
 	bool is_first = true;
 	std::vector<Command> commands;
+	error_class.reset_parser_error();
 	for (std::string token : data) {
-		commands.push_back(parse_instruction_arg(token));
+		token = trim(token);
+		if (token.length() == 0) {
+			continue; // pokud je prazdny token, pokracuje
+		}
+		Command com = parse_instruction_arg(token);
+		commands.push_back(com);
+	}
+	if (error_class.parser_has_error()) {
+		commands.clear();
+		return commands;
 	}
 	return commands;
 }
 
 
-void printDefaultString() {
+void Parser::printDefaultString() {
 	std::cout << "Zadej prikaz: ";
 }
 
-void parser_start() {
-	while (end) {
-		printDefaultString();
+void Parser::parser_start() {
+	while (this->end) {
+		this->printDefaultString();
 		std::string line;
 		std::getline(std::cin, line);
 		std::vector<Command> commands= parse_line(line);
 		for (Command c : commands) {
-			std::cout << c.to_string() << std::endl;
-		}
-		
+			std::cout <<"Command:" << c.to_string() << std::endl;
+		}	
 	}
+}
+
+
+Parser::Parser()
+{
+
+	
+}
+
+Parser::~Parser()
+{
+
+	this->error_class.~Error();
 }

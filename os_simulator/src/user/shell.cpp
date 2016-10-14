@@ -11,7 +11,8 @@ size_t __stdcall shell(const CONTEXT &regs) {
 	Close_File(stdin);*/
 
 	/* TODO - prozatim, jen at se muze testovat */
-	parser_start();
+	Parser parser;
+	parser.parser_start();
 
 	return 0;
 }
