@@ -1,0 +1,9 @@
+﻿  dllmain.cpp
+  rtl.cpp
+  shell.cpp
+     Creating library ..\..\compiled\user.lib and object ..\..\compiled\user.exp
+  Generating code
+  All 26 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  user.vcxproj -> C:\Users\Maty\Source\Repos\KIV-OS\os_simulator\msvc\user\..\..\compiled\user.dll
+  user.vcxproj -> ..\..\compiled\user.pdb (Full PDB)

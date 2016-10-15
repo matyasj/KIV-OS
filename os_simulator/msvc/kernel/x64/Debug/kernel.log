@@ -1,0 +1,10 @@
+﻿  kernel.cpp
+  io.cpp
+  fs.cpp
+  FileDescriptor.cpp
+  File.cpp
+  dllmain.cpp
+  Generating Code...
+     Creating library ..\..\compiled\kernel.lib and object ..\..\compiled\kernel.exp
+  kernel.vcxproj -> C:\Users\Maty\Source\Repos\KIV-OS\os_simulator\msvc\kernel\..\..\compiled\kernel.dll
+  kernel.vcxproj -> ..\..\compiled\kernel.pdb (Full PDB)
