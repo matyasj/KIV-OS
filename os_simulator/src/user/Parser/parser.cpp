@@ -81,7 +81,7 @@ Command Parser::parse_redirect(std::string str) {
 Command Parser::parse_instruction_arg(std::string instruction) {
 	size_t pos = 0;
 	std::vector<std::string> data = split_first_string(instruction, delimiters[SPACE_INDEX]); // rozdelit podle prvni mezery => prikaz a zbytek
-	int command_type = error_class.ERROR;
+	int command_type = error_class.ERROR_INSTRUCTION;
 	const std::string com = data.at(0);
 	if (com == EXIT_CHAR) {
 		command_type = EXIT;
@@ -117,7 +117,7 @@ Command Parser::parse_instruction_arg(std::string instruction) {
 	if (com == CD_CHAR) {
 		command_type = CD;
 	}
-	if (command_type == error_class.ERROR) {
+	if (command_type == error_class.ERROR_INSTRUCTION) {
 		error_class.parser_error(error_class.UNKNOWN_COMMAND);
 		return Command();
 	}

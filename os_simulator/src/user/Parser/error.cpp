@@ -39,7 +39,7 @@ int Error::parser_error(int error) {
 	}
 	std::cout << "Chyba: " << str << std::endl;
 	this->has_error = true;
-	return ERROR;
+	return ERROR_INSTRUCTION;
 }
 
 void Error::reset_parser_error()

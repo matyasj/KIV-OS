@@ -3,7 +3,7 @@
 
 class Error{
 public:
-	static const int ERROR = -1;		// chybova instrukce
+	static const int ERROR_INSTRUCTION = -1;		// chybova instrukce
 	static const int UNKNOWN_COMMAND = 1;
 	static const int COUNT_OF_ARGUMENT = 2;
 	static const int MORE_WORDS_ARGUMENT = 3;
