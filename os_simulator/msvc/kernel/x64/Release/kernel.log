@@ -1,8 +1,0 @@
-﻿  dllmain.cpp
-  fs.cpp
-  io.cpp
-  kernel.cpp
-..\..\src\kernel\kernel.cpp(26): error C2373: 'SysCall': redefinition; different type modifiers
-  c:\users\maty\source\repos\kiv-os\os_simulator\src\kernel\kernel.h(9): note: see declaration of 'SysCall'
-..\..\src\kernel\kernel.cpp(34): error C2373: 'Run_VM': redefinition; different type modifiers
-  c:\users\maty\source\repos\kiv-os\os_simulator\src\kernel\kernel.h(10): note: see declaration of 'Run_VM'

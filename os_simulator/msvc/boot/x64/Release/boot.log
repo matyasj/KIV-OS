@@ -1,7 +1,0 @@
-﻿  main.cpp
-..\..\src\boot\main.cpp(6): warning C4007: 'main': must be '__cdecl'
-  Generating code
-  All 10 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
-  Finished generating code
-  boot.vcxproj -> C:\Users\Maty\Source\Repos\KIV-OS\os_simulator\msvc\boot\..\..\compiled\boot.exe
-  boot.vcxproj -> ..\..\compiled\boot.pdb (Full PDB)
