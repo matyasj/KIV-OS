@@ -39,6 +39,9 @@
     <ClCompile Include="..\..\src\kernel\File.cpp">
       <Filter>Source Files\fs</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\kernel\Folder.cpp">
+      <Filter>Source Files\fs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\common\api.h">
@@ -57,6 +60,9 @@
       <Filter>Header Files\fs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kernel\File.h">
+      <Filter>Header Files\fs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kernel\Folder.h">
       <Filter>Header Files\fs</Filter>
     </ClInclude>
   </ItemGroup>

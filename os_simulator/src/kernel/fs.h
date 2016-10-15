@@ -2,11 +2,8 @@
 
 #include "..\common\api.h"
 #include "FileDescriptor.h"
-#include <vector>
 
-
-std::vector<FileDescriptor> data;
-
+//	Pøíklad cesty: C/slozka1/slozka2/soubor.txt
 THandle openFile(char* fileName, size_t flags);
 THandle createFile(char* fileName, size_t flags);
 

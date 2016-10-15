@@ -15,7 +15,9 @@ public:
 	std::string getContentFromPosition();
 	size_t write(std::string str);
 	bool setPosition(int newPosition);
+	//Konstruktor
 	File();
+	//Destruktor
 	~File();
 };
 
