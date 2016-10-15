@@ -19,26 +19,28 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\user\Dir.cpp" />
+    <ClCompile Include="..\..\src\user\dir.cpp" />
     <ClCompile Include="..\..\src\user\dllmain.cpp" />
+    <ClCompile Include="..\..\src\user\md.cpp" />
     <ClCompile Include="..\..\src\user\Parser\command.cpp" />
     <ClCompile Include="..\..\src\user\Parser\error.cpp" />
     <ClCompile Include="..\..\src\user\Parser\my_string.cpp" />
     <ClCompile Include="..\..\src\user\Parser\parser.cpp" />
-    <ClCompile Include="..\..\src\user\Program.cpp" />
+    <ClCompile Include="..\..\src\user\program.cpp" />
     <ClCompile Include="..\..\src\user\program_manager.cpp" />
     <ClCompile Include="..\..\src\user\rtl.cpp" />
     <ClCompile Include="..\..\src\user\shell.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\common\api.h" />
-    <ClInclude Include="..\..\src\user\Dir.h" />
+    <ClInclude Include="..\..\src\user\dir.h" />
+    <ClInclude Include="..\..\src\user\md.h" />
     <ClInclude Include="..\..\src\user\Parser\command.h" />
     <ClInclude Include="..\..\src\user\Parser\error.h" />
     <ClInclude Include="..\..\src\user\Parser\instruction.h" />
     <ClInclude Include="..\..\src\user\Parser\my_string.h" />
     <ClInclude Include="..\..\src\user\Parser\parser.h" />
-    <ClInclude Include="..\..\src\user\Program.h" />
+    <ClInclude Include="..\..\src\user\program.h" />
     <ClInclude Include="..\..\src\user\program_manager.h" />
     <ClInclude Include="..\..\src\user\rtl.h" />
     <ClInclude Include="..\..\src\user\shell.h" />

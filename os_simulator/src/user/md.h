@@ -3,7 +3,7 @@
 #include "program.h"
 
 
-class Dir : public Program {
+class Md : public Program {
 public:
 	std::string run(void);
 };

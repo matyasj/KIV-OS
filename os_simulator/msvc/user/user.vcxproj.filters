@@ -54,14 +54,17 @@
     <ClCompile Include="..\..\src\user\Parser\parser.cpp">
       <Filter>Source Files\Parser</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\user\Program.cpp">
-      <Filter>Source Files\Program Management</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\user\program_manager.cpp">
       <Filter>Source Files\Program Management</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\user\Dir.cpp">
+    <ClCompile Include="..\..\src\user\md.cpp">
       <Filter>Source Files\Program Management\Programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\dir.cpp">
+      <Filter>Source Files\Program Management\Programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\program.cpp">
+      <Filter>Source Files\Program Management</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -89,14 +92,17 @@
     <ClInclude Include="..\..\src\user\Parser\parser.h">
       <Filter>Header Files\Parser</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\user\Program.h">
-      <Filter>Header Files\Program Management</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\user\program_manager.h">
       <Filter>Header Files\Program Management</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\user\Dir.h">
+    <ClInclude Include="..\..\src\user\md.h">
       <Filter>Header Files\Program Management\Programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\dir.h">
+      <Filter>Header Files\Program Management\Programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\program.h">
+      <Filter>Header Files\Program Management</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
