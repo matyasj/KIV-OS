@@ -10,6 +10,7 @@
 !/os_simulator/msvc/boot/boot.sln
 !/os_simulator/msvc/boot/boot.vcxproj
 !/os_simulator/msvc/boot/boot.vcxproj.filters
+!/os_simulator/msvc/boot/boot.vcxproj.user
 
 !/os_simulator/msvc/kernel/kernel.sln
 !/os_simulator/msvc/kernel/kernel.vcxproj
