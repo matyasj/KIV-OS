@@ -13,11 +13,23 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Parser">
+      <UniqueIdentifier>{14ec5e47-a087-47c6-9a00-7a4febbe0710}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Program Management">
+      <UniqueIdentifier>{49a4b941-e21e-484f-a7e2-554874d5902b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Program Management">
+      <UniqueIdentifier>{51c774b4-91ad-403c-9482-d38a88d3b0ac}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Header Files\Parser">
       <UniqueIdentifier>{b7aed969-5165-473e-b247-ef18ea9a1bd9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Parser">
-      <UniqueIdentifier>{14ec5e47-a087-47c6-9a00-7a4febbe0710}</UniqueIdentifier>
+    <Filter Include="Header Files\Program Management\Programs">
+      <UniqueIdentifier>{5b5df9c0-029e-4449-b100-3747731d8af4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Program Management\Programs">
+      <UniqueIdentifier>{65ea5a50-2bf1-4856-b482-041fc83fe7bb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -41,6 +53,45 @@
     </ClCompile>
     <ClCompile Include="..\..\src\user\Parser\parser.cpp">
       <Filter>Source Files\Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\program_manager.cpp">
+      <Filter>Source Files\Program Management</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\md.cpp">
+      <Filter>Source Files\Program Management\Programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\dir.cpp">
+      <Filter>Source Files\Program Management\Programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\program.cpp">
+      <Filter>Source Files\Program Management</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\echo.cpp">
+      <Filter>Source Files\Program Management\Programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\cd.cpp">
+      <Filter>Source Files\Program Management\Programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\freq.cpp">
+      <Filter>Source Files\Program Management\Programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\ps.cpp">
+      <Filter>Source Files\Program Management\Programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\rd.cpp">
+      <Filter>Source Files\Program Management\Programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\rgen.cpp">
+      <Filter>Source Files\Program Management\Programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\sort.cpp">
+      <Filter>Source Files\Program Management\Programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\type.cpp">
+      <Filter>Source Files\Program Management\Programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\wc.cpp">
+      <Filter>Source Files\Program Management\Programs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -67,6 +118,45 @@
     </ClInclude>
     <ClInclude Include="..\..\src\user\Parser\parser.h">
       <Filter>Header Files\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\program_manager.h">
+      <Filter>Header Files\Program Management</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\md.h">
+      <Filter>Header Files\Program Management\Programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\dir.h">
+      <Filter>Header Files\Program Management\Programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\program.h">
+      <Filter>Header Files\Program Management</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\echo.h">
+      <Filter>Header Files\Program Management\Programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\cd.h">
+      <Filter>Header Files\Program Management\Programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\freq.h">
+      <Filter>Header Files\Program Management\Programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\ps.h">
+      <Filter>Header Files\Program Management\Programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\rd.h">
+      <Filter>Header Files\Program Management\Programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\rgen.h">
+      <Filter>Header Files\Program Management\Programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\sort.h">
+      <Filter>Header Files\Program Management\Programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\type.h">
+      <Filter>Header Files\Program Management\Programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\wc.h">
+      <Filter>Header Files\Program Management\Programs</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
