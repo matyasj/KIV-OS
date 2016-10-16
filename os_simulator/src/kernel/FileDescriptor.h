@@ -9,10 +9,8 @@
 class FileDescriptor
 {
 public:
-	int id;
 	char type;
 	std::string name;
-	int parrentFolder;
 
 	bool isFile();
 	bool isFolder();

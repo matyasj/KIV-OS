@@ -13,6 +13,7 @@ size_t __stdcall shell(const CONTEXT &regs) {
 	/* TODO - prozatim, jen at se muze testovat */
 	Parser parser;
 	parser.parser_start();
+	
 
 	return 0;
 }

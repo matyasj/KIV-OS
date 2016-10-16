@@ -1,5 +1,8 @@
 #include "io.h"
 #include "kernel.h"
+#include "fs.h"
+#include "File.h"
+#include <iostream>
 
 void HandleIO(CONTEXT &regs) {
 
@@ -9,7 +12,17 @@ void HandleIO(CONTEXT &regs) {
 		case scCreateFile: {
 				regs.Rax = (decltype(regs.Rax)) CreateFileA((char*)regs.Rdx, GENERIC_READ | GENERIC_WRITE , (DWORD) regs.Rcx, 0, OPEN_EXISTING, 0, 0);
 							//zde je treba podle Rxc doresit shared_read, shared_write, OPEN_EXISING, etc. podle potreby
-				Set_Error(regs.Rax == 0, regs);				
+				Set_Error(regs.Rax == 0, regs);	
+				/*File* ahoj = (File*)openFile("C/slozka1/slozka3/slozka4/soubor1.txt", 50);
+				createFile("C/slozka1/slozka3/slozka4/soubor3.txt", GENERIC_READ);
+				createFile("C/slozka1/slozka3/slozka4/soubor4.txt", GENERIC_READ);
+				createFile("C/slozka1/slozka3/slozka4/soubor5.txt", GENERIC_READ);
+				printFSTree();
+				std::cout << readFile(ahoj);
+				//deleteFolder("C/slozka1/slozka3/slozka4");
+				deleteFile("C/slozka1/slozka3/slozka4/soubor5.txt");
+				printFSTree();*/
+				//std::cout << "Jmeno nalezeneho souboru " << ahoj->name << "\n";
 			}
 			break;	//scCreateFile
 
