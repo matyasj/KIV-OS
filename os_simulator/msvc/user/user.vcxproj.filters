@@ -66,6 +66,33 @@
     <ClCompile Include="..\..\src\user\program.cpp">
       <Filter>Source Files\Program Management</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\user\echo.cpp">
+      <Filter>Source Files\Program Management\Programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\cd.cpp">
+      <Filter>Source Files\Program Management\Programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\freq.cpp">
+      <Filter>Source Files\Program Management\Programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\ps.cpp">
+      <Filter>Source Files\Program Management\Programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\rd.cpp">
+      <Filter>Source Files\Program Management\Programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\rgen.cpp">
+      <Filter>Source Files\Program Management\Programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\sort.cpp">
+      <Filter>Source Files\Program Management\Programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\type.cpp">
+      <Filter>Source Files\Program Management\Programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\wc.cpp">
+      <Filter>Source Files\Program Management\Programs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\common\api.h">
@@ -103,6 +130,33 @@
     </ClInclude>
     <ClInclude Include="..\..\src\user\program.h">
       <Filter>Header Files\Program Management</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\echo.h">
+      <Filter>Header Files\Program Management\Programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\cd.h">
+      <Filter>Header Files\Program Management\Programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\freq.h">
+      <Filter>Header Files\Program Management\Programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\ps.h">
+      <Filter>Header Files\Program Management\Programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\rd.h">
+      <Filter>Header Files\Program Management\Programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\rgen.h">
+      <Filter>Header Files\Program Management\Programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\sort.h">
+      <Filter>Header Files\Program Management\Programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\type.h">
+      <Filter>Header Files\Program Management\Programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\wc.h">
+      <Filter>Header Files\Program Management\Programs</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
