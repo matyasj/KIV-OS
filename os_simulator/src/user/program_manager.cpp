@@ -20,7 +20,7 @@
 std::string execute_command(Command command) {
 
 	std::string output;
-	Program *program;
+	Program *program = NULL;
 
 
 	switch (command.type_command) {
@@ -80,8 +80,14 @@ std::string execute_command(Command command) {
 			return "Error: Program " + command.name + " doesn't exist!";
 	}
 
-	program->init(command.name, NULL, command.arguments);
-	output = program->run();
+	if (program == NULL) {
+		return "Program lunching failed";
+	}
+	else {
+		program->init(command.name, NULL, command.arguments);
+		output = program->run();		
+	}
+	
 
 	return output;
 }
