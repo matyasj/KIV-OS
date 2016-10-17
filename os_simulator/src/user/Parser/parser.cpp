@@ -116,6 +116,12 @@ Command Parser::parse_instruction_arg(std::string instruction) {
 	}
 	if (com == CD_CHAR) {
 		command_type = CD;
+	}	
+	if (com == RD_CHAR) {
+		command_type = RD;
+	}
+	if (com == SORT_CHAR) {
+		command_type = SORT;
 	}
 	if (command_type == error_class.ERROR_INSTRUCTION) {
 		error_class.parser_error(error_class.UNKNOWN_COMMAND);
