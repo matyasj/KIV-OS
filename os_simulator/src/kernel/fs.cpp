@@ -8,22 +8,6 @@ Folder* rootFolder = new Folder("C",nullptr);
 
 THandle openFile(char * fullFilePath, size_t flags)
 {
-	Folder* slozka = new Folder("slozka1", rootFolder);
-	Folder* slozka2 = new Folder("slozka2", rootFolder);
-	Folder* slozka3 = new Folder("slozka3", rootFolder);
-	Folder* slozka4 = new Folder("slozka4", rootFolder);
-	
-	rootFolder->addFolder(slozka);
-	slozka->addFolder(slozka3);
-	slozka->addFolder(slozka2);
-	slozka3->addFolder(slozka4);
-	File* soubor = new File("soubor1.txt", slozka);
-	File* soubor2 = new File("soubor2.txt", slozka);
-	slozka4->addFile(soubor);
-	slozka4->addFile(soubor2);
-	slozka4->printChildren();
-
-
 	std::cout << "Hledam soubor: " << fullFilePath << "\n";
 	std::vector<std::string> partsOfPath = parsePath(fullFilePath);
 
@@ -37,6 +21,9 @@ THandle openFile(char * fullFilePath, size_t flags)
 			if (tmpFolder->containFile(partsOfPath[i])) {
 				std::cout << "Soubor nalezen: " << partsOfPath[i] << "\n";
 				File *foundFile = tmpFolder->getFileByName(partsOfPath[i]);
+				if (foundFile->isOpened) {
+					return nullptr;
+				}
 				foundFile->setOpened();
 				return foundFile;
 			}
@@ -48,41 +35,6 @@ THandle openFile(char * fullFilePath, size_t flags)
 		}else {
 			std::cout << "BAD PATH\n";
 		}
-
-		/*
-		if (tmpFolder->containFile(partsOfPath[i])) {
-			FileDescriptor *file = &(tmpFolder->getFileByName(partsOfPath[i]));
-			
-			if (file->isFolder()) {
-				//tmpFolder = (Folder* ) &file;
-				try {
-
-					//tmpFolder = dynamic_cast<Folder*>(file);
-					//Folder &ref = dynamic_cast<Folder&>(file);
-					*tmpFolder = tmpFolder->getFolderByName(partsOfPath[i]);
-					//Folder &ref = dynamic_cast<Folder&>(*file2);
-				}
-				catch (std::bad_cast& e) {
-					std::cerr << "Nelze pretypovat\n";
-
-				}
-				//tmpFolder->printChildren();
-				std::cout << "slozka - " << tmpFolder->name << "\n";
-				continue;
-			}else if(file->isFile() && i ==(partsOfPath.size() - 1)){
-				std::cout << "soubor " << file->name << "\n";
-				return nullptr;
-			}else {
-				std::cout << "UNKNOWN ERROR!\n";
-				return nullptr;
-			}
-		}
-		else {
-			std::cout << "BAD PATH!\n";
-			return nullptr;
-		}*/
-
-		//std::cout << "prvek" << i << " - " << partsOfPath[i] << "\n";
 	}
 	std::cout << "FILE NOT FOUND!\n";
 	

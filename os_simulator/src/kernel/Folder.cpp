@@ -58,10 +58,10 @@ void Folder::printChildren()
 {
 	std::cout << this->name + "\n";
 	for (int i = 0; i != this->folders.size(); i++) {
-		std::cout << " - FOLDER::" + this->folders[i]->name + "\n";
+		std::cout << "|- FOLDER::" + this->folders[i]->name + "\n";
 	}
 	for (int i = 0; i != this->files.size(); i++) {
-		std::cout << " - FILE::" + this->files[i]->name + "\n";
+		std::cout << "|- FILE::" + this->files[i]->name + "\n";
 	}
 }
 

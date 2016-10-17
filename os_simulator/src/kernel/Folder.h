@@ -6,16 +6,17 @@
 #include <string>
 #include "File.h"
 
+/*Trida, co reprezentuje Soubor*/
 class Folder : public FileDescriptor
 {
 public:
-	// vektor instanci podsouboru
+	// vektor incstanci souboru
 	std::vector<File* > files;
+	// vektor incstanci slozek
 	std::vector<Folder* > folders;
+	// Rodicovska slozka
 	Folder* parrentFolder;
 	
-	// vektor stringu resp. jmen podsouboru (podslozek)
-	std::vector<std::string> getFiles();
 	bool addFile(File* file);
 	bool addFolder(Folder* file);
 
