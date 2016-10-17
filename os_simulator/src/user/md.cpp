@@ -7,5 +7,13 @@ Parametry:
 */
 std::string Md::run(void)
 {
-	return "Vytvor adresar...";
+	std::string name = "";
+	if(_arguments.size()!=0) name = _arguments.at(0);
+	bool fail = Create_Folder(name,0);
+	if (fail) {
+		return "Adresar vytvoren";
+	}
+	else {
+		return "Chyba";
+	}
 }

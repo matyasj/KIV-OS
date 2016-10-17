@@ -13,5 +13,13 @@ Asi bych to udelal ze rovnou smaze vse - ale muzem se zeptat
 */
 std::string Rd::run(void)
 {
-	return "Vymaze zadany soubor...";
+	std::string name = "";
+	if (_arguments.size() != 0) name = _arguments.at(0);
+	bool fail = Delete_Folder(name, 0);
+	if (fail) {
+		return "Adresar smazan";
+	}
+	else {
+		return "Chyba";
+	}
 }

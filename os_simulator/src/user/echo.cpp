@@ -10,5 +10,7 @@ Parametry:
 */
 std::string Echo::run(void)
 {
-	return "Vypis neco na obrazovku...";
+	std::string arg = "";
+	if(_arguments.size()!=0) arg = _arguments.at(0);
+	return arg;
 }
