@@ -26,7 +26,7 @@
 */
 std::string execute_commands(std::vector<Command> commands) {
 
-	std::string input = NULL;
+	std::string input = "";
 	
 	/*
 		projde vsechny prikazy - vystup posledniho spusteneho
@@ -71,7 +71,7 @@ std::string execute_commands(std::vector<Command> commands) {
 */
 std::string start_program(Command command, std::string input)
 {
-	std::string output = NULL;
+	std::string output = "";
 	Program *program = NULL;
 
 
