@@ -62,11 +62,24 @@ const __int8 scIO = 1;		//IO operace
 //al hodnoty pro scIO 
 const __int8 scCreateFile = 1;
 const __int8 scWriteFile = 2;
-const __int8 scOpenFile = 3;
-const __int8 scReadFile = 4;
-const __int8 scCloseFile = 5;
-const __int8 scCreateFolder = 6;
-const __int8 scDeleteFolder = 7;
+const __int8 scAppendFile = 3;
+const __int8 scOpenFile = 4;
+const __int8 scReadFile = 5;
+const __int8 scCloseFile = 6;
+const __int8 scCreateFolder = 7;
+const __int8 scDeleteFolder = 8;
+
+// Cisla pro chybyIO
+// Soubor nebo slozka nenalezena/neexistuje ... zalezi na tom co se volalo
+const __int8 errorFileNotFound = 1;
+// Soubor je nastaven jako opened -> proto ho nelze otevrit znovu.
+const __int8 errorFileIsUsed = 2;
+// Pri vytvareni souboru, ktery jiz existuje
+const __int8 errorAlreadyExist = 3;
+// Spatna cesta - specialni pripady spatne zadane cesty
+const __int8 errorBadPath = 4;
+// Dalsi blize nespecifikovana IO chyba :D
+const __int8 errorIO = 5;
 
 
 
