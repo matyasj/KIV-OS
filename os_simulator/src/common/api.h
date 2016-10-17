@@ -27,6 +27,12 @@ typedef void (__stdcall *TSysCall)(CONTEXT &context);			//prototyp funkce, ktera
 			5 - zavri soubor				 IN: rdx  je handle souboru k zavreni
 											OUT: rax != 0 je uspech, jinak chyba
 
+			6 - vytvorit slozku           IN: rdx je pointer na null-terminated string udavajici folder_name i s cestou; Rcx jsou flags
+										  OUT: rax == 0 uspech, jinak cislo chyby
+
+		    7 - odstranit slozku	      IN: rdx je pointer na null-terminated string udavajici folder_name i s cestou; Rcx jsou flags
+										  OUT: rax == 0 uspech, jinak cislo chyby
+
 
 												
 
@@ -57,6 +63,9 @@ const __int8 scIO = 1;		//IO operace
 const __int8 scCreateFile = 1;
 const __int8 scWriteFile = 2;
 const __int8 scCloseFile = 5;
+const __int8 scCreateFolder = 6;
+const __int8 scDeleteFolder = 7;
+
 
 
 constexpr __int16 Compose_AX(const __int8 ah, const __int8 al) {

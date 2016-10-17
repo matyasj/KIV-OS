@@ -10,10 +10,10 @@ void HandleIO(CONTEXT &regs) {
 
 	switch (Get_AL((__int16) regs.Rax)) {
 		case scCreateFile: {
-				regs.Rax = (decltype(regs.Rax)) CreateFileA((char*)regs.Rdx, GENERIC_READ | GENERIC_WRITE , (DWORD) regs.Rcx, 0, OPEN_EXISTING, 0, 0);
+				/*regs.Rax = (decltype(regs.Rax)) CreateFileA((char*)regs.Rdx, GENERIC_READ | GENERIC_WRITE , (DWORD) regs.Rcx, 0, OPEN_EXISTING, 0, 0);
 							//zde je treba podle Rxc doresit shared_read, shared_write, OPEN_EXISING, etc. podle potreby
-				Set_Error(regs.Rax == 0, regs);	
-				/*File* ahoj = (File*)openFile("C/slozka1/slozka3/slozka4/soubor1.txt", 50);
+				Set_Error(regs.Rax == 0, regs);	*/
+				File* ahoj = (File*)openFile("C/slozka1/slozka3/slozka4/soubor1.txt", 50);
 				createFile("C/slozka1/slozka3/slozka4/soubor3.txt", GENERIC_READ);
 				createFile("C/slozka1/slozka3/slozka4/soubor4.txt", GENERIC_READ);
 				createFile("C/slozka1/slozka3/slozka4/soubor5.txt", GENERIC_READ);
@@ -21,7 +21,7 @@ void HandleIO(CONTEXT &regs) {
 				std::cout << readFile(ahoj);
 				//deleteFolder("C/slozka1/slozka3/slozka4");
 				deleteFile("C/slozka1/slozka3/slozka4/soubor5.txt");
-				printFSTree();*/
+				printFSTree();
 				//std::cout << "Jmeno nalezeneho souboru " << ahoj->name << "\n";
 			}
 			break;	//scCreateFile
@@ -37,8 +37,23 @@ void HandleIO(CONTEXT &regs) {
 
 
 		case scCloseFile: {
+
 			Set_Error(!CloseHandle((HANDLE)regs.Rdx), regs);			
 			}
 			break;	//CloseFile
+		case scCreateFolder:{
+			char* name = (char*)regs.Rdx;
+			bool failed =createFolder(name);
+			printFSTree();
+			regs.Rax = failed;
+			break;
+		}
+		case scDeleteFolder: {
+			char* name = (char*)regs.Rdx;
+			bool failed = deleteFolder(name);
+			printFSTree();
+			regs.Rax = failed;
+			break;
+		}
 	}
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "..\common\api.h"
+#include<string>
 
 size_t Get_Last_Error();
 
@@ -13,3 +14,8 @@ bool Write_File(const THandle file_handle, const void *buffer, const size_t buff
 bool Close_File(const THandle file_handle);
 		//uzavre soubor identifikovany pomoci deskriptoru
 		//vraci true, kdyz vse OK
+
+//vytvori slozku s uvedenou cestou a flags
+bool Create_Folder(const std::string file_name, size_t flags);
+//odstrani slozku s uvedenou cestou a flags
+bool Delete_Folder(const std::string file_name, size_t flags);

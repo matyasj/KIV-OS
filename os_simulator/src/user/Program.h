@@ -1,10 +1,10 @@
 #pragma once
-
+#include"rtl.h"
 #include <string>
 #include<vector>
 
 class Program {
-
+protected:
 	// jmeno programu
 	std::string _name;
 

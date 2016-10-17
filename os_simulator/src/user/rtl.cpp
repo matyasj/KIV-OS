@@ -53,3 +53,19 @@ bool Close_File(const THandle file_handle) {
 	regs.Rdx = (decltype(regs.Rdx))file_handle;
 	return Do_SysCall(regs);
 }
+
+bool Create_Folder(const std::string file_name, size_t flags) {
+	CONTEXT regs = Prepare_SysCall_Context(scIO, scCreateFolder);
+	regs.Rdx = (decltype(regs.Rdx))file_name.c_str();
+	regs.Rcx = flags;
+	Do_SysCall(regs);
+	return (bool)regs.Rax;
+}
+bool Delete_Folder(const std::string file_name, size_t flags) {
+	CONTEXT regs = Prepare_SysCall_Context(scIO, scDeleteFolder);
+	regs.Rdx = (decltype(regs.Rdx))file_name.c_str();
+	regs.Rcx = flags;
+	Do_SysCall(regs);
+	return (bool)regs.Rax;
+}
+

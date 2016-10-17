@@ -8,7 +8,7 @@ Folder* rootFolder = new Folder("C",nullptr);
 
 THandle openFile(char * fullFilePath, size_t flags)
 {
-	Folder* slozka = new Folder("slozka1", rootFolder);
+/*	Folder* slozka = new Folder("slozka1", rootFolder);
 	Folder* slozka2 = new Folder("slozka2", rootFolder);
 	Folder* slozka3 = new Folder("slozka3", rootFolder);
 	Folder* slozka4 = new Folder("slozka4", rootFolder);
@@ -24,7 +24,7 @@ THandle openFile(char * fullFilePath, size_t flags)
 	slozka4->printChildren();
 
 
-	std::cout << "Hledam soubor: " << fullFilePath << "\n";
+	std::cout << "Hledam soubor: " << fullFilePath << "\n";*/
 	std::vector<std::string> partsOfPath = parsePath(fullFilePath);
 
 	if (partsOfPath[0] != "C") {
