@@ -8,6 +8,22 @@ Folder* rootFolder = new Folder("C",nullptr);
 
 THandle openFile(char * fullFilePath, size_t flags)
 {
+	Folder* slozka = new Folder("slozka1", rootFolder);
+	Folder* slozka2 = new Folder("slozka2", rootFolder);
+	Folder* slozka3 = new Folder("slozka3", rootFolder);
+	Folder* slozka4 = new Folder("slozka4", rootFolder);
+	
+	rootFolder->addFolder(slozka);
+	slozka->addFolder(slozka3);
+	slozka->addFolder(slozka2);
+	slozka3->addFolder(slozka4);
+	File* soubor = new File("soubor1.txt", slozka);
+	File* soubor2 = new File("soubor2.txt", slozka);
+	slozka4->addFile(soubor);
+	slozka4->addFile(soubor2);
+	slozka4->printChildren();
+
+
 	std::cout << "Hledam soubor: " << fullFilePath << "\n";
 	std::vector<std::string> partsOfPath = parsePath(fullFilePath);
 
