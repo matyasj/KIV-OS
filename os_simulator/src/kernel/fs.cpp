@@ -79,6 +79,7 @@ THandle createFile(char * fullFilePath, size_t flags)
 				File* newFile = new File(partsOfPath[i], tmpFolder);
 				tmpFolder->addFile(newFile);
 				tmpFolder->printChildren();
+				return newFile;
 			}
 		}
 		else if (tmpFolder->containFolder(partsOfPath[i])) {
