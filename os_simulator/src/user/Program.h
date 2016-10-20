@@ -13,6 +13,7 @@ protected:
 
 	// vstupni parametry programu (muze byt NULL)
 	std::vector<std::string> _arguments;
+	bool _error=false;
 
 public:
 	virtual std::string run(void);

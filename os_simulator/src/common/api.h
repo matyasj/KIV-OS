@@ -24,13 +24,13 @@ typedef void (__stdcall *TSysCall)(CONTEXT &context);			//prototyp funkce, ktera
 											OUT: rax je pocet zapsanych bytu
 			3 - cti ze souboru
 			4 - nastav pozici v souboru
-			5 - zavri soubor				 IN: rdx  je handle souboru k zavreni
+			6 - zavri soubor				 IN: rdx  je handle souboru k zavreni
 											OUT: rax != 0 je uspech, jinak chyba
 
-			6 - vytvorit slozku           IN: rdx je pointer na null-terminated string udavajici folder_name i s cestou; Rcx jsou flags
+			7 - vytvorit slozku           IN: rdx je pointer na null-terminated string udavajici folder_name i s cestou; Rcx jsou flags
 										  OUT: rax == 0 uspech, jinak cislo chyby
 
-		    7 - odstranit slozku	      IN: rdx je pointer na null-terminated string udavajici folder_name i s cestou; Rcx jsou flags
+		    8 - odstranit slozku	      IN: rdx je pointer na null-terminated string udavajici folder_name i s cestou; Rcx jsou flags
 										  OUT: rax == 0 uspech, jinak cislo chyby
 
 

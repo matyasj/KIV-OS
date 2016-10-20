@@ -9,8 +9,8 @@ std::string Md::run(void)
 {
 	std::string name = "";
 	if(_arguments.size()!=0) name = _arguments.at(0);
-	bool fail = Create_Folder(name,0);
-	if (fail) {
+	bool succes = Create_Folder(name,0);
+	if (succes) {
 		return "Adresar vytvoren";
 	}
 	else {

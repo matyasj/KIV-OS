@@ -14,7 +14,7 @@ void HandleIO(CONTEXT &regs) {
 							//zde je treba podle Rxc doresit shared_read, shared_write, OPEN_EXISING, etc. podle potreby
 				Set_Error(regs.Rax == 0, regs);	*/
 				File* ahoj = (File*)openFile("C/slozka1/slozka3/slozka4/soubor1.txt", 50);
-				createFile("C/slozka1/slozka3/slozka4/soubor3.txt", GENERIC_READ);
+				/*createFile("C/slozka1/slozka3/slozka4/soubor3.txt", GENERIC_READ);
 				createFile("C/slozka1/slozka3/slozka4/soubor4.txt", GENERIC_READ);
 				createFile("C/slozka1/slozka3/slozka4/soubor5.txt", GENERIC_READ);
 				printFSTree();
@@ -22,42 +22,53 @@ void HandleIO(CONTEXT &regs) {
 				//deleteFolder("C/slozka1/slozka3/slozka4");
 				deleteFile("C/slozka1/slozka3/slozka4/soubor5.txt");
 				printFSTree();
-				//std::cout << "Jmeno nalezeneho souboru " << ahoj->name << "\n";
+				//std::cout << "Jmeno nalezeneho souboru " << ahoj->name << "\n";*/
+				THandle file = createFile((char*)regs.Rdx, (DWORD)regs.Rcx);
+				if (file==nullptr)
+				{
+					regs.Rax = errorAlreadyExist;
+				}
+				regs.Rax = (decltype(regs.Rax))file;
 			}
 			break;	//scCreateFile
 
 
 		case scWriteFile: {
-				DWORD written;
-				const bool failed = !WriteFile((HANDLE)regs.Rdx, (void*)regs.Rdi, (DWORD)regs.Rcx, &written, NULL);
-				Set_Error(failed, regs);
-				if (!failed) regs.Rax = written;
+				//const bool failed = !WriteFile((HANDLE)regs.Rdx, (void*)regs.Rdi, (DWORD)regs.Rcx, &written, NULL);
+				char * buff = (char*)regs.Rdi;
+				int write = writeFile((THandle)regs.Rdx,buff);
+				regs.Rax = write;
 			}
 			break; //scWriteFile
 
 		case scOpenFile: {
-			File* ahoj = (File*)openFile("C/slozka1/slozka3/slozka4/soubor1.txt", 50);
-			Set_Error(ahoj == nullptr, regs);
+			THandle ahoj = openFile((char*)regs.Rdx, (DWORD)regs.Rcx);
+			if (ahoj == nullptr) {
+				regs.Rax = errorFileNotFound;
+			}
 		}
 			break; //scOpenFile
-
-
 		case scCloseFile: {
-
-			Set_Error(!CloseHandle((HANDLE)regs.Rdx), regs);			
-			}
+			bool failed = closeFile((THandle)regs.Rdx);		
+			regs.Rax = failed;
 			break;	//CloseFile
+		}
+		case scReadFile: {
+			char* content = readFile((THandle)regs.Rdx);
+			regs.Rdi = (decltype(regs.Rdi))content;
+			regs.Rax = (decltype(regs.Rax))strlen(content);
+		}break;
 		case scCreateFolder:{
 			char* name = (char*)regs.Rdx;
 			bool failed =createFolder(name);
-			printFSTree();
+			//printFSTree();
 			regs.Rax = failed;
 			break;
 		}
 		case scDeleteFolder: {
 			char* name = (char*)regs.Rdx;
 			bool failed = deleteFolder(name);
-			printFSTree();
+			//printFSTree();
 			regs.Rax = failed;
 			break;
 		}
