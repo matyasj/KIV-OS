@@ -18,7 +18,7 @@ protected:
 public:
 	virtual std::string run(void);
 	void Program::init(std::string, std::string, std::vector<std::string>);
-
+	bool Program::hasError();
 	Program();
 	~Program();	
 };

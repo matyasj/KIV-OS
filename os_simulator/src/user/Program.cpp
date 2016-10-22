@@ -14,6 +14,11 @@ void Program::init(std::string name, std::string input, std::vector<std::string>
 	_arguments = arguments;
 }
 
+bool Program::hasError()
+{
+	return _error;
+}
+
 
 std::string Program::run(void)
 {

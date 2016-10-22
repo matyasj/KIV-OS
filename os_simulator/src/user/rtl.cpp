@@ -85,3 +85,20 @@ bool Delete_Folder(const std::string file_name, size_t flags) {
 	return (bool)regs.Rax;
 }
 
+/*------------------------THREAD-------------------*/
+int Create_Thread(int type_command, int parrent_id,std::string* path) {
+	CONTEXT regs = Prepare_SysCall_Context(scThread, scCreateThread);
+	regs.Rdx = type_command;
+	regs.Rcx = parrent_id;
+	regs.Rbx = (decltype(regs.Rdx))path;
+	Do_SysCall(regs);
+	return (int)regs.Rax;
+}
+
+int Execute_Thread(int id) {
+	CONTEXT regs = Prepare_SysCall_Context(scThread, scExecuteThread);
+	regs.Rdx = id;
+	Do_SysCall(regs);
+	return (int)regs.Rax;
+}
+

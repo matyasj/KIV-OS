@@ -13,7 +13,7 @@ void HandleIO(CONTEXT &regs) {
 				/*regs.Rax = (decltype(regs.Rax)) CreateFileA((char*)regs.Rdx, GENERIC_READ | GENERIC_WRITE , (DWORD) regs.Rcx, 0, OPEN_EXISTING, 0, 0);
 							//zde je treba podle Rxc doresit shared_read, shared_write, OPEN_EXISING, etc. podle potreby
 				Set_Error(regs.Rax == 0, regs);	*/
-				File* ahoj = (File*)openFile("C/slozka1/slozka3/slozka4/soubor1.txt", 50);
+				//File* ahoj = (File*)openFile("C/slozka1/slozka3/slozka4/soubor1.txt", 50);
 				/*createFile("C/slozka1/slozka3/slozka4/soubor3.txt", GENERIC_READ);
 				createFile("C/slozka1/slozka3/slozka4/soubor4.txt", GENERIC_READ);
 				createFile("C/slozka1/slozka3/slozka4/soubor5.txt", GENERIC_READ);

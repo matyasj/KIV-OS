@@ -2,6 +2,7 @@
 
 #include "kernel.h"
 #include "io.h"
+#include"Thread_managment.h"
 
 HMODULE User_Programs;
 
@@ -26,7 +27,8 @@ void Shutdown_Kernel() {
 void SysCall(CONTEXT &regs) {
 
 	switch (Get_AH((__int16) regs.Rax)) {
-		case scIO:		HandleIO(regs);
+	case scIO:		HandleIO(regs);break;
+	case scThread: handleThread(regs);break;
 	}
 
 }

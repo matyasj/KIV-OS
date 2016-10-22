@@ -25,3 +25,10 @@ THandle Open_File(const char* file_name, size_t flags);
 bool Create_Folder(const std::string file_name, size_t flags);
 //odstrani slozku s uvedenou cestou a flags
 bool Delete_Folder(const std::string file_name, size_t flags);
+
+/*-----------------------------THREAD----------------------------*/
+
+int Create_Thread(int type_command,int parrent_id, std::string* path);
+//vytvori vlakno a vrati jeho id. Pokud nema rodice, parrent_id = -1;
+int Execute_Thread(int id);
+//ukonci vlakno s  id
