@@ -86,7 +86,6 @@ Command Parser::parse_instruction_arg(std::string instruction) {
 	const std::string com = data.at(0);
 	if (com == EXIT_CHAR) {
 		command_type = EXIT;
-		this->end = 0;
 	}
 	if (com == SHELL_CHAR) {
 		command_type = SHELL;
@@ -155,28 +154,6 @@ std::vector<Command> Parser::parse_line(std::string line) {
 	}
 	return commands;
 }
-
-
-/*
-void Parser::printDefaultString() {
-	std::cout << "Zadej prikaz: ";
-}
-
-void Parser::parser_start() {
-	while (this->end) {
-		this->printDefaultString();
-		std::string line;
-		std::getline(std::cin, line);
-		std::vector<Command> commands= parse_line(line);
-		for (Command c : commands) {
-			std::cout <<"Command:" << c.to_string() << std::endl;
-			execute_commands(c);
-
-		}
-		execute_commands(commands);
-	}
-}
-*/
 
 Parser::Parser()
 {

@@ -10,7 +10,7 @@ int main() {
 	if (vm) vm();
 	FreeLibrary(kernel);
 	
-	std::cout << "End!";
+	std::cout << "OS terminated!";
 	std::cin.get();
 	return (EXIT_SUCCESS);
 }

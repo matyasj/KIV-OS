@@ -23,6 +23,7 @@
     <ClCompile Include="..\..\src\user\dir.cpp" />
     <ClCompile Include="..\..\src\user\dllmain.cpp" />
     <ClCompile Include="..\..\src\user\echo.cpp" />
+    <ClCompile Include="..\..\src\user\exit.cpp" />
     <ClCompile Include="..\..\src\user\freq.cpp" />
     <ClCompile Include="..\..\src\user\md.cpp" />
     <ClCompile Include="..\..\src\user\Parser\command.cpp" />
@@ -45,6 +46,7 @@
     <ClInclude Include="..\..\src\user\cd.h" />
     <ClInclude Include="..\..\src\user\dir.h" />
     <ClInclude Include="..\..\src\user\echo.h" />
+    <ClInclude Include="..\..\src\user\exit.h" />
     <ClInclude Include="..\..\src\user\freq.h" />
     <ClInclude Include="..\..\src\user\md.h" />
     <ClInclude Include="..\..\src\user\Parser\command.h" />
