@@ -1,6 +1,9 @@
-#include "shell.h"
-#include"Parser/parser.h"
+#include <iostream>
+#include <string>
 
+#include "shell.h"
+#include "Parser/parser.h"
+#include "program_manager.h"
 #include "rtl.h"
 
 size_t __stdcall shell(const CONTEXT &regs) {
@@ -10,10 +13,19 @@ size_t __stdcall shell(const CONTEXT &regs) {
 	Write_File(stdin, hello, strlen(hello), written);
 	Close_File(stdin);*/
 
+
 	/* TODO - prozatim, jen at se muze testovat */
 	Parser parser;
-	parser.parser_start();
 	
+	while (parser.end) {
+
+		std::cout << "Zadej prikaz: ";
+		std::string line;
+		std::getline(std::cin, line);
+
+		std::vector<Command> commands = parser.parse_line(line);
+		execute_commands(commands);
+	}	
 
 	return 0;
 }

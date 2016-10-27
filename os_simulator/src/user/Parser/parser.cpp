@@ -157,6 +157,7 @@ std::vector<Command> Parser::parse_line(std::string line) {
 }
 
 
+/*
 void Parser::printDefaultString() {
 	std::cout << "Zadej prikaz: ";
 }
@@ -167,15 +168,15 @@ void Parser::parser_start() {
 		std::string line;
 		std::getline(std::cin, line);
 		std::vector<Command> commands= parse_line(line);
-		/*for (Command c : commands) {
+		for (Command c : commands) {
 			std::cout <<"Command:" << c.to_string() << std::endl;
 			execute_commands(c);
 
-		}*/	
+		}
 		execute_commands(commands);
 	}
 }
-
+*/
 
 Parser::Parser()
 {

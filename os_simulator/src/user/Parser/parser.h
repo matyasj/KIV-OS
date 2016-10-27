@@ -23,12 +23,12 @@ public:
 	*Nastartuje parser se ctenim ze stdin
 	* pravdepodobne jen pro testovaci ucely
 	*/
-	void parser_start();
+	//void parser_start();
 private:
 	std::string parse_argument(std::string argument);
 	Command parse_redirect(std::string str);
 	Command parse_instruction_arg(std::string instruction);
-	void printDefaultString();
+	//void printDefaultString();
 };
 
 #endif // !parser_h
