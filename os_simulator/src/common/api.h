@@ -18,24 +18,31 @@ typedef void (__stdcall *TSysCall)(CONTEXT &context);			//prototyp funkce, ktera
 
       AH == 1 : IO operace
 		AL: cislo IO operace	//konzole je take jenom soubor
-			1 - otevrit soubor				 IN: rdx je pointer na null-terminated string udavajici file_name; rcx jsou flags k otevreni souboru
+			1 - Vytvor soubor				 IN: rdx je pointer na null-terminated string udavajici file_name; rcx jsou flags k otevreni souboru
 											OUT: rax je handle nove otevreneho souboru
 			2 - zapis do souboru			 IN: rdx je handle souboru, rdi je pointer na buffer, rcx je pocet bytu v bufferu k zapsani
 											OUT: rax je pocet zapsanych bytu
-			3 - cti ze souboru
-			4 - nastav pozici v souboru
-			5 - zavri soubor				 IN: rdx  je handle souboru k zavreni
+
+			3 - append do souboru			 IN: rdx je handle souboru, rdi je pointer na buffer
+											OUT: rax je pocet zapsanych bytu
+			4 - Otevri soubor				 IN: rdx je pointer na null-terminated string udavajici file_name
+											OUT: rax je handle nove otevreneho souboru
+
+			5 - cti ze souboru				 IN: rdx je handle souboru
+											OUT: rax je pointer na buffer
+			
+			6 - zavri soubor				 IN: rdx  je handle souboru k zavreni
 											OUT: rax != 0 je uspech, jinak chyba
 
-			6 - vytvorit slozku           IN: rdx je pointer na null-terminated string udavajici folder_name i s cestou; Rcx jsou flags
-										  OUT: rax == 0 uspech, jinak cislo chyby
+			7 - vytvorit slozku				 IN: rdx je pointer na null-terminated string udavajici folder_name i s cestou; Rcx jsou flags
+											OUT: rax == 0 uspech, jinak cislo chyby
 
-		    7 - odstranit slozku	      IN: rdx je pointer na null-terminated string udavajici folder_name i s cestou; Rcx jsou flags
-										  OUT: rax == 0 uspech, jinak cislo chyby
+			8 - odstranit slozku			 IN: rdx je pointer na null-terminated string udavajici folder_name i s cestou; Rcx jsou flags
+											OUT: rax == 0 uspech, jinak cislo chyby
 
-
-												
-
+			9 - nastav pozici v souboru		 IN: rdx je handle souboru, rcx je cislo pozice v souboru
+											OUT: rax je pocet zapsanych bytu
+								
    Dalsi cisla si doplnte dle potreby
 
 
@@ -68,6 +75,7 @@ const __int8 scReadFile = 5;
 const __int8 scCloseFile = 6;
 const __int8 scCreateFolder = 7;
 const __int8 scDeleteFolder = 8;
+const __int8 scSetInFilePosition = 9;
 
 // Cisla pro chybyIO
 // Soubor nebo slozka nenalezena/neexistuje ... zalezi na tom co se volalo

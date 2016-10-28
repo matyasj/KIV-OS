@@ -15,7 +15,7 @@ public:
 	// vektor incstanci slozek
 	std::vector<Folder* > folders;
 	// Rodicovska slozka
-	Folder* parrentFolder;
+	Folder* parentFolder;
 	
 	bool addFile(File* file);
 	bool addFolder(Folder* file);

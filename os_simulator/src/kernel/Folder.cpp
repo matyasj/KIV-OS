@@ -9,6 +9,8 @@ bool Folder::addFile(File* file)
 	}
 	else {
 		this->files.push_back(file);
+		file->parrentFolder = this;
+
 		return true;
 	}
 }
@@ -117,7 +119,7 @@ Folder::Folder(std::string name, Folder* parent)
 {
 	this->name = name;
 	this->type = FOLDER;
-	this->parrentFolder = parent;
+	this->parentFolder = parent;
 
 }
 

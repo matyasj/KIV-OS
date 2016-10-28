@@ -6,17 +6,21 @@
 #include "FileDescriptor.h"
 #include "Folder.h"
 
-//	Pøíklad cesty: C/slozka1/slozka2/soubor.txt
-THandle openFile(char* fullFilePath, size_t flags);
-THandle createFile(char* fullFilePath, size_t flags);
+//	Pøíklad cesty: C/slozka1/slozka2/soubor.txt   Nazvy slozek a souboru mohou obsahovat napr. i mezery.
+THandle openFile(std::string fullFilePath, size_t flags);
+THandle createFile(std::string fullFilePath, size_t flags);
 
-int writeFile(THandle file, char* buffer);
-char* readFile(THandle file);
+int writeFile(THandle file, std::string buffer);
+bool setInFilePosition(THandle file, int newPosition);
+int appendFile(THandle file, std::string buffer);
+std::string readFile(THandle file);
 bool closeFile(THandle file);
-bool deleteFile(char* fullFilePath);
+bool deleteFileByPath(std::string fullFilePath);
+bool deleteFile(THandle file);
 
-bool createFolder(char* fullFolderPath);
-bool deleteFolder(char* fullFolderPath);
+THandle createFolder(std::string fullFolderPath);
+bool deleteFolderByPath(std::string fullFolderPath);
+bool deleteFolder(THandle folder);
 
 std::vector<std::string> parsePath(std::string path);
 

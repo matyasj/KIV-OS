@@ -10,6 +10,7 @@ public:
 	bool isOpened;
 	int inFilePosition;
 	FileDescriptor* parrentFolder;
+	std::string path;
 
 	bool setOpened();
 	bool setClosed();
@@ -18,8 +19,9 @@ public:
 	size_t write(std::string str);
 	size_t append(std::string str);
 	bool setPosition(int newPosition);
+	
 	//Konstruktor
-	File(std::string name, FileDescriptor* parent);
+	File(std::string name, FileDescriptor* parent, std::string path);
 	//Destruktor
 	~File();
 };

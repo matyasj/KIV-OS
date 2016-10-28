@@ -21,20 +21,21 @@ bool File::setClosed()
 
 std::string File::getContentFromPosition()
 {
-	return this->content.substr(this->inFilePosition, this->content.size());
+	std::string content(this->content.substr(this->inFilePosition, this->content.size()));
+	return content;
 }
 
 size_t File::write(std::string str)
 {
 	if (this->isOpened) {
 		this->content = this->content.insert(this->inFilePosition, str);
+		this->inFilePosition = this->inFilePosition + str.size();
 		return str.size();
 	}
 	else {
+		SetLastError(errorFileIsUsed);
 		return -1;
 	}
-	
-	
 }
 
 size_t File::append(std::string str)
@@ -44,6 +45,7 @@ size_t File::append(std::string str)
 		return str.size();
 	}
 	else {
+		SetLastError(errorFileIsUsed);
 		return -1;
 	}
 	
@@ -51,22 +53,24 @@ size_t File::append(std::string str)
 
 bool File::setPosition(int newPosition)
 {
-	if (this->content.size() <= newPosition) {
-		this->inFilePosition;
+	if (this->content.size() > newPosition && this->isOpened) {
+		this->inFilePosition = newPosition;
 		return true;
 	}
+	SetLastError(errorFileIsUsed);
 	return false;
 	
 }
 
-File::File(std::string name, FileDescriptor* parent)
+File::File(std::string name, FileDescriptor* parent, std::string path)
 {
 	this->name = name;
 	this->parrentFolder = parent;
-	this->content = "";
+	this->content = *(new std::string);
 	this->inFilePosition = 0;
 	this->isOpened = false;
 	this->type = FILE;
+	this->path = path;
 }
 
 
