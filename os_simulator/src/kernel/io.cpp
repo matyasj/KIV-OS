@@ -85,8 +85,6 @@ void HandleIO(CONTEXT &regs) {
 			
 		}
 			break; //scOpenFile
-
-
 		case scCloseFile: {
 			Set_Error(!closeFile((THandle*)regs.Rdx), regs);
 			}

@@ -17,6 +17,7 @@
 #include "sort.h"
 #include "type.h"
 #include "wc.h"
+#include "exit.h"
 #include "program_manager.h"
 
 
@@ -58,9 +59,6 @@ std::string execute_commands(std::vector<Command> commands) {
 			// uloz do souboru commands[i].redirect_files.name
 		//}
 	}
-	
-	// testovaci vypis
-	std::cout << input << std::endl;
 
 	return input;
 }
@@ -81,7 +79,7 @@ std::string start_program(Command command, std::string input)
 		break;
 
 	case EXIT:
-		// Ukonci shell
+		program = new Exit();
 		break;
 
 	case CD:

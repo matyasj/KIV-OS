@@ -26,6 +26,9 @@
     <ClCompile Include="..\..\src\kernel\fs.cpp" />
     <ClCompile Include="..\..\src\kernel\io.cpp" />
     <ClCompile Include="..\..\src\kernel\kernel.cpp" />
+    <ClCompile Include="..\..\src\kernel\TCB.cpp" />
+    <ClCompile Include="..\..\src\kernel\Thread.cpp" />
+    <ClCompile Include="..\..\src\kernel\Thread_managment.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\common\api.h" />
@@ -35,6 +38,9 @@
     <ClInclude Include="..\..\src\kernel\fs.h" />
     <ClInclude Include="..\..\src\kernel\io.h" />
     <ClInclude Include="..\..\src\kernel\kernel.h" />
+    <ClInclude Include="..\..\src\kernel\TCB.h" />
+    <ClInclude Include="..\..\src\kernel\Thread.h" />
+    <ClInclude Include="..\..\src\kernel\Thread_managment.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B4305463-59C5-40C3-9A1A-92976A40562D}</ProjectGuid>

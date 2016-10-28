@@ -51,7 +51,7 @@ bool Command::add_redirect_file(std::string name, std::string type_redirect){
 	if (this->has_redirect) {		// pokud uz presmerovani je, neni umozneno dalsi
 		return false;	
 	}
-	if (type_redirect == RED_IN_ADD_CHAR) i = RED_IN_ADD;
+	if (type_redirect == RED_OUT_ADD_CHAR) i = RED_OUT_ADD;
 	if (type_redirect == RED_IN_CHAR) i = RED_IN;
 	if (type_redirect == RED_OUT_CHAR) i = RED_OUT;
 	this->has_redirect = true;

@@ -20,7 +20,7 @@ static const int SORT = 12;
 static const int PIPE = 99;
 static const int RED_IN = 98; // <
 static const int RED_OUT = 97;//>
-static const int RED_IN_ADD = 96;// >>
+static const int RED_OUT_ADD = 96;// >>
 
 /* char */
 static const std::string  SHELL_CHAR = "cmd";
@@ -40,6 +40,6 @@ static const std::string  SORT_CHAR = "sort";
 static const std::string  PIPE_CHAR = "|";
 static const std::string  RED_IN_CHAR = "<"; // <
 static const std::string  RED_OUT_CHAR = ">";//>
-static const std::string  RED_IN_ADD_CHAR = ">>";// >>
+static const std::string  RED_OUT_ADD_CHAR = ">>";// >>
 
 #endif // !instruction_H

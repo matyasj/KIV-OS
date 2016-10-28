@@ -20,6 +20,7 @@ std::string Rd::run(void)
 		return "Adresar smazan";
 	}
 	else {
+		_error = true;
 		return "Chyba";
 	}
 }

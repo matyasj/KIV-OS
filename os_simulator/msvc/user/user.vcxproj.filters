@@ -93,15 +93,15 @@
     <ClCompile Include="..\..\src\user\wc.cpp">
       <Filter>Source Files\Program Management\Programs</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\user\exit.cpp">
+      <Filter>Source Files\Program Management\Programs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\common\api.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\user\rtl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\user\shell.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\user\Parser\command.h">
@@ -157,6 +157,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\user\wc.h">
       <Filter>Header Files\Program Management\Programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\exit.h">
+      <Filter>Header Files\Program Management\Programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\shell.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 #include"parser.h"
 #include"my_string.h"
 #include"instruction.h"
+#include"../program_manager.h"
 #include<iostream>
 #include <vector>
 
@@ -51,7 +52,7 @@ rozparsuje presmerovani - ve str je:
 */
 Command Parser::parse_redirect(std::string str) {
 	Command command;
-	std::vector<std::string> add = split_first_string_more(str, { RED_IN_ADD_CHAR,RED_IN_CHAR,RED_OUT_CHAR});
+	std::vector<std::string> add = split_first_string_more(str, { RED_OUT_ADD_CHAR,RED_IN_CHAR,RED_OUT_CHAR});
 	/*prvni je argument*/
 	std::string old = add.at(add.size()-1);
 	std::string return_value = parse_argument(add.at(0));
@@ -62,7 +63,7 @@ Command Parser::parse_redirect(std::string str) {
 	command.add_argument(return_value);
 	while (old != "") {
 		/* dale jen soubory*/
-		add = split_first_string_more(add.at(1), { RED_IN_ADD_CHAR,RED_IN_CHAR,RED_OUT_CHAR });
+		add = split_first_string_more(add.at(1), { RED_OUT_ADD_CHAR,RED_IN_CHAR,RED_OUT_CHAR });
 		return_value = parse_argument(add.at(0));
 		if (error_class.parser_has_error()) {
 			error_class.parser_error(error_class.REDIRECT_ERROR);
@@ -85,7 +86,6 @@ Command Parser::parse_instruction_arg(std::string instruction) {
 	const std::string com = data.at(0);
 	if (com == EXIT_CHAR) {
 		command_type = EXIT;
-		this->end = 0;
 	}
 	if (com == SHELL_CHAR) {
 		command_type = SHELL;
@@ -154,24 +154,6 @@ std::vector<Command> Parser::parse_line(std::string line) {
 	}
 	return commands;
 }
-
-
-void Parser::printDefaultString() {
-	std::cout << "Zadej prikaz: ";
-}
-
-void Parser::parser_start() {
-	while (this->end) {
-		this->printDefaultString();
-		std::string line;
-		std::getline(std::cin, line);
-		std::vector<Command> commands= parse_line(line);
-		for (Command c : commands) {
-			std::cout <<"Command:" << c.to_string() << std::endl;
-		}	
-	}
-}
-
 
 Parser::Parser()
 {

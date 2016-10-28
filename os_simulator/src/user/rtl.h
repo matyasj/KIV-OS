@@ -11,11 +11,24 @@ THandle Create_File(const char* file_name, size_t flags);
 bool Write_File(const THandle file_handle, const void *buffer, const size_t buffer_size, size_t &written);
 		//zapise do souboru identifikovaneho deskriptor data z buffer o velikosti buffer_size a vrati pocet zapsanych dat ve writtent
 		//vraci true, kdyz vse OK
+bool Read_File(const THandle file_handle, const void *buffer, const size_t buffer_size, size_t &read);
+//zapise do souboru identifikovaneho deskriptor data z buffer o velikosti buffer_size a vrati pocet zapsanych dat ve writtent
+//vraci true, kdyz vse OK
 bool Close_File(const THandle file_handle);
 		//uzavre soubor identifikovany pomoci deskriptoru
 		//vraci true, kdyz vse OK
+THandle Open_File(const char* file_name, size_t flags);
+//podle flags otevre, vytvori soubor a vrati jeho deskriptor
+//vraci nenulovy handle, kdyz vse OK
 
 //vytvori slozku s uvedenou cestou a flags
 bool Create_Folder(const std::string file_name, size_t flags);
 //odstrani slozku s uvedenou cestou a flags
 bool Delete_Folder(const std::string file_name, size_t flags);
+
+/*-----------------------------THREAD----------------------------*/
+
+int Create_Thread(int type_command,int parrent_id, std::string* path);
+//vytvori vlakno a vrati jeho id. Pokud nema rodice, parrent_id = -1;
+int Execute_Thread(int id);
+//ukonci vlakno s  id

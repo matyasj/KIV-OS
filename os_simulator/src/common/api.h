@@ -64,6 +64,7 @@ constexpr bool test_cf(const DWORD flags) {
 
 //ah hodnoty 
 const __int8 scIO = 1;		//IO operace
+const __int8 scThread = 2;		//THREAD operace
 
 
 //al hodnoty pro scIO 
@@ -77,6 +78,11 @@ const __int8 scCreateFolder = 7;
 const __int8 scDeleteFolder = 8;
 const __int8 scSetInFilePosition = 9;
 
+//al hodnoty pro scThread
+const __int8 scCreateThread = 1;
+const __int8 scExecuteThread = 2;
+
+
 // Cisla pro chybyIO
 // Soubor nebo slozka nenalezena/neexistuje ... zalezi na tom co se volalo
 const __int8 errorFileNotFound = 1;
@@ -88,6 +94,8 @@ const __int8 errorAlreadyExist = 3;
 const __int8 errorBadPath = 4;
 // Dalsi blize nespecifikovana IO chyba :D
 const __int8 errorIO = 5;
+// vlakno nenalazeno
+const __int8 threadNotFound = 1;
 
 
 
