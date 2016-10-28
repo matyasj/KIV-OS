@@ -1,4 +1,5 @@
 #include "File.h"
+#include "../common/api.h"
 
 bool File::setOpened()
 {
