@@ -16,7 +16,7 @@ public:
 	bool setClosed();
 
 	std::string getContentFromPosition();
-	size_t write(std::string str);
+	size_t write(std::string str, size_t flag);
 	size_t append(std::string str);
 	bool setPosition(int newPosition);
 	

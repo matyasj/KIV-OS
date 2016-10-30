@@ -26,11 +26,20 @@ std::string File::getContentFromPosition()
 	return content;
 }
 
-size_t File::write(std::string str)
+size_t File::write(std::string str, size_t flag)
 {
-	if (this->isOpened) {
-		this->content = this->content.insert(this->inFilePosition, str);
-		this->inFilePosition = this->inFilePosition + str.size();
+	if(this->isOpened) {
+		if(flag == 0){
+			this->content = this->content.insert(this->inFilePosition, str);
+		}
+		else if (flag == 1) {
+			this->content = this->content.replace(this->inFilePosition,str.size(), str);
+		}
+		else if (flag == 2) {
+			this->content = std::string(str);
+		}
+		
+		this->inFilePosition = this->inFilePosition + (int)str.size();
 		return str.size();
 	}
 	else {

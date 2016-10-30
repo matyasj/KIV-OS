@@ -10,7 +10,7 @@
 THandle openFile(std::string fullFilePath, size_t flags);
 THandle createFile(std::string fullFilePath, size_t flags);
 
-int writeFile(THandle file, std::string buffer);
+int writeFile(THandle file, std::string buffer, size_t flag);
 bool setInFilePosition(THandle file, int newPosition);
 int appendFile(THandle file, std::string buffer);
 std::string readFile(THandle file);

@@ -11,7 +11,7 @@ void handleThread(CONTEXT &regs) {
 		regs.Rax = (decltype(regs.Rax))i;
 	}break;
 	case scExecuteThread: {
-		int id = regs.Rdx;
+		int id = (int)regs.Rdx;
 		int i = (decltype(regs.Rax)) tcb->execute_thread(id);
 	}break;
 	
