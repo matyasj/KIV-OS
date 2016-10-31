@@ -10,6 +10,7 @@ Folder* rootFolder = new Folder(ROOT_FOLDER,nullptr);
 
 THandle openFile(std::string fullFilePath, size_t flags)
 {
+	std::cout << "Oteviram soubor: " << fullFilePath << "\n";
 	std::vector<std::string> partsOfPath = parsePath(fullFilePath);
 
 	if (partsOfPath[0] != ROOT_FOLDER) {
@@ -24,6 +25,8 @@ THandle openFile(std::string fullFilePath, size_t flags)
 				std::cout << "Soubor nalezen: " << partsOfPath[i] << "\n";
 				File *foundFile = tmpFolder->getFileByName(partsOfPath[i]);
 				if (foundFile->isOpened) {
+					SetLastError(errorFileIsUsed);
+					std::cout << "FILE IS OPENED EXCEPTION\n";
 					return nullptr;
 				}
 				foundFile->setOpened();
@@ -86,10 +89,10 @@ THandle createFile(std::string fullFilePath, size_t flags)
 	return (THandle)nullptr;
 }
 
-int writeFile(THandle file, std::string buffer)
+int writeFile(THandle file, std::string buffer, size_t flag)
 {
 	File *tmpFile = (File *)file;
-	int numberOfBytes = (int)tmpFile->write(buffer);
+	int numberOfBytes = (int)tmpFile->write(buffer, flag);
 	if (numberOfBytes < 0) {
 		std::cout << "File " << tmpFile->name << " is NOT opened\nUnable to write into the file\n";
 		SetLastError(errorIO);
@@ -125,12 +128,13 @@ std::string readFile(THandle file)
 bool closeFile(THandle file)
 {
 	File *tmpFile = (File *)file;
+	std::cout << "Zaviram soubor " << tmpFile->name << ".\n";
 	return tmpFile->setClosed();
 }
 
 THandle createFolder(std::string fullFolderPath)
 {
-	std::cout << "Vytvarim soubor: " << fullFolderPath << "\n";
+	std::cout << "Vytvarim slozku: " << fullFolderPath << "\n";
 	std::vector<std::string> partsOfPath = parsePath(fullFolderPath);
 
 	if (partsOfPath[0] != ROOT_FOLDER) {
@@ -147,14 +151,14 @@ THandle createFolder(std::string fullFolderPath)
 				SetLastError(errorAlreadyExist);
 				std::cout << "FOLDER ALREADY EXISTS!\n";
 				Folder *foundFolder = tmpFolder->getFolderByName(partsOfPath[i]);
-				tmpFolder->printChildren();
+				//tmpFolder->printChildren();
 				
 				return false;
 			}
 			else {
 				Folder* newFolder = new Folder(partsOfPath[i], tmpFolder);
 				tmpFolder->addFolder(newFolder);
-				tmpFolder->printChildren();
+				//tmpFolder->printChildren();
 				return newFolder;
 			}
 		}

@@ -62,8 +62,9 @@ void HandleIO(CONTEXT &regs) {
 		case scWriteFile: {
 			//DWORD written;
 			//const bool failed = !WriteFile((HANDLE)regs.Rdx, (void*)regs.Rdi, (DWORD)regs.Rcx, &written, NULL);
+			size_t flag = regs.Rcx;
 			std::string buffer = (char*)regs.Rdi;
-			int written = writeFile((THandle)regs.Rdx, buffer);
+			int written = writeFile((THandle)regs.Rdx, buffer, flag);
 			Set_Error(written < 0, regs);
 			regs.Rax = written;
 		}
@@ -80,7 +81,9 @@ void HandleIO(CONTEXT &regs) {
 			break; //scWriteFile
 
 		case scOpenFile: {
-			regs.Rax = (decltype(regs.Rax))openFile((char*)regs.Rdx, GENERIC_READ | GENERIC_WRITE);
+			File* tmpFile = (File*)openFile((char*)regs.Rdx, GENERIC_READ | GENERIC_WRITE);
+			std::cout << "Soubor: " << tmpFile->name << "\n";
+			regs.Rax = (decltype(regs.Rax))tmpFile;
 			Set_Error(regs.Rax == 0, regs);
 			
 		}
@@ -104,12 +107,18 @@ void HandleIO(CONTEXT &regs) {
 		}
 			break; //deleteFolder
 		case scReadFile: {
-			std::string name = (char*)regs.Rdx;
-			regs.Rax = (decltype(regs.Rax))deleteFolderByPath(name);
-			Set_Error(regs.Rax == false, regs);
+			THandle* file = (THandle*)regs.Rdx;
+			std::string* buffer;
+			buffer = (std::string*)regs.Rdi;
+			
+			std::string buf = readFile(file);
+			*buffer = buf;
+			regs.Rax = buffer->size();
+			std::cout << "cteni: " << buf << "\n";
+			Set_Error(regs.Rax == -1, regs);
 			printFSTree();
 		}
-			break; //deleteFolder
+			break; //readFile
 
 		case scSetInFilePosition: {
 			THandle file = (THandle*)regs.Rdx;
