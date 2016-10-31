@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Parser\command.h"
+#include "buffer.h"
 
 std::string execute_commands(std::vector<Command>);
-std::string start_program(Command command, std::string input);
+void start_program(Command command, Buffer* bin, Buffer* bout);

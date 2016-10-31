@@ -96,6 +96,9 @@
     <ClCompile Include="..\..\src\user\exit.cpp">
       <Filter>Source Files\Program Management\Programs</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\user\buffer.cpp">
+      <Filter>Source Files\Program Management</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\common\api.h">
@@ -163,6 +166,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\user\shell.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\user\buffer.h">
+      <Filter>Header Files\Program Management</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

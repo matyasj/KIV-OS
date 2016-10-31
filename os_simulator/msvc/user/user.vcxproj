@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\user\buffer.cpp" />
     <ClCompile Include="..\..\src\user\cd.cpp" />
     <ClCompile Include="..\..\src\user\dir.cpp" />
     <ClCompile Include="..\..\src\user\dllmain.cpp" />
@@ -43,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\common\api.h" />
+    <ClInclude Include="..\..\src\user\buffer.h" />
     <ClInclude Include="..\..\src\user\cd.h" />
     <ClInclude Include="..\..\src\user\dir.h" />
     <ClInclude Include="..\..\src\user\echo.h" />
