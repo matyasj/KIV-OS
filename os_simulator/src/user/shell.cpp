@@ -31,7 +31,7 @@ size_t __stdcall shell(const CONTEXT &regs) {
 		line = execute_commands(commands);
 
 		// TODO vyresit pres zapis do souboru
-		std::cout << line << std::endl;
+		print(line, true);
 
 		// TODO chtelo by vyresit lepe - prozatim, aby byla kontrola v Shell ne v Parseru
 		if ((commands.size() > 0) && (commands[0].type_command == EXIT)) {
@@ -40,4 +40,14 @@ size_t __stdcall shell(const CONTEXT &regs) {
 	}
 
 	return 0;
+}
+
+
+void print(std::string message, bool endl) {
+
+	std::cout << message;
+
+	if (endl) {
+		std::cout << std::endl;
+	}
 }

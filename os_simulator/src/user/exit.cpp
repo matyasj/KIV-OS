@@ -5,10 +5,9 @@ Ukonci konzoli
 Bez parametru
 
 */
-std::string Exit::run(void)
-{
+std::string Exit::run(void) {
 	
-	std::string result = "Console ended.";
+	save_whole_output("Console ended.", true);
 
-	return result;
+	return "";
 }

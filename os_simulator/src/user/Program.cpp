@@ -33,29 +33,36 @@ std::string Program::get_whole_input() {
 	while (_bin->isReadable()) {
 
 		std::string pop = _bin->pop();
-
 		content += pop;
 
-		std::cout << "Consuming " << pop << " ..." << std::endl;
-		std::this_thread::sleep_for(std::chrono::milliseconds(200));
-
-		
+		//std::cout << _name << " is consuming " << pop << " ..." << std::endl;
+		//std::this_thread::sleep_for(std::chrono::milliseconds(30));
 	}
 	
 	return content;
 }
 
 
-void Program::save_whole_output(std::string output) {
+void Program::save_whole_output(std::string output, bool all_in_one) {
 
-	while (output.size() > 0) {
-		
-		std::cout << "Producing " << output[0] << " ..." << std::endl;
-		std::this_thread::sleep_for(std::chrono::milliseconds(300));
-
-		_bout->push(output[0]);
-		output.erase(0, 1);
+	// ulozi cely string jako jeden prvek
+	if (all_in_one) {
+		_bout->push(output);
 	}
+	else {
+		// ulozi string po znacich
+		char c = '0';
+		while (output.size() > 0) {
+
+			c = output[0];
+			_bout->push(std::string(1, c));
+			output.erase(0, 1);
+
+			//std::cout << _name << " is producing " << output[0] << " ..." << std::endl;
+			//std::this_thread::sleep_for(std::chrono::milliseconds(50));
+		}
+	}
+	
 
 	_bout->close();
 }

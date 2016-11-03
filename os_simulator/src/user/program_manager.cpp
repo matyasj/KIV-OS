@@ -40,7 +40,6 @@ std::string execute_commands(std::vector<Command> commands) {
 		buffers.push_back(new Buffer());
 	}
 
-	buffers[0]->setContent("IN");
 
 	/*
 		projde vsechny prikazy - vystup posledniho spusteneho
@@ -72,14 +71,28 @@ std::string execute_commands(std::vector<Command> commands) {
 		}
 	}
 
+	while (buffers[buffers.size() - 1]->isReadable()) {
+
+		std::string pop = buffers[buffers.size() - 1]->pop();
+
+		// jestli ze se jedna o program RGEN, tiskni prubezne
+		if (commands[commands.size() - 1].type_command == RGEN) {
+
+			//TODO pomoci shell - print(pop, false); 
+			std::cout << pop << " ";
+			std::this_thread::sleep_for(std::chrono::milliseconds(50));
+		}
+		else {
+			output += pop;
+		}		
+	}
+
 	
 	// program_manager ceka na dokonceni vsech vlaken
 	for (int i = 0; i < threads.size(); i++) {
 		
 		threads[i].join();
 	}
-
-	output = buffers[buffers.size() - 1]->getContent();
 	
 	return output;
 }

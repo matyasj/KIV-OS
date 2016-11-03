@@ -7,14 +7,22 @@ Parametry:
  0   bude vypisovat náhodně vygenerovaná čísla v plovoucí čárce na stdout, dokud mu nepřijde znak Ctrl+Z //EOF
 */
 std::string Rgen::run(void) {
+	
+	int min = 0;
+	int max = 9;
 
-	// TESTOVANI BUFFERU
+	int number = 0;
+	std::string str = "";
 
-	std::string output = get_whole_input();
+	for (int i = 0; i < 10; i++) {
 
-	output += "rgen";
+		number = min + (rand() % (int)(max - min + 1));
+		str = std::to_string(number);
 
-	save_whole_output(output);
+		_bout->push(str);
+	}
 
-	return output;
+	_bout->close();
+
+	return "";
 }

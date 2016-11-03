@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <deque>
 #include <mutex>              
 #include <condition_variable>
 
@@ -14,7 +15,7 @@ private:
 	int _size;
 
 	// obsah bufferu
-	std::string _content;
+	std::deque<std::string> _content;
 
 	// zda je buffer otevren - producent neskoncil cinnost
 	bool _open;
@@ -35,7 +36,7 @@ public:
 	// uloz znak na posledni misto do contentu
 	// vraci 0 pokud vse v poradku
 	// vraci 1 pokud je buffer plny
-	void Buffer::push(char);
+	void Buffer::push(std::string);
 
 	// uzavre pridavani do bufferu - zavola producent na konci cinnosti
 	void Buffer::close();
@@ -45,10 +46,4 @@ public:
 
 	// zjisti zda je buffer otevreny a je v nem co cist
 	bool isReadable();
-
-	// pokud je buffer uzavren je mozne ziskat cely obsah najednou
-	std::string Buffer::getContent();
-
-	// prida content a zavre buffer - producent vi ze ma vse k dispozici na zacatku
-	void Buffer::setContent(std::string);
 };

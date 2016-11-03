@@ -25,8 +25,9 @@ protected:
 	// pro programy, ktere neumoznuji prubezne zpracovani (napr. CD)
 	std::string Program::get_whole_input();
 
-	// ulozi cely vystup do vystupniho bufferu
-	void Program::save_whole_output(std::string);
+	// ulozi cely vystup do vystupniho bufferu - data deli po charu
+	// nebo ulozi cely string najednou
+	void Program::save_whole_output(std::string, bool);
 
 public:
 	virtual std::string run(void);

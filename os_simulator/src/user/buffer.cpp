@@ -3,7 +3,6 @@
 
 Buffer::Buffer() {
 	
-	_content = "";
 	_size = 0;
 	_open = true;
 }
@@ -28,8 +27,8 @@ std::string Buffer::pop() {
 	}
 	
 	// v bufferu neco je - vyber 1 znak
-	c = _content[0];
-	_content.erase(0, 1);
+	c = _content.front();
+	_content.pop_front();
 	_size--;
 	cv.notify_one();
 			
@@ -37,7 +36,7 @@ std::string Buffer::pop() {
 }
 
 
-void Buffer::push(char c) {
+void Buffer::push(std::string str) {
 
 	// pokud je buffer zavreny, neni mozne pridavat
 	if (_open) {
@@ -49,7 +48,7 @@ void Buffer::push(char c) {
 		}
 
 		// v bufferu je volne misto - uloz znak
-		_content += c;
+		_content.push_back(str);
 		_size++;
 		cv.notify_one();
 	}
@@ -67,6 +66,8 @@ bool Buffer::isOpen() {
 	return _open;
 }
 
+
+// TODO - vyresit lepe (EOF)
 bool Buffer::isReadable() {
 	
 	if(_size == 0 && !_open){
@@ -75,16 +76,4 @@ bool Buffer::isReadable() {
 	else {
 		return true;
 	}
-}
-
-std::string Buffer::getContent() {
-
-	return _content;
-}
-
-void Buffer::setContent(std::string content) {
-
-	_content += content;
-	_size = content.size();
-	_open = false;
 }

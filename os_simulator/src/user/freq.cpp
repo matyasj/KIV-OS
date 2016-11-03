@@ -8,13 +8,16 @@ Parametry:
 */
 std::string Freq::run(void) {
 
-	// TESTOVANI BUFFERU
+	while (_bin->isReadable()) {
 
-	std::string output = get_whole_input();
+		std::string pop = _bin->pop();
 
-	output += "freq";
+		int number = std::stoi(pop) + 1;
 
-	save_whole_output(output);
+		_bout->push(std::to_string(number));
+	}
 
-	return "Vytvori frekvencni tabulku bytu ze vstupu...";
+	_bout->close();
+
+	return "";
 }
