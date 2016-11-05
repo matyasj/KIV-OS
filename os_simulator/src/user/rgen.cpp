@@ -6,7 +6,7 @@
 Parametry:
  0   bude vypisovat náhodně vygenerovaná čísla v plovoucí čárce na stdout, dokud mu nepřijde znak Ctrl+Z //EOF
 */
-std::string Rgen::run(void) {
+void Rgen::run(void) {
 	
 	int min = 0;
 	int max = 9;
@@ -23,6 +23,4 @@ std::string Rgen::run(void) {
 	}
 
 	_bout->close();
-
-	return "";
 }

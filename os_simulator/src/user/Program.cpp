@@ -68,8 +68,7 @@ void Program::save_whole_output(std::string output, bool all_in_one) {
 }
 
 
-std::string Program::run(void) {
+void Program::run(void) {
 
 	// Nepouziva se - je implementovana v jednotlivych programech
-	return std::string();
 }

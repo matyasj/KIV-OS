@@ -10,7 +10,7 @@ Prepinace
 /D  Zmeni aktualni jednotku (to se nas asi netyka)
 
 */
-std::string Cd::run(void)
-{
-	return "Zobrazi aktualni adresar nebo se presune na zadanou cestu";
+void Cd::run(void) {
+
+	save_whole_output("Zobrazi aktualni adresar nebo se presune na zadanou cestu", true);
 }

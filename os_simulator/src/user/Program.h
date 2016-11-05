@@ -30,7 +30,7 @@ protected:
 	void Program::save_whole_output(std::string, bool);
 
 public:
-	virtual std::string run(void);
+	virtual void run(void);
 	void Program::init(std::string, std::vector<std::string>, Buffer*, Buffer*);
 	bool Program::hasError();
 	Program();

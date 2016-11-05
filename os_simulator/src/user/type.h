@@ -5,6 +5,6 @@
 
 class Type : public Program {
 public:
-	std::string run(void);
+	void run(void);
 };
 

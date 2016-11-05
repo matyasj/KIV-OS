@@ -5,6 +5,6 @@
 
 class Rd : public Program {
 public:
-	std::string run(void);
+	void run(void);
 };
 

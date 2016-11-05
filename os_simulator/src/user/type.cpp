@@ -6,8 +6,11 @@
 Parametry:
 1   Zobrazi obsah textoveho souboru
 */
-std::string Type::run(void)
-{
+void Type::run(void) {
+
+	// TODO Opravit - nemuze vrace string
+	// pouzit save_whole_output(string, bool)
+	/*
 	std::string name = "";
 	if (_arguments.size() != 0) name = _arguments.at(0);
 	THandle fileHelp = Create_File(name.c_str(),FILE_WRITE_ACCESS);
@@ -38,5 +41,7 @@ std::string Type::run(void)
 		Close_File(file);
 		return "Soubor neexistuje";
 	}
+	*/
 
+	save_whole_output("TODO - opravit", true);
 }

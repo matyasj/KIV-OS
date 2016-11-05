@@ -170,7 +170,7 @@ void start_program(Command command, Buffer* bin, Buffer* bout)
 	}
 	else {
 		program->init(command.name, command.arguments, bin, bout);
-		output = program->run();
+		program->run();
 	}
 
 	//TODO zrusit poiter

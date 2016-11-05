@@ -5,7 +5,7 @@
 Parametry:
 0   Vypise informace o aktualnich procesech
 */
-std::string Ps::run(void)
+void Ps::run(void)
 {
-	return "Vypis aktualni procesy...";
+	save_whole_output("Vypis aktualnich procesu", true);
 }

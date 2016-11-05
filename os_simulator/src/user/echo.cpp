@@ -8,9 +8,10 @@ Parametry:
 1   Vypise zadanou zpravu
 
 */
-std::string Echo::run(void)
+void Echo::run(void)
 {
 	std::string arg = "";
 	if(_arguments.size()!=0) arg = _arguments.at(0);
-	return arg;
+
+	save_whole_output(arg, true);
 }
