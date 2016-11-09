@@ -65,8 +65,8 @@ void HandleIO(CONTEXT &regs) {
 			size_t flag = regs.Rcx;
 			std::string buffer = (char*)regs.Rdi;
 			int written = writeFile((THandle)regs.Rdx, buffer, flag);
-			Set_Error(written < 0, regs);
 			regs.Rax = written;
+			Set_Error(written < 0, regs);
 		}
 			break; //scWriteFile
 
@@ -82,7 +82,9 @@ void HandleIO(CONTEXT &regs) {
 
 		case scOpenFile: {
 			File* tmpFile = (File*)openFile((char*)regs.Rdx, GENERIC_READ | GENERIC_WRITE);
-			std::cout << "Soubor: " << tmpFile->name << "\n";
+			if (tmpFile != nullptr) {
+				std::cout << "Soubor: " << tmpFile->name << "\n";
+			}
 			regs.Rax = (decltype(regs.Rax))tmpFile;
 			Set_Error(regs.Rax == 0, regs);
 			

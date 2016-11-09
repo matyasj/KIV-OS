@@ -7,41 +7,50 @@ Parametry:
 1   Zobrazi obsah textoveho souboru
 */
 void Type::run(void) {
+	// odkomentuj pro otestovani
 
-	// TODO Opravit - nemuze vrace string
-	// pouzit save_whole_output(string, bool)
-	/*
 	std::string name = "";
-	if (_arguments.size() != 0) name = _arguments.at(0);
+	if (_arguments.size() != 0) {
+		name = _arguments.at(0);
+	}
+	else {
+		_error = true;
+		save_whole_output(print_error(wrongArgument), true);
+		return;
+	}
+	/*
 	THandle fileHelp = Create_File(name.c_str(),FILE_WRITE_ACCESS);
 	size_t written;
 	std::string str = "prvni soubor";
 	if (fileHelp == nullptr)
 	{
-		return "error";
+		save_whole_output("Error", true);
+		return;
 	}
-	Write_File(fileHelp, str.c_str(), str.length(), written);
-	Close_File(fileHelp);
+	Write_File(fileHelp, str.c_str(), 0, written);
+	Close_File(fileHelp);*/
+
 
 
 	
 	THandle file = Open_File(name.c_str(), FILE_READ_ACCESS);
-	char* buffer = new char[100];
+	std::string buffer;
 	size_t read;
-	if (file!=nullptr)
+	if (Get_Last_Error() ==0)
 	{
-		bool succes = Read_File(file,buffer, strlen(buffer),read);
-		Close_File(file);
+		bool succes = Read_File(file,&buffer, 0,read);
 		if (!succes) {
-			return "Soubor se nepodaøilo precist";
+			_error = true;
+			save_whole_output(print_error(Get_Last_Error()), true);
 		}
-		return read + "\n" + *buffer;
+		else {
+			save_whole_output(buffer, false);
+		}
+		Close_File(file);
 	}
 	else {
-		Close_File(file);
-		return "Soubor neexistuje";
+		_error = true;
+		save_whole_output(print_error(Get_Last_Error()), true);
 	}
-	*/
 
-	save_whole_output("TODO - opravit", true);
 }

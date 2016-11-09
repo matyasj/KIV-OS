@@ -1,6 +1,7 @@
 #pragma once
 #include"rtl.h"
 #include "buffer.h"
+#include"rtl_error.h"
 #include <string>
 #include<vector>
 

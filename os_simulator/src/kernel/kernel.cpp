@@ -8,11 +8,13 @@ HMODULE User_Programs;
 
 void Set_Error(const bool failed, CONTEXT &regs) {
 	if (failed) {
-		stc(regs.EFlags);
+		regs.EFlags = stc(regs.EFlags);
+		int i = GetLastError();
 		regs.Rax = GetLastError();
 	}
-	else
-		clc(regs.EFlags);
+	else {
+		regs.EFlags = clc(regs.EFlags);
+	}
 }
 
 

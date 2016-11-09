@@ -83,6 +83,7 @@ const __int8 scCreateThread = 1;
 const __int8 scExecuteThread = 2;
 
 
+
 // Cisla pro chybyIO
 // Soubor nebo slozka nenalezena/neexistuje ... zalezi na tom co se volalo
 const __int8 errorFileNotFound = 1;
@@ -95,7 +96,9 @@ const __int8 errorBadPath = 4;
 // Dalsi blize nespecifikovana IO chyba :D
 const __int8 errorIO = 5;
 // vlakno nenalazeno
-const __int8 threadNotFound = 1;
+const __int8 threadNotFound = 6;
+// spatny argument
+const __int8 wrongArgument = 7;
 
 
 

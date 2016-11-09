@@ -21,8 +21,12 @@ bool Do_SysCall(CONTEXT &regs) {
 	SysCall(regs);
 
 	const bool failed = test_cf(regs.EFlags);
-	if (failed) LastError = regs.Rax;
-		else LastError = 0;
+	if (failed) {
+		LastError = regs.Rax;
+	}
+	else {
+		LastError = 0;
+	}
 
 	return !failed;
 }
