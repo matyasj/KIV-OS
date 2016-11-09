@@ -15,11 +15,13 @@ public:
 };
 class Command {
 public:
-	bool has_redirect = false;	          // defaultne nema presmerovani
+	bool has_redirect = false;        // defaultne nema presmerovani
 	bool has_argument = false;			  // defaultne nema argument
+	bool has_redirect_out = false;			  // defaultne nema argument
 	std::string name;				      // name of command - acutally for cout	
 	std::vector<std::string> arguments;	  // argumenty
 	Redirect_file redirect_files;	      // presmerovani
+	Redirect_file redirect_files_out;	      // presmerovani
 	int type_command = -1;			      // druh instrukce jako int - viz instruction.h
 	Command(std::string name);
 	Command();
@@ -30,6 +32,11 @@ public:
 	*@param type_redirect znak presmerovani
 	*/
 	bool add_redirect_file(std::string name, std::string type_redirect);
+	/*
+	@param file file
+	*/
+	bool add_redirect_file_in(Redirect_file file);
+	bool add_redirect_file_out(Redirect_file file);
 	/*
 	*nastavi hodnoty Command
 	* @param name jmeno - napr. cd, dir...

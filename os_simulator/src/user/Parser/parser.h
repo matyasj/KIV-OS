@@ -20,8 +20,8 @@ public:
 
 private:
 	std::string parse_argument(std::string argument);
-	Command parse_redirect(std::string str);
-	Command parse_instruction_arg(std::string instruction);
+	std::vector<Redirect_file>  parse_redirect(std::string str, Command& command);
+	Command parse_instruction_arg(std::string& instruction);
 };
 
 #endif // !parser_h

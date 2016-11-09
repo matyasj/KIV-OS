@@ -15,8 +15,12 @@ std::string Command::to_string() {
 		stream << arg+" ";
 	}
 	if (this->has_redirect) {
-		stream << std::endl << "REDIRECT: " << std::endl;
+		stream << std::endl << "REDIRECT IN: " << std::endl;
 		stream << "name: " << this->redirect_files.name << ", type: " << this->redirect_files.type_redirect;
+	}
+	if(this->has_redirect_out){
+		stream << std::endl << "REDIRECT OUT: " << std::endl;
+		stream << "name: " << this->redirect_files_out.name << ", type: " << this->redirect_files_out.type_redirect;
 	}
 	stream << std::endl;
 	return stream.str();
@@ -43,20 +47,33 @@ void Command::reset_command() {
 	this->type_command=-1;
 	this->redirect_files.~Redirect_file();
 	this->redirect_files;
+	this->redirect_files_out.~Redirect_file();	      // presmerovani
+	this->redirect_files;
 }
 
 
 bool Command::add_redirect_file(std::string name, std::string type_redirect){
 	int i = -1;
 	if (this->has_redirect) {		// pokud uz presmerovani je, neni umozneno dalsi
-		return false;	
+		return false;
 	}
 	if (type_redirect == RED_OUT_ADD_CHAR) i = RED_OUT_ADD;
 	if (type_redirect == RED_IN_CHAR) i = RED_IN;
 	if (type_redirect == RED_OUT_CHAR) i = RED_OUT;
+	
 	this->has_redirect = true;
 	this->redirect_files.name = name;
 	this->redirect_files.type_redirect = i;
+	return true;
+}
+bool Command::add_redirect_file_in(Redirect_file file) {
+	this->has_redirect = true;
+	this->redirect_files = file;
+	return true;
+}
+bool Command::add_redirect_file_out(Redirect_file file) {
+	this->has_redirect_out = true;
+	this->redirect_files_out = file;
 	return true;
 }
 
