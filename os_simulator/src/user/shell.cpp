@@ -25,11 +25,12 @@ size_t __stdcall shell(const CONTEXT &regs) {
 
 		// TODO vyresit pres cteni ze souboru (nebo jak se to bude resit)
 		std::string line;
+		std::cin.clear();
 		std::getline(std::cin, line);
-
 		std::vector<Command> commands = parser.parse_line(line);
 		line = execute_commands(commands);
-
+		if (commands.empty()) continue;
+		
 		// TODO vyresit pres zapis do souboru
 		print(line, true);
 

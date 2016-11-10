@@ -8,7 +8,6 @@ Parametry:
 */
 void Type::run(void) {
 	// odkomentuj pro otestovani
-
 	std::string name = "";
 	if (_arguments.size() != 0) {
 		name = _arguments.at(0);
@@ -30,9 +29,6 @@ void Type::run(void) {
 	Write_File(fileHelp, str.c_str(), 0, written);
 	Close_File(fileHelp);*/
 
-
-
-	
 	THandle file = Open_File(name.c_str(), FILE_READ_ACCESS);
 	std::string buffer;
 	size_t read;

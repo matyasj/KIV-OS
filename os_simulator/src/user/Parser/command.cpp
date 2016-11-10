@@ -5,6 +5,7 @@
 
 
 void Command::add_argument(std::string argument) {
+	if (argument == "") return;
 	this->arguments.push_back(argument);
 	this->has_argument = true;
 }
