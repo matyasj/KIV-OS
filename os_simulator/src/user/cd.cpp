@@ -1,4 +1,5 @@
 #include "cd.h"
+#include "Parser\instruction.h"
 
 
 /*
@@ -12,5 +13,15 @@ Prepinace
 */
 void Cd::run(void) {
 
+	THandle main = search_runing_thread(SHELL);
+	std::string name = "";
+	if (_arguments.size() == 0) {
+		std::string str;
+		printf_current_folder(main, &str);
+		save_whole_output(str, true);
+	}
+	else {
+
+	}
 	save_whole_output("Zobrazi aktualni adresar nebo se presune na zadanou cestu", true);
 }

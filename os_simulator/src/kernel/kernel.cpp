@@ -29,8 +29,13 @@ void Shutdown_Kernel() {
 void SysCall(CONTEXT &regs) {
 
 	switch (Get_AH((__int16) regs.Rax)) {
-	case scIO:		HandleIO(regs);break;
-	case scThread: handleThread(regs);break;
+		case scIO:		HandleIO(regs);break;
+		case scThread: handleThread(regs);break;
+		case scBooth: {
+			Thread* thread = (Thread*)regs.Rdx; //v Rdx je handle na vlakno
+			regs.Rdx = (decltype(regs.Rdx))thread->current_folder.c_str();	// nastavim aktualni slozku
+			HandleIO(regs);
+	}break;
 	}
 
 }
@@ -43,7 +48,10 @@ void Run_VM() {
 	if (shell) {
 		CONTEXT regs;  //ted je regs jenom nejak vyplneno kvuli preakladci
 		GetThreadContext(GetCurrentThread(), &regs);  //ale pak bude jeden z registru ukazovat na nejaky startup info blok
+		THandle h = create_thread(1, "C/", -1);
+		regs.Rax = (decltype(regs.Rax))h;
 		shell(regs);
+		execute_thread(h);
 	}
 
 	Shutdown_Kernel();

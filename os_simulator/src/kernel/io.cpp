@@ -54,7 +54,7 @@ void HandleIO(CONTEXT &regs) {
 			// Zatim funguje primo jako shared_read | generic_write
 			regs.Rax = (decltype(regs.Rax)) createFile((char*)regs.Rdx, GENERIC_READ | GENERIC_WRITE);
 			Set_Error(regs.Rax == 0, regs);
-			printFSTree();
+		//	printFSTree();
 			}
 			break;	//scCreateFile
 
@@ -82,9 +82,9 @@ void HandleIO(CONTEXT &regs) {
 
 		case scOpenFile: {
 			File* tmpFile = (File*)openFile((char*)regs.Rdx, GENERIC_READ | GENERIC_WRITE);
-			if (tmpFile != nullptr) {
+			/*if (tmpFile != nullptr) {
 				std::cout << "Soubor: " << tmpFile->name << "\n";
-			}
+			}*/
 			regs.Rax = (decltype(regs.Rax))tmpFile;
 			Set_Error(regs.Rax == 0, regs);
 			
@@ -98,14 +98,14 @@ void HandleIO(CONTEXT &regs) {
 			std::string name = (char*)regs.Rdx;
 			regs.Rax = (decltype(regs.Rax))createFolder(name);
 			Set_Error(regs.Rax == false, regs);
-			printFSTree();
+	//		printFSTree();
 			break;
 		}
 		case scDeleteFolder: {
 			std::string name = (char*)regs.Rdx;
 			regs.Rax = (decltype(regs.Rax))deleteFolderByPath(name);
 			Set_Error(regs.Rax == false, regs);
-			printFSTree();
+//			printFSTree();
 		}
 			break; //deleteFolder
 		case scReadFile: {
@@ -116,9 +116,9 @@ void HandleIO(CONTEXT &regs) {
 			std::string buf = readFile(file);
 			*buffer = buf;
 			regs.Rax = buffer->size();
-			std::cout << "cteni: " << buf << "\n";
+			//std::cout << "cteni: " << buf << "\n";
 			Set_Error(regs.Rax == -1, regs);
-			printFSTree();
+	//		printFSTree();
 		}
 			break; //readFile
 
@@ -129,6 +129,11 @@ void HandleIO(CONTEXT &regs) {
 			Set_Error(!success, regs);
 		}
 			break; //deleteFolder
+		case scPrintFolder: {
+			std::string thread = (char*)regs.Rdx;
+			std::string buffer = (char *)regs.Rdi;
+			std::string arg = (char *)regs.Rcx;
+		}break;
 		
 	}
 }

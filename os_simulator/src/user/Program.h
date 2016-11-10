@@ -22,6 +22,8 @@ protected:
 	// error
 	bool _error=false;
 
+	std::string _error_string;
+
 	// cte ze vstupniho bufferu tak dlouho, dokud nema vsechny data
 	// pro programy, ktere neumoznuji prubezne zpracovani (napr. CD)
 	std::string Program::get_whole_input();

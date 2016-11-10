@@ -15,6 +15,7 @@ size_t __stdcall shell(const CONTEXT &regs) {
 
 
 	/* TODO - prozatim, jen at se muze testovat */
+	int id = (int)regs.Rax;
 	Parser parser;
 	bool run = 1;
 	
@@ -28,8 +29,8 @@ size_t __stdcall shell(const CONTEXT &regs) {
 		std::cin.clear();
 		std::getline(std::cin, line);
 		std::vector<Command> commands = parser.parse_line(line);
-		line = execute_commands(commands);
 		if (commands.empty()) continue;
+		line = execute_commands(commands);
 		
 		// TODO vyresit pres zapis do souboru
 		print(line, true);

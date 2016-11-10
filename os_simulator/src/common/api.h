@@ -65,6 +65,7 @@ constexpr bool test_cf(const DWORD flags) {
 //ah hodnoty 
 const __int8 scIO = 1;		//IO operace
 const __int8 scThread = 2;		//THREAD operace
+const __int8 scBooth = 3;		//THREAD operace
 
 
 //al hodnoty pro scIO 
@@ -81,6 +82,12 @@ const __int8 scSetInFilePosition = 9;
 //al hodnoty pro scThread
 const __int8 scCreateThread = 1;
 const __int8 scExecuteThread = 2;
+const __int8 scSearchThread = 3;
+const __int8 scPrintCurrentFolder = 4;
+
+// booth
+const __int8 scPrintFolder = 10;
+
 
 
 

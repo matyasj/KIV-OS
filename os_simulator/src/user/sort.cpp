@@ -29,6 +29,7 @@ void Sort::run(void)
 	std::string name = "";
 	if (_arguments.size() != 0) {
 		name = _arguments.at(0);
+		
 		//pro test
 		THandle fileHelp = Create_File(name.c_str(), FILE_WRITE_ACCESS);
 		size_t written;
@@ -36,7 +37,7 @@ void Sort::run(void)
 		str << "b" << std::endl << "a" << std::endl << "c";
 		if (fileHelp == nullptr)
 		{
-			save_whole_output("Error", true);
+			_error_string = print_error(Get_Last_Error());
 			return;
 		}
 		Write_File(fileHelp, str.str().c_str(), 0, written);
@@ -52,7 +53,7 @@ void Sort::run(void)
 			bool succes = Read_File(file, &buffer, 0, read);
 			if (!succes) {
 				_error = true;
-				save_whole_output(print_error(Get_Last_Error()), true);
+				_error_string = print_error(Get_Last_Error());
 			}
 			else {
 				sort(buffer);
@@ -61,7 +62,7 @@ void Sort::run(void)
 		}
 		else {
 			_error = true;
-			save_whole_output(print_error(Get_Last_Error()), true);
+			_error_string = print_error(Get_Last_Error());
 		}
 
 	}

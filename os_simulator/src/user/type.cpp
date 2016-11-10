@@ -14,7 +14,7 @@ void Type::run(void) {
 	}
 	else {
 		_error = true;
-		save_whole_output(print_error(wrongArgument), true);
+		_error_string = print_error(wrongArgument);
 		return;
 	}
 	/*
@@ -37,7 +37,7 @@ void Type::run(void) {
 		bool succes = Read_File(file,&buffer, 0,read);
 		if (!succes) {
 			_error = true;
-			save_whole_output(print_error(Get_Last_Error()), true);
+			_error_string = print_error(Get_Last_Error());
 		}
 		else {
 			save_whole_output(buffer, false);
@@ -46,7 +46,7 @@ void Type::run(void) {
 	}
 	else {
 		_error = true;
-		save_whole_output(print_error(Get_Last_Error()), true);
+		_error_string = print_error(Get_Last_Error());
 	}
 
 }
