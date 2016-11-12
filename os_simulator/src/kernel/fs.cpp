@@ -3,34 +3,37 @@
 #include <typeinfo>
 
 #include "File.h"
+#include "FileDescriptorBlock.h"
 
 
 Folder* rootFolder = new Folder(ROOT_FOLDER,nullptr);
+std::vector<FileDescriptorBlock*> FileDescriptorTable;
+
 
 THandle openFile(std::string fullFilePath, size_t flags)
 {
-	std::cout << "Separator: " << FILE_SEPARATOR << "\n";
-	std::cout << "Oteviram soubor: " << fullFilePath << "\n";
-	std::vector<std::string> partsOfPath = parsePath(fullFilePath);
-
-	if (partsOfPath[0] != ROOT_FOLDER) {
+	if (!containRoot(fullFilePath)) {
 		SetLastError(errorBadPath);
 		std::cout << "Bad path of file (root C is missing)!\n";
 		return NULL;
 	}
+	
+	std::vector<std::string> partsOfPath = parsePath(fullFilePath);
+
 	Folder *tmpFolder = rootFolder;
 	for (int i = 1; i < partsOfPath.size(); i++) {
 		if (i == (partsOfPath.size() - 1)) {
 			if (tmpFolder->containFile(partsOfPath[i])) {
 				std::cout << "Soubor nalezen: " << partsOfPath[i] << "\n";
-				File *foundFile = tmpFolder->getFileByName(partsOfPath[i]);
-				if (foundFile->isOpened) {
+				File *foundedFile = tmpFolder->getFileByName(partsOfPath[i]);
+				if (foundedFile->isOpened) {
 					SetLastError(errorFileIsUsed);
 					std::cout << "FILE IS OPENED EXCEPTION\n";
 					return nullptr;
 				}
-				foundFile->setOpened();
-				return foundFile;
+				foundedFile->setOpened();
+				THandle newFileDescriptor = putFileIntoFDTable(foundedFile);
+				return newFileDescriptor;
 			}
 			else {
 				SetLastError(errorFileNotFound);
@@ -51,14 +54,15 @@ THandle openFile(std::string fullFilePath, size_t flags)
 
 THandle createFile(std::string fullFilePath, size_t flags)
 {
-	std::cout << "Vytvarim soubor: " << fullFilePath << "\n";
-	std::vector<std::string> partsOfPath = parsePath(fullFilePath);
-
-	if (partsOfPath[0] != ROOT_FOLDER) {
+	if (!containRoot(fullFilePath)) {
 		SetLastError(errorBadPath);
 		std::cout << "Bad path of file (root C is missing)!\n";
 		return NULL;
 	}
+
+	std::cout << "Vytvarim soubor: " << fullFilePath << "\n";
+	std::vector<std::string> partsOfPath = parsePath(fullFilePath);
+
 	Folder *tmpFolder = rootFolder;
 	for (int i = 1; i < partsOfPath.size(); i++) {
 		if (i == (partsOfPath.size() - 1)) {
@@ -67,15 +71,23 @@ THandle createFile(std::string fullFilePath, size_t flags)
 				std::cout << "FILE ALREADY EXISTS!\n";
 				File *foundFile = tmpFolder->getFileByName(partsOfPath[i]);
 				foundFile->setOpened();
+				THandle newFileDescriptor = putFileIntoFDTable(foundFile);
+				if ((size_t)newFileDescriptor != -1) {
+					return newFileDescriptor;
+				}
+				else {
+					std::cout << "Chyba neni mozne takto otevrit soubor \n";
+					return newFileDescriptor;
+				}
 				
-				return foundFile;
 			}
 			else {
 				File* newFile = new File(partsOfPath[i], tmpFolder, fullFilePath);
 				newFile->setOpened();
 				tmpFolder->addFile(newFile);
+				THandle newFileDescriptor = putFileIntoFDTable(newFile);
 				
-				return newFile;
+				return newFileDescriptor;
 			}
 		}
 		else if (tmpFolder->containFolder(partsOfPath[i])) {
@@ -84,14 +96,14 @@ THandle createFile(std::string fullFilePath, size_t flags)
 		else {
 			SetLastError(errorBadPath);
 			std::cout << "BAD PATH\n";
-		}
+		} 
 	}
-	return (THandle)nullptr;
+	return (THandle)-1;
 }
 
 int writeFile(THandle file, std::string buffer, size_t flag)
 {
-	File *tmpFile = (File *)file;
+	File *tmpFile = getFileByTHandle(file);
 	int numberOfBytes = (int)tmpFile->write(buffer, flag);
 	if (numberOfBytes < 0) {
 		std::cout << "File " << tmpFile->name << " is NOT opened\nUnable to write into the file\n";
@@ -102,13 +114,13 @@ int writeFile(THandle file, std::string buffer, size_t flag)
 
 bool setInFilePosition(THandle file, int newPosition)
 {
-	File *tmpFile = (File *)file;
+	File *tmpFile = getFileByTHandle(file);
 	return tmpFile->setPosition(newPosition);;
 }
 
 int appendFile(THandle file, std::string buffer)
 {
-	File *tmpFile = (File *)file;
+	File *tmpFile = getFileByTHandle(file);
 	int numberOfBytes = (int)tmpFile->append(buffer);
 	if (numberOfBytes < 0) {
 		std::cout << "File " << tmpFile->name << " is NOT opened\nUnable to write into the file\n";
@@ -119,7 +131,7 @@ int appendFile(THandle file, std::string buffer)
 
 std::string readFile(THandle file)
 {
-	File *tmpFile = (File *)file;
+	File *tmpFile = getFileByTHandle(file);
 	std::string str(tmpFile->content);
 	
 	return str;
@@ -127,21 +139,22 @@ std::string readFile(THandle file)
 
 bool closeFile(THandle file)
 {
-	File *tmpFile = (File *)file;
+	File *tmpFile = getFileByTHandle(file);
 	std::cout << "Zaviram soubor " << tmpFile->name << ".\n";
 	return tmpFile->setClosed();
 }
 
 THandle createFolder(std::string fullFolderPath)
 {
-	std::cout << "Vytvarim slozku: " << fullFolderPath << "\n";
-	std::vector<std::string> partsOfPath = parsePath(fullFolderPath);
-
-	if (partsOfPath[0] != ROOT_FOLDER) {
+	if (!containRoot(fullFolderPath)) {
 		SetLastError(errorBadPath);
 		std::cout << "Bad path of file (root C is missing)!\n";
 		return NULL;
 	}
+	std::cout << "Vytvarim slozku: " << fullFolderPath << "\n";
+	std::vector<std::string> partsOfPath = parsePath(fullFolderPath);
+
+	
 	Folder *tmpFolder = rootFolder;
 
 	for (int i = 1; i < partsOfPath.size(); i++) {
@@ -177,7 +190,6 @@ THandle createFolder(std::string fullFolderPath)
 
 bool deleteFolderByPath(std::string fullFolderPath)
 {
-	std::cout << "Mazu soubor: " << fullFolderPath << "\n";
 	std::vector<std::string> partsOfPath = parsePath(fullFolderPath);
 
 	if (partsOfPath[0] != ROOT_FOLDER) {
@@ -191,7 +203,6 @@ bool deleteFolderByPath(std::string fullFolderPath)
 		if (i == (partsOfPath.size() - 1)) {
 			if (tmpFolder->containFolder(partsOfPath[i])) {
 				bool a = tmpFolder->removeFolder(partsOfPath[i]);
-				printFSTree();
 				return a;
 			}
 			else {
@@ -241,7 +252,6 @@ bool deleteFileByPath(std::string fullFilePath){
 	for (int i = 1; i < partsOfPath.size(); i++) {
 		if (i == (partsOfPath.size() - 1)) {
 			if (tmpFolder->containFile(partsOfPath[i])) {
-				std::cout << "Mazu soubor: " << partsOfPath[i] << "\n";
 				return tmpFolder->removeFile(partsOfPath[i]);
 			}
 			else {
@@ -264,7 +274,7 @@ bool deleteFileByPath(std::string fullFilePath){
 
 bool deleteFile(THandle file)
 {
-	File *tmpFile = (File *)file;
+	File *tmpFile = getFileByTHandle(file);
 	std::string path = tmpFile->path;
 	return deleteFileByPath(path);
 }
@@ -304,4 +314,36 @@ void recursePrintTree(Folder * startNode, std::string prefix)
 		recursePrintTree(startNode->folders[i], prefix + "|-");
 	}
 	
+}
+
+bool containRoot(std::string fullFolderPath)
+{
+	std::vector<std::string> partsOfPath = parsePath(fullFolderPath);
+
+	if (partsOfPath[0] != ROOT_FOLDER) {
+		//SetLastError(errorBadPath);
+		return false;
+	}
+	return true;
+}
+
+/*
+ * @return FileDescriptor of new created FileDescriptor
+*/
+THandle putFileIntoFDTable(File* file) {
+	FileDescriptorBlock* newFD = new FileDescriptorBlock(file->path, FILE_SHARE_READ, file);
+	FileDescriptorTable.push_back(newFD);
+
+	return (THandle)newFD->getId();
+}
+
+File* getFileByTHandle(THandle fileDescriptor) {
+	size_t id = (size_t)fileDescriptor;
+	for (size_t i = 0; i < FileDescriptorTable.size(); i++)
+	{
+		if (FileDescriptorTable[i]->getId() == id) {
+			return FileDescriptorTable[i]->filePointer;
+		}
+	}
+	return nullptr;
 }

@@ -23,6 +23,9 @@ bool Set_In_File_Position(const THandle file_handle, const size_t new_position);
 bool Close_File(const THandle file_handle);
 		//uzavre soubor identifikovany pomoci deskriptoru
 		//vraci true, kdyz vse OK
+bool Delete_File(const THandle file_handle);
+		//Smaze soubor identifikovany pomoci deskriptoru
+		//vraci true, kdyz vse OK
 THandle Open_File(const char* file_name, size_t flags);
 //podle flags otevre, vytvori soubor a vrati jeho deskriptor
 //vraci nenulovy handle, kdyz vse OK

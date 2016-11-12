@@ -136,6 +136,18 @@ bool Close_File(const THandle file_handle) {
 Pouziti:
 
 THandle openedFile = Open_File("C/slozka/jmenoSouboru.txt", FILE_SHARE_READ);
+Delete_File(openedFile);
+*/
+bool Delete_File(const THandle file_handle) {
+	CONTEXT regs = Prepare_SysCall_Context(scIO, scDeleteFile);
+	regs.Rdx = (decltype(regs.Rdx))file_handle;
+	return Do_SysCall(regs);
+}
+
+/*
+Pouziti:
+
+THandle openedFile = Open_File("C/slozka/jmenoSouboru.txt", FILE_SHARE_READ);
 */
 THandle Open_File(const char* file_name, size_t flags) {
 	CONTEXT regs = Prepare_SysCall_Context(scIO, scOpenFile);

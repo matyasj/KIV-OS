@@ -92,7 +92,11 @@ void HandleIO(CONTEXT &regs) {
 			break; //scOpenFile
 		case scCloseFile: {
 			Set_Error(!closeFile((THandle*)regs.Rdx), regs);
-			}
+		}
+			break;	//CloseFile
+		case scDeleteFile: {
+			Set_Error(!deleteFile((THandle*)regs.Rdx), regs);
+		}
 			break;	//CloseFile
 		case scCreateFolder:{
 			std::string name = (char*)regs.Rdx;

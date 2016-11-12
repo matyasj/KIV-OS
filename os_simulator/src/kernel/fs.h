@@ -29,5 +29,11 @@ std::vector<std::string> parsePath(std::string path);
 void printFSTree();
 void recursePrintTree(Folder* startNode, std::string prefix);
 
+bool containRoot(std::string fullFolderPath);
+
+
+// File Descriptors
+THandle putFileIntoFDTable(File* file);
+File* getFileByTHandle(THandle fileDescriptor);
 
 //FileDescriptor getFileByName(char* fileName);

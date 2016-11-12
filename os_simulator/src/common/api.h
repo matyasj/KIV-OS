@@ -42,6 +42,8 @@ typedef void (__stdcall *TSysCall)(CONTEXT &context);			//prototyp funkce, ktera
 
 			9 - nastav pozici v souboru		 IN: rdx je handle souboru, rcx je cislo pozice v souboru
 											OUT: rax je pocet zapsanych bytu
+			10 - Zavri soubor				 IN: rdx je pointer na null-terminated File descriptor
+											OUT: rax je handle nove otevreneho souboru
 								
    Dalsi cisla si doplnte dle potreby
 
@@ -79,6 +81,7 @@ const __int8 scCloseFile = 6;
 const __int8 scCreateFolder = 7;
 const __int8 scDeleteFolder = 8;
 const __int8 scSetInFilePosition = 9;
+const __int8 scDeleteFile = 10;
 
 //al hodnoty pro scThread
 const __int8 scCreateThread = 1;
@@ -87,7 +90,7 @@ const __int8 scSearchThread = 3;
 const __int8 scPrintCurrentFolder = 4;
 
 // booth
-const __int8 scPrintFolder = 10;
+const __int8 scPrintFolder = 11;
 
 // program
 const __int8 scProgramStart = 1;
