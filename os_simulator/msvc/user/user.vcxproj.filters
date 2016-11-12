@@ -54,9 +54,6 @@
     <ClCompile Include="..\..\src\user\Parser\parser.cpp">
       <Filter>Source Files\Parser</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\user\program_manager.cpp">
-      <Filter>Source Files\Program Management</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\user\md.cpp">
       <Filter>Source Files\Program Management\Programs</Filter>
     </ClCompile>
@@ -124,9 +121,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\user\Parser\parser.h">
       <Filter>Header Files\Parser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\user\program_manager.h">
-      <Filter>Header Files\Program Management</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\user\md.h">
       <Filter>Header Files\Program Management\Programs</Filter>

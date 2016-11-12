@@ -1,6 +1,7 @@
 #pragma once
 
 #include "..\common\api.h"
+#include "Parser\command.h"
 #include<string>
 
 size_t Get_Last_Error();
@@ -41,3 +42,6 @@ int Execute_Thread(THandle id);
 //ukonci vlakno s  id
 THandle search_runing_thread(int type_command);
 bool printf_current_folder(THandle h, const void* buffer);
+
+// spusti program s uvedenymi parametry
+bool Start_Program(Command command);

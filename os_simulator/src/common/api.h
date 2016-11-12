@@ -63,9 +63,10 @@ constexpr bool test_cf(const DWORD flags) {
 }
 
 //ah hodnoty 
-const __int8 scIO = 1;		//IO operace
+const __int8 scIO = 1;			//IO operace
 const __int8 scThread = 2;		//THREAD operace
 const __int8 scBooth = 3;		//THREAD operace
+const __int8 scProgram = 4;		//PROGRAM operace
 
 
 //al hodnoty pro scIO 
@@ -87,6 +88,9 @@ const __int8 scPrintCurrentFolder = 4;
 
 // booth
 const __int8 scPrintFolder = 10;
+
+// program
+const __int8 scProgramStart = 1;
 
 
 
@@ -120,4 +124,3 @@ constexpr __int8  Get_AH(const __int16 ax) {
 constexpr __int8  Get_AL(const __int16 ax) {
 	return ax & 0xFF;
 }
-

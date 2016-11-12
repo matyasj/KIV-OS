@@ -2,7 +2,8 @@
 
 #include "kernel.h"
 #include "io.h"
-#include"Thread_managment.h"
+#include "Thread_managment.h"
+#include "program_manager.h"
 
 HMODULE User_Programs;
 
@@ -29,13 +30,14 @@ void Shutdown_Kernel() {
 void SysCall(CONTEXT &regs) {
 
 	switch (Get_AH((__int16) regs.Rax)) {
-		case scIO:		HandleIO(regs);break;
-		case scThread: handleThread(regs);break;
-		case scBooth: {
+		case scIO:		HandleIO(regs);break;		
+		case scThread:	handleThread(regs);break;
+		case scBooth:	{
 			Thread* thread = (Thread*)regs.Rdx; //v Rdx je handle na vlakno
 			regs.Rdx = (decltype(regs.Rdx))thread->current_folder.c_str();	// nastavim aktualni slozku
 			HandleIO(regs);
-	}break;
+		}break;
+		case scProgram:	handleProgram(regs); break;
 	}
 
 }
@@ -53,6 +55,6 @@ void Run_VM() {
 		shell(regs);
 		execute_thread(h);
 	}
-
+	
 	Shutdown_Kernel();
 }

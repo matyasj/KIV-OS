@@ -1,9 +1,9 @@
 #include <iostream>
+#include <thread>
 
 #include "shell.h"
 #include "Parser/instruction.h"
 #include "Parser/parser.h"
-#include "program_manager.h"
 #include "rtl.h"
 
 size_t __stdcall shell(const CONTEXT &regs) {
@@ -30,15 +30,20 @@ size_t __stdcall shell(const CONTEXT &regs) {
 		std::getline(std::cin, line);
 		std::vector<Command> commands = parser.parse_line(line);
 		if (commands.empty()) continue;
-		line = execute_commands(commands);
-		
-		// TODO vyresit pres zapis do souboru
-		print(line, true);
 
-		// TODO chtelo by vyresit lepe - prozatim, aby byla kontrola v Shell ne v Parseru
-		if ((commands.size() > 0) && (commands[0].type_command == EXIT)) {
-			run = 0;
-		}			
+
+
+		// PROGRAM MANAGER ################################################################################
+		// projde vsechny prikazy
+		for (int i = 0; i < commands.size(); i++) {
+			
+			if (commands[i].type_command == EXIT) {
+				run = 0;
+			}
+
+			Start_Program(commands[i]);
+		}
+		// ##################################################################################################		
 	}
 
 	return 0;

@@ -1,7 +1,6 @@
 #include"parser.h"
 #include"my_string.h"
 #include"instruction.h"
-#include"../program_manager.h"
 #include<iostream>
 #include <vector>
 

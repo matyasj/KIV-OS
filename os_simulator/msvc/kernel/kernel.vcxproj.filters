@@ -57,6 +57,9 @@
     <ClCompile Include="..\..\src\kernel\Thread_managment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\kernel\program_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\common\api.h">
@@ -87,6 +90,9 @@
       <Filter>Header Files\thread_managment</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kernel\Thread_managment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kernel\program_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

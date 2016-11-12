@@ -3,28 +3,27 @@
 #include <iostream>
 #include <thread>
 
-#include "Parser\command.h"
-#include "Parser\instruction.h"
-#include "program.h"
-
-#include "cd.h"
-#include "dir.h"
-#include "echo.h"
-#include "freq.h"
-#include "md.h"
-#include "ps.h"
-#include "rd.h"
-#include "rgen.h"
-#include "sort.h"
-#include "type.h"
-#include "wc.h"
-#include "exit.h"
 #include "program_manager.h"
 
+
+
+void handleProgram(CONTEXT &regs) {
+
+	int type_command = (int)regs.Rdx;
+	int parrent_id = (int)regs.Rcx;
+	std::string *str = (std::string *)regs.Rbx;
+	Command* command = (Command*)regs.Rdx;
+	
+	LPCSTR program_name = command->name.c_str();
+	TEntryPoint program = (TEntryPoint)GetProcAddress(User_Programs, program_name);
+	std::thread t = std::thread(program, regs);
+	t.join();
+}
 
 /*
 	Spusti serii prikazu
 */
+/*
 std::string execute_commands(std::vector<Command> commands) {
 
 	std::string output = "";
@@ -45,7 +44,6 @@ std::string execute_commands(std::vector<Command> commands) {
 		projde vsechny prikazy - vystup posledniho spusteneho
 		je vstup dalsiho spusteneho
 		vystup posledniho prikazu je celkovy vystup
-	*/
 	for (int i = 0; i < commands.size(); i++) {
 
 		// pokud je vstup presmerovan ze souboru
@@ -80,7 +78,7 @@ std::string execute_commands(std::vector<Command> commands) {
 
 			//TODO pomoci shell - print(pop, false); 
 			std::cout << pop << " ";
-			std::this_thread::sleep_for(std::chrono::milliseconds(50));
+			//std::this_thread::sleep_for(std::chrono::milliseconds(50));
 		}
 		else {
 			output += pop;
@@ -98,9 +96,7 @@ std::string execute_commands(std::vector<Command> commands) {
 }
 
 
-/*
-	Spusti jeden konktretni program a vrati jeho vystup
-*/
+// Spusti jeden konktretni program a vrati jeho vystup
 void start_program(Command command, Buffer* bin, Buffer* bout)
 {
 	std::string output = "";
@@ -175,3 +171,4 @@ void start_program(Command command, Buffer* bin, Buffer* bout)
 
 	//TODO zrusit poiter
 }
+*/

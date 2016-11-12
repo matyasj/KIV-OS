@@ -1,10 +1,10 @@
 #pragma once
 
-#include "program.h"
+#include <iostream>
+
+#include"rtl.h"
+#include"rtl_error.h"
 
 
-class Rgen : public Program {
-public:
-	void run(void);
-};
 
+size_t __stdcall rgen(const CONTEXT &regs);

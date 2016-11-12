@@ -1,10 +1,11 @@
 #pragma once
 
-#include "program.h"
+#include <iostream>
+#include <map>
+
+#include"rtl.h"
+#include"rtl_error.h"
 
 
-class Freq : public Program {
-public:
-	void run(void);
-};
 
+size_t __stdcall freq(const CONTEXT &regs);

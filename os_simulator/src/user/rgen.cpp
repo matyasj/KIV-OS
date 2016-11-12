@@ -1,26 +1,25 @@
 #include "rgen.h"
-#include <iostream>
 
 
 /*
 Parametry:
- 0   bude vypisovat náhodně vygenerovaná čísla v plovoucí čárce na stdout, dokud mu nepřijde znak Ctrl+Z //EOF
+0   bude vypisovat náhodně vygenerovaná čísla v plovoucí čárce na stdout, dokud mu nepřijde znak Ctrl+Z //EOF
 */
-void Rgen::run(void) {
-	
+size_t __stdcall rgen(const CONTEXT &regs) {
+
 	int min = 0;
 	int max = 9;
 
-	int number = 0;
+	double number = 0.0;
 	std::string str = "";
 
 	for (int i = 0; i < 10; i++) {
 
-		number = min + (rand() % (int)(max - min + 1));
+		number = ((double)rand() / (double)RAND_MAX);
 		str = std::to_string(number);
 
-		_bout->push(str);
+		std::cout << str << std::endl;
 	}
 
-	_bout->close();
+	return 0;
 }

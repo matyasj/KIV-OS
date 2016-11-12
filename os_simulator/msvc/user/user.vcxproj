@@ -33,7 +33,6 @@
     <ClCompile Include="..\..\src\user\Parser\my_string.cpp" />
     <ClCompile Include="..\..\src\user\Parser\parser.cpp" />
     <ClCompile Include="..\..\src\user\program.cpp" />
-    <ClCompile Include="..\..\src\user\program_manager.cpp" />
     <ClCompile Include="..\..\src\user\ps.cpp" />
     <ClCompile Include="..\..\src\user\rd.cpp" />
     <ClCompile Include="..\..\src\user\rgen.cpp" />
@@ -59,7 +58,6 @@
     <ClInclude Include="..\..\src\user\Parser\my_string.h" />
     <ClInclude Include="..\..\src\user\Parser\parser.h" />
     <ClInclude Include="..\..\src\user\program.h" />
-    <ClInclude Include="..\..\src\user\program_manager.h" />
     <ClInclude Include="..\..\src\user\ps.h" />
     <ClInclude Include="..\..\src\user\rd.h" />
     <ClInclude Include="..\..\src\user\rgen.h" />
