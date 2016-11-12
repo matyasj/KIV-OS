@@ -15,16 +15,16 @@ public:
 	parrent_id - id rodicovskeho thread
 	return id vytvoreneho vlakna
 	*/
-	THandle add_thread(int type_command, std::string current_folder,int parrent_id);
+	int add_thread(int type_command, std::string current_folder, Thread_State state, int parent_id, THandle inputHandle, THandle outputHandle);
 	/*
 	id - id hledaneho procesu
 	pokud nenajde, vrati nullptr
 	*/
-	THandle get_thread(int id);
+	Thread* get_thread(int id);
 	/*
 	najde running thread podle jeho typu
 	*/
-	THandle get_active_thread_by_type(int type_command);
+	Thread* get_active_thread_by_type(int type_command);
 	/*
 	id - id hledaneho procesu
 	vrati cislo chyby. Vse ok == 0

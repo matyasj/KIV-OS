@@ -3,10 +3,25 @@
 
 #ifndef thread_H
 #define thread_H
+#include "../common/api.h"
 enum Thread_State{
 	RUN,		//bezici
+	READY,		// pripravene
 	BLOCK,		//blokovany
-	WAIT		//ceka na dokonceni deti
+	WAIT,		//ceka na dokonceni deti
+	EXECUTED	//ukoncene
+};
+enum Access {
+	READ,
+	WRITE,
+	READ_WRITE
+};
+class Handle_TCB {
+public:
+	THandle handle;
+	Access access;
+	Handle_TCB(THandle handle,Access access);
+	~Handle_TCB();
 };
 class Thread {
 public:
@@ -15,10 +30,12 @@ public:
 	int parent_id = -1;		// id rodice
 	Thread_State state;		// stav vlakna
 	std::string current_folder;		// aktualni slozka
+	Handle_TCB* inputHandle;		//vstupni handle
+	Handle_TCB* outputHandle;	//vystupni handle
 
-	Thread(int type_command,std::string current_folder);
-	Thread(int type_command, std::string current_folder,Thread_State state);
-	Thread(int type_command, std::string current_folder,Thread_State state, int parent_id);
+	//Thread(int type_command,std::string current_folder);
+	//Thread(int type_command, std::string current_folder,Thread_State state);
+	Thread(int type_command, std::string current_folder,Thread_State state, int parent_id,THandle inputHandle,THandle outputHandle);
 	~Thread();
 	
 

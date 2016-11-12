@@ -1,42 +1,50 @@
 #include"Thread_managment.h"
+#include"../user/Parser/command.h"
+#include<thread>
+
 TCB *tcb = new TCB();
 
+/*
+
+
+*/
 void handleThread(CONTEXT &regs) {
 	switch (Get_AL((__int16)regs.Rax)) {
-	case scCreateThread: {
-		int type_command = (int)regs.Rdx;
-		int parrent_id = (int)regs.Rcx;
-		std::string *str = (std::string *)regs.Rbx;
-		THandle i = create_thread(type_command, *str, parrent_id);
-		regs.Rax= (decltype(regs.Rax))i;
-	}break;
-	case scExecuteThread: {
-		THandle h = (THandle)regs.Rdx;
-		int i = (decltype(regs.Rax))execute_thread(h);
-	}break;
-	case scSearchThread: {
-		int type = (int)regs.Rdx;
-		THandle t = tcb->get_active_thread_by_type(type);
-		Set_Error(t == nullptr, regs);
-		regs.Rax = (decltype(regs.Rax))t;
-	}break;
-	case scPrintCurrentFolder: {
-		Thread* h = (Thread*)regs.Rdx;
-
-		std::string* buffer;
-		buffer = (std::string*)regs.Rdi;
-
-		std::string buf = h->current_folder;
-		*buffer = buf;
-		regs.Rax = (decltype(regs.Rax))true;
-	}
 	}
 }
+/*
+rax Command, rbx input, rcx output, rdx arguments
+pøedám ti program a regs ... z regs si vytáhneš Handlery a nastavíš práva, z regs rax si z command vytáhneš typ abys to mohl uložit do TCB, 
+jinak s regs nic nedìláš a pošleš je programu pomocí thread(program, regs), uložíš si do TCB a všechny ty vìci kolem
 
-THandle create_thread(int type_command, std::string current_folder, int parrent_id) {
+rax Command
+rbx input Handler
+rcx output Handler
+rdx error
+
+do rdi prida id thread
+*/
+void do_thread(TEntryPoint program, CONTEXT &regs) {
+	Command* comm = ((Command*)regs.Rax);
+	int type_command = comm->type_command;
+	std::string arguments = "";
+	if (comm->has_argument) arguments = comm->arguments.at(0);
+	Thread* shell = tcb->get_active_thread_by_type(SHELL);
+	int parrent_id = shell->id;
+	THandle handleIn = (THandle)regs.Rbx;
+	THandle handleOut = (THandle)regs.Rcx;
+	std::string current_folder = shell->current_folder;
+	int id = tcb->add_thread(type_command, current_folder, RUN,parrent_id,handleIn,handleOut);
+	regs.Rdi = id;
+	std::thread thread(program,regs);
+	thread.join();		//todo - nebude cekat
+	tcb->execute_thread(id);
+}
+
+
+/*int create_thread(int type_command, std::string current_folder, int parrent_id) {
 	return tcb->add_thread(type_command, current_folder, parrent_id);
-}
-int execute_thread(THandle h) {
-	Thread * t = (Thread*)h;
-	return tcb->execute_thread(t->id);
+}*/
+int execute_thread(int id) {
+	return tcb->execute_thread(id);
 }
