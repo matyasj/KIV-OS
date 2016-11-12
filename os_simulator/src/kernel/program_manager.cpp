@@ -16,8 +16,8 @@ void handleProgram(CONTEXT &regs) {
 	
 	LPCSTR program_name = command->name.c_str();
 	TEntryPoint program = (TEntryPoint)GetProcAddress(User_Programs, program_name);
-	std::thread t = std::thread(program, regs);
-	t.join();
+//	std::thread t = std::thread(program, regs);
+//	t.join();
 }
 
 /*
