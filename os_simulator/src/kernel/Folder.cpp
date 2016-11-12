@@ -46,14 +46,52 @@ bool Folder::removeFile(std::string name)
 
 bool Folder::removeFolder(std::string name)
 {
+	bool result = true;
 	for (int i = 0; i != this->folders.size(); i++) {
 		if (this->folders[i]->name == name) {
-			this->folders.erase(this->folders.begin() + i);
-			return true;
+			//Recursion of removing subfolders
+			std::vector<Folder*>::iterator it = this->folders[i]->folders.begin();
+			int numberOfOpenedFolders = 0;
+			while (it != this->folders[i]->folders.end()) {
+				bool success= this->folders[i]->removeFolder((*it)->name);
+				if (!success) {
+					it++;
+					numberOfOpenedFolders++;
+					result = (result && success);
+				}
+				else {
+					it = this->folders[i]->folders.begin();
+					it += numberOfOpenedFolders;
+					continue;
+				}
+			}
+			
+			// Mazani souboru
+			std::vector<File*>::iterator fileIt = this->folders[i]->files.begin();
+			int numberOfOpenedFiles = 0;
+			while (fileIt != this->folders[i]->files.end()) {
+				std::string name((*fileIt)->name);
+				bool success = this->folders[i]->removeFile((*fileIt)->name);
+				if (!success) {
+					result = (result && success);
+					fileIt++;
+					numberOfOpenedFiles++;
+				}
+				else {
+					fileIt = this->folders[i]->files.begin();
+					fileIt += numberOfOpenedFiles;
+					continue;
+				}
+			}
+			if (result) {
+				this->folders.erase(this->folders.begin() + i);
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 	}
-	
-	return false;
 }
 
 void Folder::printChildren()

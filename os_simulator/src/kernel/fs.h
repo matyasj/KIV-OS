@@ -1,12 +1,14 @@
 #pragma once
-#define FILE_SEPARATOR '/'
 #include <vector>
 #include <string>
 #include "..\common\api.h"
 #include "FileDescriptor.h"
 #include "Folder.h"
 
-//	Pøíklad cesty: C/slozka1/slozka2/soubor.txt   Nazvy slozek a souboru mohou obsahovat napr. i mezery.
+#define FILE_SEPARATOR '\\'
+#define ROOT_FOLDER "C:"
+
+//	Pøíklad cesty: C\slozka1\slozka2\soubor.txt   Nazvy slozek a souboru mohou obsahovat napr. i mezery.
 THandle openFile(std::string fullFilePath, size_t flags);
 THandle createFile(std::string fullFilePath, size_t flags);
 

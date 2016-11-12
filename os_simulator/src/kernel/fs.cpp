@@ -4,12 +4,12 @@
 
 #include "File.h"
 
-#define ROOT_FOLDER "C"
 
 Folder* rootFolder = new Folder(ROOT_FOLDER,nullptr);
 
 THandle openFile(std::string fullFilePath, size_t flags)
 {
+	std::cout << "Separator: " << FILE_SEPARATOR << "\n";
 	std::cout << "Oteviram soubor: " << fullFilePath << "\n";
 	std::vector<std::string> partsOfPath = parsePath(fullFilePath);
 
@@ -67,14 +67,14 @@ THandle createFile(std::string fullFilePath, size_t flags)
 				std::cout << "FILE ALREADY EXISTS!\n";
 				File *foundFile = tmpFolder->getFileByName(partsOfPath[i]);
 				foundFile->setOpened();
-				tmpFolder->printChildren();
+				
 				return foundFile;
 			}
 			else {
 				File* newFile = new File(partsOfPath[i], tmpFolder, fullFilePath);
 				newFile->setOpened();
 				tmpFolder->addFile(newFile);
-				tmpFolder->printChildren();
+				
 				return newFile;
 			}
 		}
@@ -177,21 +177,21 @@ THandle createFolder(std::string fullFolderPath)
 
 bool deleteFolderByPath(std::string fullFolderPath)
 {
-	
 	std::cout << "Mazu soubor: " << fullFolderPath << "\n";
 	std::vector<std::string> partsOfPath = parsePath(fullFolderPath);
 
 	if (partsOfPath[0] != ROOT_FOLDER) {
 		SetLastError(errorBadPath);
 		std::cout << "Bad path of file (root C is missing)!\n";
-		return NULL;
+		return false;
 	}
 	Folder *tmpFolder = rootFolder;
 
 	for (int i = 1; i < partsOfPath.size(); i++) {
 		if (i == (partsOfPath.size() - 1)) {
 			if (tmpFolder->containFolder(partsOfPath[i])) {
-				bool a = tmpFolder->removeFolder(partsOfPath[i]);;
+				bool a = tmpFolder->removeFolder(partsOfPath[i]);
+				printFSTree();
 				return a;
 			}
 			else {
@@ -221,7 +221,7 @@ bool deleteFolder(THandle folder)
 	tmpPath.insert(0, tmpFolder->name);
 	while (tmpFolder->parentFolder != nullptr) {
 		tmpFolder = tmpFolder->parentFolder;
-		tmpPath.insert(0,tmpFolder->name + "/");
+		tmpPath.insert(0,tmpFolder->name + FILE_SEPARATOR);
 	}
 	
 	deleteFolderByPath(tmpPath);
