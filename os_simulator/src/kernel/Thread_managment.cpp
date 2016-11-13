@@ -12,6 +12,18 @@ void handleThread(CONTEXT &regs) {
 	switch (Get_AL((__int16)regs.Rax)) {
 	}
 }
+
+
+
+
+
+
+
+void thread(TEntryPoint program, CONTEXT &regs,int id) {
+	GetThreadContext(GetCurrentThread(), &regs);
+	program(regs);		//todo - nebude cekat
+	tcb->execute_thread(id);
+}
 /*
 rax Command, rbx input, rcx output, rdx arguments
 pøedám ti program a regs ... z regs si vytáhneš Handlery a nastavíš práva, z regs rax si z command vytáhneš typ abys to mohl uložit do TCB, 
@@ -36,9 +48,7 @@ void do_thread(TEntryPoint program, CONTEXT &regs) {
 	std::string current_folder = shell->current_folder;
 	int id = tcb->add_thread(type_command, current_folder, RUN,parrent_id,handleIn,handleOut);
 	regs.Rdi = id;
-	std::thread thread(program,regs);
-	thread.join();		//todo - nebude cekat
-	tcb->execute_thread(id);
+	std::thread thread(thread,program,regs,id);
 }
 
 
