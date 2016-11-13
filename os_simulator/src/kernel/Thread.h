@@ -4,7 +4,7 @@
 #ifndef thread_H
 #define thread_H
 #include "../common/api.h"
-enum Thread_State{
+enum Thread_State {
 	RUN,		//bezici
 	READY,		// pripravene
 	BLOCK,		//blokovany

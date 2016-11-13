@@ -25,8 +25,8 @@ size_t __stdcall shell(const CONTEXT &regs) {
 	int id = (int)regs.Rax;
 	Parser parser;
 	bool run = 1;
-	
-	while(run) {
+
+	while (run) {
 
 		// TODO vypise cestu
 		//std::cout << "Zadej prikaz: ";
@@ -45,13 +45,21 @@ size_t __stdcall shell(const CONTEXT &regs) {
 
 		// PROGRAM MANAGER ################################################################################
 		// projde vsechny prikazy
+		bool end = false;
 		for (int i = 0; i < commands.size(); i++) {
-			
+
 			if (commands[i].type_command == EXIT) {
 				run = 0;
 			}
 
-			Start_Program(commands[i]);
+			if (i == commands.size() - 1) {
+				end = true;
+			}
+			else {
+				end = false;
+			}
+
+			Start_Program(commands[i], end);
 		}
 		// ##################################################################################################		
 	}

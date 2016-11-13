@@ -1,13 +1,6 @@
 #pragma once
+#include "..\common\api.h"
+#include "rtl.h"
+#include "Parser\command.h"
 
-#include "program.h"
-
-
-class Sort : public Program {
-public:
-	void run(void);
-private:
-	void sort(std::string buf);
-	void Sort::sort_vector(std::vector<std::string> lines);
-};
-
+extern "C" size_t __stdcall sort(const CONTEXT &regs);

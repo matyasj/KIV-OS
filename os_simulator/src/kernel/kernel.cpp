@@ -32,10 +32,6 @@ void SysCall(CONTEXT &regs) {
 	switch (Get_AH((__int16) regs.Rax)) {
 		case scIO:		HandleIO(regs);break;		
 		case scThread:	handleThread(regs);break;
-		case scBooth:	{
-			
-			HandleIO(regs);
-		}break;
 		case scProgram:	handleProgram(regs); break;
 	}
 

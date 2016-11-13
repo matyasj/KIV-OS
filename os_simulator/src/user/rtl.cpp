@@ -181,17 +181,24 @@ bool Delete_Folder(const std::string file_name, size_t flags) {
 	Do_SysCall(regs);
 	return (bool)regs.Rax;
 }
-bool Print_Folder(THandle handle, std::string arg, const void *buffer) {
+/*bool Print_Folder(THandle handle, std::string arg, const void *buffer) {
 	CONTEXT regs = Prepare_SysCall_Context(scBooth, scPrintFolder);
 	regs.Rdx = (decltype(regs.Rdx))handle;
 	regs.Rcx = (decltype(regs.Rcx))arg.c_str();
 	regs.Rdi = (decltype(regs.Rdi))buffer;
 	Do_SysCall(regs);
 	return (bool)regs.Rax;
-}
+}*/
 
 /*------------------------THREAD-------------------*/
-THandle Create_Thread(int type_command, int parrent_id, std::string* path) {
+
+void print_ps(const void *buffer) {
+	CONTEXT regs = Prepare_SysCall_Context(scThread, scPs);
+	regs.Rdx = (decltype(regs.Rdx))buffer;
+	Do_SysCall(regs);
+	return;
+}
+/*THandle Create_Thread(int type_command, int parrent_id, std::string* path) {
 	CONTEXT regs = Prepare_SysCall_Context(scThread, scCreateThread);
 	regs.Rdx = type_command;
 	regs.Rcx = parrent_id;
@@ -218,14 +225,14 @@ bool printf_current_folder(THandle h, const void* buffer) {
 	regs.Rdi = (decltype(regs.Rdi))buffer;
 	Do_SysCall(regs);
 	return (bool)regs.Rax;
-}
+}*/
+
 
 /*---------------------- PROGRAM -------------------*/
-bool Start_Program(Command command) {
+bool Start_Program(Command command, bool end) {
 	CONTEXT regs = Prepare_SysCall_Context(scProgram, scProgramStart);
 	regs.Rdx = (decltype(regs.Rdx))&command;
+	regs.Rbx = end;
 	Do_SysCall(regs);
-	return true;
+	return (bool)regs.Rax;
 }
-
-
