@@ -13,6 +13,13 @@ size_t __stdcall shell(const CONTEXT &regs) {
 	Write_File(stdin, hello, strlen(hello), written);
 	Close_File(stdin);*/
 
+	// Standardni vystup - chova se jako soubor -> pri vzpisu na konzoli volat napr: Write_File(std_out, "retezec", strlen("retezec"), written);
+	THandle std_out = Create_File("CONOUT$", FILE_SHARE_WRITE);	
+	size_t written;
+	// Standardni vstup - chova se jako soubor -> pri vzpisu na konzoli volat napr: Write_File(std_out, "retezec", strlen("retezec"), written);
+	THandle std_in = Create_File("CONIN$", FILE_SHARE_READ);
+	size_t pocet = 0; // neni potreba pri praci se std::string
+	
 
 	/* TODO - prozatim, jen at se muze testovat */
 	int id = (int)regs.Rax;
@@ -22,12 +29,15 @@ size_t __stdcall shell(const CONTEXT &regs) {
 	while(run) {
 
 		// TODO vypise cestu
-		std::cout << "Zadej prikaz: ";
+		//std::cout << "Zadej prikaz: ";
+		Write_File(std_out, "Zadej prikaz: ", strlen("Zadej prikaz: "), written);
+		std::string line = "";
+		Read_File(std_in, &line, 0, pocet);
 
 		// TODO vyresit pres cteni ze souboru (nebo jak se to bude resit)
-		std::string line;
-		std::cin.clear();
-		std::getline(std::cin, line);
+		//std::string line;
+		//std::cin.clear();
+		//std::getline(std::cin, line);
 		std::vector<Command> commands = parser.parse_line(line);
 		if (commands.empty()) continue;
 
@@ -45,6 +55,7 @@ size_t __stdcall shell(const CONTEXT &regs) {
 		}
 		// ##################################################################################################		
 	}
+	Close_File(std_out);
 
 	return 0;
 }

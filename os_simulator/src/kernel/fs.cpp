@@ -4,11 +4,12 @@
 
 #include "File.h"
 #include "FileDescriptorBlock.h"
+#include "stdin.h"
+#include "stdout.h"
 
 
 Folder* rootFolder = new Folder(ROOT_FOLDER,nullptr);
 std::vector<FileDescriptorBlock*> FileDescriptorTable;
-
 
 THandle openFile(std::string fullFilePath, size_t flags)
 {
@@ -54,6 +55,12 @@ THandle openFile(std::string fullFilePath, size_t flags)
 
 THandle createFile(std::string fullFilePath, size_t flags)
 {
+	if (fullFilePath == "CONOUT$") {
+		return getStdOut();
+	}
+	else if (fullFilePath == "CONIN$") {
+		return getStdIn();
+	}
 	if (!containRoot(fullFilePath)) {
 		SetLastError(errorBadPath);
 		std::cout << "Bad path of file (root C is missing)!\n";
@@ -104,6 +111,7 @@ THandle createFile(std::string fullFilePath, size_t flags)
 int writeFile(THandle file, std::string buffer, size_t flag)
 {
 	File *tmpFile = getFileByTHandle(file);
+	Stdout* out = dynamic_cast<Stdout*>(tmpFile);
 	int numberOfBytes = (int)tmpFile->write(buffer, flag);
 	if (numberOfBytes < 0) {
 		std::cout << "File " << tmpFile->name << " is NOT opened\nUnable to write into the file\n";
@@ -132,7 +140,7 @@ int appendFile(THandle file, std::string buffer)
 std::string readFile(THandle file)
 {
 	File *tmpFile = getFileByTHandle(file);
-	std::string str(tmpFile->content);
+	std::string str(tmpFile->read());
 	
 	return str;
 }
@@ -190,13 +198,14 @@ THandle createFolder(std::string fullFolderPath)
 
 bool deleteFolderByPath(std::string fullFolderPath)
 {
-	std::vector<std::string> partsOfPath = parsePath(fullFolderPath);
-
-	if (partsOfPath[0] != ROOT_FOLDER) {
+	if (containRoot(fullFolderPath)) {
 		SetLastError(errorBadPath);
 		std::cout << "Bad path of file (root C is missing)!\n";
 		return false;
 	}
+	std::vector<std::string> partsOfPath = parsePath(fullFolderPath);
+
+	
 	Folder *tmpFolder = rootFolder;
 
 	for (int i = 1; i < partsOfPath.size(); i++) {
@@ -241,13 +250,14 @@ bool deleteFolder(THandle folder)
 }
 
 bool deleteFileByPath(std::string fullFilePath){
-	std::vector<std::string> partsOfPath = parsePath(fullFilePath);
-
-	if (partsOfPath[0] != ROOT_FOLDER) {
+	if (containRoot(fullFilePath)) {
 		SetLastError(errorBadPath);
 		std::cout << "Bad path of file (root C is missing)!\n";
 		return NULL;
 	}
+	
+	std::vector<std::string> partsOfPath = parsePath(fullFilePath);
+
 	Folder *tmpFolder = rootFolder;
 	for (int i = 1; i < partsOfPath.size(); i++) {
 		if (i == (partsOfPath.size() - 1)) {
@@ -331,6 +341,9 @@ bool containRoot(std::string fullFolderPath)
  * @return FileDescriptor of new created FileDescriptor
 */
 THandle putFileIntoFDTable(File* file) {
+	if (FileDescriptorTable.size() == 0) {
+		init();
+	}
 	FileDescriptorBlock* newFD = new FileDescriptorBlock(file->path, FILE_SHARE_READ, file);
 	FileDescriptorTable.push_back(newFD);
 
@@ -346,4 +359,41 @@ File* getFileByTHandle(THandle fileDescriptor) {
 		}
 	}
 	return nullptr;
+}
+
+void init()
+{
+	std::string path = ROOT_FOLDER;
+	path += "name";
+	Stdin* std_in = new Stdin("std_in", NULL, path);
+	Stdout* std_out = new Stdout("std_out", NULL, path);
+
+	FileDescriptorBlock* std_inFD = new FileDescriptorBlock(std_in->path, FILE_SHARE_READ, std_in);
+	FileDescriptorBlock* std_outFD = new FileDescriptorBlock(std_in->path, FILE_SHARE_READ, std_out);
+
+	FileDescriptorTable.push_back(std_inFD);
+	FileDescriptorTable.push_back(std_outFD);
+	std::cout << "Cykl: \n";
+	for (int i = 0; i < FileDescriptorTable.size(); i++) {
+		std::cout << FileDescriptorTable[i]->filePointer->name << "\n";
+	}
+	
+}
+
+THandle getStdIn() {
+	if (FileDescriptorTable.size() == 0) {
+		init();
+	}
+	THandle std_in = (THandle)0;
+
+	return std_in;
+}
+
+THandle getStdOut() {
+	if (FileDescriptorTable.size() == 0) {
+		init();
+	}
+	THandle std_out = (THandle)1;
+
+	return std_out;
 }

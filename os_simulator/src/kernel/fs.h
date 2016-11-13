@@ -35,5 +35,8 @@ bool containRoot(std::string fullFolderPath);
 // File Descriptors
 THandle putFileIntoFDTable(File* file);
 File* getFileByTHandle(THandle fileDescriptor);
+void init();
+THandle getStdOut();
+THandle getStdIn();
 
 //FileDescriptor getFileByName(char* fileName);

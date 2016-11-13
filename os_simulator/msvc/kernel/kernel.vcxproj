@@ -28,6 +28,8 @@
     <ClCompile Include="..\..\src\kernel\io.cpp" />
     <ClCompile Include="..\..\src\kernel\kernel.cpp" />
     <ClCompile Include="..\..\src\kernel\program_manager.cpp" />
+    <ClCompile Include="..\..\src\kernel\stdin.cpp" />
+    <ClCompile Include="..\..\src\kernel\stdout.cpp" />
     <ClCompile Include="..\..\src\kernel\TCB.cpp" />
     <ClCompile Include="..\..\src\kernel\Thread.cpp" />
     <ClCompile Include="..\..\src\kernel\Thread_managment.cpp" />
@@ -42,6 +44,8 @@
     <ClInclude Include="..\..\src\kernel\io.h" />
     <ClInclude Include="..\..\src\kernel\kernel.h" />
     <ClInclude Include="..\..\src\kernel\program_manager.h" />
+    <ClInclude Include="..\..\src\kernel\stdin.h" />
+    <ClInclude Include="..\..\src\kernel\stdout.h" />
     <ClInclude Include="..\..\src\kernel\TCB.h" />
     <ClInclude Include="..\..\src\kernel\Thread.h" />
     <ClInclude Include="..\..\src\kernel\Thread_managment.h" />

@@ -63,6 +63,12 @@
     <ClCompile Include="..\..\src\kernel\FileDescriptorBlock.cpp">
       <Filter>Source Files\fs</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\kernel\stdin.cpp">
+      <Filter>Source Files\fs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kernel\stdout.cpp">
+      <Filter>Source Files\fs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\common\api.h">
@@ -99,6 +105,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\kernel\FileDescriptorBlock.h">
+      <Filter>Header Files\fs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kernel\stdin.h">
+      <Filter>Header Files\fs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\kernel\stdout.h">
       <Filter>Header Files\fs</Filter>
     </ClInclude>
   </ItemGroup>

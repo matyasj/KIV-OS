@@ -72,6 +72,11 @@ bool File::setPosition(int newPosition)
 	
 }
 
+std::string File::read()
+{
+	return this->content;
+}
+
 File::File(std::string name, FileDescriptor* parent, std::string path)
 {
 	this->name = name;
