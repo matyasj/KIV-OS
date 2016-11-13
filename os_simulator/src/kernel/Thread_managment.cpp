@@ -8,16 +8,11 @@ TCB *tcb = new TCB();
 
 
 */
+std::vector<Thread_ready> thread_ready;
 void handleThread(CONTEXT &regs) {
 	switch (Get_AL((__int16)regs.Rax)) {
 	}
 }
-
-
-
-
-
-
 
 void thread(TEntryPoint program, CONTEXT &regs,int id) {
 	GetThreadContext(GetCurrentThread(), &regs);
@@ -48,9 +43,24 @@ void do_thread(TEntryPoint program, CONTEXT &regs) {
 	std::string current_folder = shell->current_folder;
 	int id = tcb->add_thread(type_command, current_folder, RUN,parrent_id,handleIn,handleOut);
 	regs.Rdi = id;
-	std::thread thread(thread,program,regs,id);
+	Thread_ready t;
+	t.id = id;
+	t.program = program;
+	t.regs = regs;
+	thread_ready.push_back(t);
+	//std::thread thread(thread,program,regs,id);
+	//thread.join();
 }
-
+void start() {
+	std::vector<std::thread> threads;
+	for (Thread_ready t : thread_ready) {
+		threads.push_back(std::thread(thread, t.program,t.regs,t.id));
+	}
+	//wait for them to complete
+	for (auto& th : threads)
+		th.join();
+	thread_ready.clear();
+}
 
 /*int create_thread(int type_command, std::string current_folder, int parrent_id) {
 	return tcb->add_thread(type_command, current_folder, parrent_id);
