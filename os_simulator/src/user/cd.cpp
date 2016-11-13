@@ -13,7 +13,7 @@ Prepinace
 */
 void Cd::run(void) {
 
-	THandle main = search_runing_thread(SHELL);
+/*	THandle main = search_runing_thread(SHELL);
 	std::string name = "";
 	if (_arguments.size() == 0) {
 		std::string str;
@@ -22,6 +22,6 @@ void Cd::run(void) {
 	}
 	else {
 
-	}
+	}*/
 	save_whole_output("Zobrazi aktualni adresar nebo se presune na zadanou cestu", true);
 }

@@ -1,5 +1,6 @@
 #include"TCB.h"
 #include<mutex>
+#include <sstream>
 std::mutex mutex;
 TCB::TCB() {
 	Thread *thread = new Thread(SHELL, "C/", RUN, -1, nullptr, nullptr);
@@ -76,5 +77,22 @@ int TCB::change_thread_current_folder(int id, std::string* folder)
 	}
 	SetLastError(threadNotFound);
 	return threadNotFound;;
+}
+std::string TCB::print() {
+	std::lock_guard<std::mutex> guard(mutex);
+	std::stringstream str;
+	str << "id \t typ prikazu \t rodic \t stav \t aktualni slozka \t " << std::endl;
+	for (Thread* t : threads) {
+		str << t->id << "\t" << t->type_command << "\t" << t->parent_id << "\t";
+		switch (t->state) {
+		case RUN: str << "RUN \t";break;
+		case READY: str << "READY \t";break;
+		case WAIT: str << "WAIT \t";break;
+		case EXECUTED: str << "EXECUTED \t";break;
+		case BLOCK: str << "BLOCK \t";break;
+		}
+		str<< t->current_folder << std::endl;
+	}
+	return str.str();
 }
 

@@ -5,22 +5,24 @@
 Parametry:
 1   Vytvori novy adresar se zadanym jmenem / na zadane ceste
 */
-void Md::run(void) {
-	
-	std::string output = "";
-	std::string name = "";
+size_t __stdcall md(const CONTEXT &regs) {
+	int id = (int)regs.Rdi;
+	THandle input = (THandle)regs.Rbx;
+	THandle output = (THandle)regs.Rcx;
+	Command* com = (Command*)regs.Rdx;
 
-	if(_arguments.size()!=0) name = _arguments.at(0);
-	//int _thread_id = Create_Thread(MD,-1,&name);
-	bool succes = Create_Folder(name,0);
-	//Execute_Thread(_thread_id);
-	if (succes) {
-		output = "Adresar vytvoren";
+	std::vector<std::string> lines;
+	if (com->has_argument) {
+		std::string argument = com->arguments.at(0);
+		bool succes = Create_Folder(argument, 0);
+		if (succes) {
+			return 0;
+		}
+		else {
+			//TODO chyba
+		}
 	}
 	else {
-		_error = true;
-		output = "Chyba";
+		//TODO - indikovat chybu
 	}
-
-	save_whole_output(output, true);
 }

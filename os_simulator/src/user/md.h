@@ -1,10 +1,9 @@
 #pragma once
 
-#include "program.h"
+#include "..\common\api.h"
+#include "Parser\command.h"
+#include "rtl.h"
 
 
-class Md : public Program {
-public:
-	void run(void);
-};
+extern "C" size_t __stdcall md(const CONTEXT &regs);
 

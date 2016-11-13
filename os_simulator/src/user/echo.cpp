@@ -1,5 +1,5 @@
 #include "echo.h"
-
+#include <iostream>
 
 /*
 Parametry:
@@ -8,10 +8,22 @@ Parametry:
 1   Vypise zadanou zpravu
 
 */
-void Echo::run(void)
-{
-	std::string arg = "";
-	if(_arguments.size()!=0) arg = _arguments.at(0);
+size_t __stdcall echo(const CONTEXT &regs) {
+	int id = (int)regs.Rdi;
+	THandle input = (THandle)regs.Rbx;
+	THandle output = (THandle)regs.Rcx;
+	Command* com = (Command*)regs.Rdx;
 
-	save_whole_output(arg, true);
+	std::vector<std::string> lines;
+	if (com->has_argument) {
+		std::string argument = com->arguments.at(0);
+		std::cout << argument;
+		//Write_File(output, out.c_str(), 0, written);
+	}
+	else {
+		// TODO - chyba
+		// error - > echo je pouze out
+	}
+	return 0;
 }
+

@@ -34,17 +34,18 @@ THandle Open_File(const char* file_name, size_t flags);
 bool Create_Folder(const std::string file_name, size_t flags);
 //odstrani slozku s uvedenou cestou a flags
 bool Delete_Folder(const std::string file_name, size_t flags);
-bool Print_Folder(THandle handle, std::string arg, const void *buffer);
+
+//bool Print_Folder(THandle handle, std::string arg, const void *buffer);
 //vytiskne slozku dle argumentu
 // v handle je vychozi vlakno
 /*-----------------------------THREAD----------------------------*/
-
-THandle Create_Thread(int type_command,int parrent_id, std::string* path);
+void print_ps(const void *buffer);
+/*THandle Create_Thread(int type_command,int parrent_id, std::string* path);
 //vytvori vlakno a vrati jeho id. Pokud nema rodice, parrent_id = -1;
 int Execute_Thread(THandle id);
 //ukonci vlakno s  id
 THandle search_runing_thread(int type_command);
-bool printf_current_folder(THandle h, const void* buffer);
+bool printf_current_folder(THandle h, const void* buffer);*/
 
 // spusti program s uvedenymi parametry
 bool Start_Program(Command command, bool end);

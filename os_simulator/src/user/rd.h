@@ -1,10 +1,7 @@
 #pragma once
 
-#include "program.h"
+#include "..\common\api.h"
+#include "Parser\command.h"
+#include "rtl.h"
 
-
-class Rd : public Program {
-public:
-	void run(void);
-};
-
+extern "C" size_t __stdcall rd(const CONTEXT &regs);

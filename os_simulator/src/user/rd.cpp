@@ -11,20 +11,25 @@ Nevim jak to udelame bez prepinacu to nesmaze plny adresar
 
 Asi bych to udelal ze rovnou smaze vse - ale muzem se zeptat
 */
-void Rd::run(void) {
 
-	std::string output = "";
-	std::string name = "";
+size_t __stdcall rd(const CONTEXT &regs) {
+	int id = (int)regs.Rdi;
+	THandle input = (THandle)regs.Rbx;
+	THandle output = (THandle)regs.Rcx;
+	Command* com = (Command*)regs.Rdx;
 
-	if (_arguments.size() != 0) name = _arguments.at(0);
-	bool fail = Delete_Folder(name, 0);
-	if (fail) {
-		output = "Adresar smazan";
+	std::vector<std::string> lines;
+	if (com->has_argument) {
+		std::string argument = com->arguments.at(0);
+		bool success = Delete_Folder(argument, 0);
+		if (success) {
+			return 0;
+		}
+		else {
+			//TODO chyba
+		}
 	}
 	else {
-		_error = true;
-		output = "Chyba";
+		//TODO chyba
 	}
-
-	save_whole_output(output, true);
 }

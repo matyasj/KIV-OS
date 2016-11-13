@@ -1,6 +1,7 @@
 #include"Thread_managment.h"
 #include"../user/Parser/command.h"
 #include<thread>
+#include<iostream>
 
 TCB *tcb = new TCB();
 
@@ -11,12 +12,22 @@ TCB *tcb = new TCB();
 std::vector<Thread_ready> thread_ready;
 void handleThread(CONTEXT &regs) {
 	switch (Get_AL((__int16)regs.Rax)) {
+	case scPs:
+		std::string* buffer;
+		buffer = (std::string*)regs.Rdx;
+		std::string buf = tcb->print();
+		*buffer = buf;
 	}
 }
 
 void thread(TEntryPoint program, CONTEXT &regs,int id) {
 	GetThreadContext(GetCurrentThread(), &regs);
-	program(regs);		//todo - nebude cekat
+	if (program) {
+		program(regs);		//todo - nebude cekat
+	}
+	else {
+		std::cout << "Neznami program";
+	}
 	tcb->execute_thread(id);
 }
 /*

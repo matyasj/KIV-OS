@@ -42,7 +42,7 @@ public:
 	vrati cislo chyby. Vse ok == 0
 	*/
 	int change_thread_current_folder(int id, std::string* folder);
-
+	std::string print();
 
 
 private:
