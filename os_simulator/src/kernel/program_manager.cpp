@@ -108,4 +108,9 @@ void handleProgram(CONTEXT &regs) {
 	// spousteni programu pomoci Thread Management
 	do_thread(program, regs);
 	std::cout << "Spousteni programu " << program_name << std::endl;
+
+
+	if (end) {
+		start();
+	}
 }
