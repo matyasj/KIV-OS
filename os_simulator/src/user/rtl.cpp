@@ -220,12 +220,12 @@ bool printf_current_folder(THandle h, const void* buffer) {
 	return (bool)regs.Rax;
 }
 
+
 /*---------------------- PROGRAM -------------------*/
-bool Start_Program(Command command) {
+bool Start_Program(Command command, bool end) {
 	CONTEXT regs = Prepare_SysCall_Context(scProgram, scProgramStart);
 	regs.Rdx = (decltype(regs.Rdx))&command;
+	regs.Rbx = end;
 	Do_SysCall(regs);
-	return true;
+	return (bool)regs.Rax;
 }
-
-

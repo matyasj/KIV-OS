@@ -47,4 +47,4 @@ THandle search_runing_thread(int type_command);
 bool printf_current_folder(THandle h, const void* buffer);
 
 // spusti program s uvedenymi parametry
-bool Start_Program(Command command);
+bool Start_Program(Command command, bool end);

@@ -7,19 +7,13 @@
 #include "rtl.h"
 
 size_t __stdcall shell(const CONTEXT &regs) {
-	/*THandle stdin = Create_File("CONOUT$", FILE_SHARE_WRITE);	//nahradte systemovym resenim, zatim viz Console u CreateFile na MSDN
-	const char* hello = "Hello world from shell!\n";
-	size_t written;
-	Write_File(stdin, hello, strlen(hello), written);
-	Close_File(stdin);*/
-
 
 	/* TODO - prozatim, jen at se muze testovat */
 	int id = (int)regs.Rax;
 	Parser parser;
 	bool run = 1;
-	
-	while(run) {
+
+	while (run) {
 
 		// TODO vypise cestu
 		std::cout << "Zadej prikaz: ";
@@ -35,13 +29,21 @@ size_t __stdcall shell(const CONTEXT &regs) {
 
 		// PROGRAM MANAGER ################################################################################
 		// projde vsechny prikazy
+		bool end = false;
 		for (int i = 0; i < commands.size(); i++) {
-			
+
 			if (commands[i].type_command == EXIT) {
 				run = 0;
 			}
 
-			Start_Program(commands[i]);
+			if (i == commands.size() - 1) {
+				end = true;
+			}
+			else {
+				end = false;
+			}
+
+			Start_Program(commands[i], end);
 		}
 		// ##################################################################################################		
 	}

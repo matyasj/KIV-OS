@@ -1,12 +1,12 @@
 #pragma once
 #include "..\common\api.h"
 #include "..\user\Parser\command.h"
+#include "..\user\Parser\instruction.h"
+#include "Thread_managment.h"
 #include "kernel.h"
 
 #include <string>
 #include <vector>
 
-//#include "Parser\command.h"
 
 void handleProgram(CONTEXT &regs);
-//void execute_commands(std::vector<Command>);
