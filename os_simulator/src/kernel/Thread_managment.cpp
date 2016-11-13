@@ -29,15 +29,15 @@ rax Command, rbx input, rcx output, rdx arguments
 pøedám ti program a regs ... z regs si vytáhneš Handlery a nastavíš práva, z regs rax si z command vytáhneš typ abys to mohl uloit do TCB, 
 jinak s regs nic nedìláš a pošleš je programu pomocí thread(program, regs), uloíš si do TCB a všechny ty vìci kolem
 
-rax Command
+rdx Command
 rbx input Handler
 rcx output Handler
-rdx error
+rax error
 
 do rdi prida id thread
 */
 void do_thread(TEntryPoint program, CONTEXT &regs) {
-	Command* comm = ((Command*)regs.Rax);
+	Command* comm = ((Command*)regs.Rdx);
 	int type_command = comm->type_command;
 	std::string arguments = "";
 	if (comm->has_argument) arguments = comm->arguments.at(0);
