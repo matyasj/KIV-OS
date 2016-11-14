@@ -11,9 +11,12 @@ THandle last_handle;
 bool first_program = true;
 
 /*
-Rdx - Command
-Rbx - END flag / IN THandle (END flag se zjisti ulozi a pote prepise - dale uz neni treba)
+Spousti jednotlive prikazy a prirazuje jim spravne vstupny a vystupni proudy
+
+Rax - Error
+Rbx - IN THandle / END flag (END flag se zjisti ulozi a pote prepise - dale uz neni treba)
 Rcx - OUT THandle
+Rdx - Command
 */
 void handleProgram(CONTEXT &regs) {
 
@@ -35,19 +38,16 @@ void handleProgram(CONTEXT &regs) {
 		// vstup jde ze souboru
 		if (command->has_redirect && command->redirect_files.type_redirect == RED_IN) {
 
-			// ziskej THandle na vstupni soubor a uloz ho do fronty
-			// TODO requestThandle(READ, command->redirect_files.name);
-			t = 0;
+			// ziskej THandle na vstupni soubor a uloz ho do registru
+			t = openFile(command->redirect_files.name, FILE_READ_ACCESS);
 			regs.Rbx = (decltype(regs.Rbx))t;
 
 			std::cout << "Vstup programu je presmerovan ze souboru " << command->redirect_files.name << std::endl;
 		}
-		// vstup je prazdny (cte se z konzole ? )
+		// vstup je prazdny (cte se z konzole)
 		else {
-
-			// uloz prazdny Handler - neni vstup
-			// TODO - vstup z konzole ?
-			t = 0;
+			// vstup z konzole
+			t = getStdIn();
 			regs.Rbx = (decltype(regs.Rbx))t;
 		}
 	}
@@ -70,8 +70,7 @@ void handleProgram(CONTEXT &regs) {
 			if (command->redirect_files_out.type_redirect == RED_OUT) {
 
 				// ziskej THandle na vystupni soubor a uloz ho do fronty
-				// TODO requestThandle(WRITE, command->redirect_files.name);
-				t = 0;
+				t = openFile(command->redirect_files.name, FILE_WRITE_ACCESS);
 				regs.Rbx = (decltype(regs.Rcx))t;
 
 				std::cout << "Vystup programu je presmerovan do souboru " << command->redirect_files_out.name << std::endl;
@@ -79,8 +78,8 @@ void handleProgram(CONTEXT &regs) {
 			// vypis na konec souboru
 			else if (command->redirect_files_out.type_redirect == RED_OUT_ADD) {
 
-				// ziskej THandle na vystupni soubor a uloz ho do fronty
-				// TODO requestThandle(WRITE, command->redirect_files.name);
+				// ziskej THandle na vystupni soubor a uloz ho do registru
+				// TODO Append file command->redirect_files.name
 				t = 0;
 				regs.Rbx = (decltype(regs.Rcx))t;
 
@@ -89,16 +88,15 @@ void handleProgram(CONTEXT &regs) {
 		}
 		// neni vypis do souboru - uloz vystup na konzoli
 		else {
-			// TODO requestThandle(CONSOLE-WRITE, command->redirect_files.name);
-			t = 0;
+			// vypis na konzoli
+			t = getStdOut();
 			regs.Rbx = (decltype(regs.Rcx))t;
 		}
 	}
 	else {
 
 		// vystup je do noveho THandlu
-		// TODO requestThandle(WRITE, NEW-PIPE);
-		t = 0;
+		t = getStdOut();
 		regs.Rcx = (decltype(regs.Rbx))t;
 
 		// ulozeni handlu pro nasleduji program
@@ -109,7 +107,7 @@ void handleProgram(CONTEXT &regs) {
 	do_thread(program, regs);
 	std::cout << "Spousteni programu " << program_name << std::endl;
 
-
+	// spusteni programu pote co jsou vsechny zpracovany
 	if (end) {
 		start();
 	}
