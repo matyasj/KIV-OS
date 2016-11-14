@@ -4,6 +4,7 @@
 #include "..\user\Parser\instruction.h"
 #include "Thread_managment.h"
 #include "kernel.h"
+#include "fs.h"
 
 #include <string>
 #include <vector>
