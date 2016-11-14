@@ -35,6 +35,9 @@ bool Create_Folder(const std::string file_name, size_t flags);
 //odstrani slozku s uvedenou cestou a flags
 bool Delete_Folder(const std::string file_name, size_t flags);
 
+//Vytvori Pipe a vrati jeji vstupni a vystupni filedescriptor, ktere pak lze pouzivat jako soubor
+bool Create_Pipe(THandle *pipe_output, THandle *pipe_input);
+
 //bool Print_Folder(THandle handle, std::string arg, const void *buffer);
 //vytiskne slozku dle argumentu
 // v handle je vychozi vlakno

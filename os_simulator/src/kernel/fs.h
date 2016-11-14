@@ -35,8 +35,11 @@ bool containRoot(std::string fullFolderPath);
 // File Descriptors
 THandle putFileIntoFDTable(File* file);
 File* getFileByTHandle(THandle fileDescriptor);
+File* removeFileFromFDTable(THandle fileDescriptor);
 void init();
 THandle getStdOut();
 THandle getStdIn();
 
+// Create Pipe
+bool createPipe(THandle* input, THandle *output);
 //FileDescriptor getFileByName(char* fileName);

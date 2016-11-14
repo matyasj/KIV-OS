@@ -83,6 +83,9 @@ const __int8 scDeleteFolder = 8;
 const __int8 scSetInFilePosition = 9;
 const __int8 scDeleteFile = 10;
 
+//Pipe
+const __int8 scGetPipe = 12;
+
 //al hodnoty pro scThread
 /*const __int8 scCreateThread = 1;
 const __int8 scExecuteThread = 2;

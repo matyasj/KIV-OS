@@ -92,6 +92,7 @@ bool Folder::removeFolder(std::string name)
 			}
 		}
 	}
+	return false;
 }
 
 void Folder::printChildren()

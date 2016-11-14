@@ -18,9 +18,8 @@ size_t __stdcall shell(const CONTEXT &regs) {
 	size_t written;
 	// Standardni vstup - chova se jako soubor -> pri vzpisu na konzoli volat napr: Write_File(std_out, "retezec", strlen("retezec"), written);
 	THandle std_in = Create_File("CONIN$", FILE_SHARE_READ);
-	size_t pocet = 0; // neni potreba pri praci se std::string
+	size_t pocet = 0;
 	
-
 	/* TODO - prozatim, jen at se muze testovat */
 	int id = (int)regs.Rax;
 	Parser parser;

@@ -6,6 +6,7 @@
 #include "FileDescriptorBlock.h"
 #include "stdin.h"
 #include "stdout.h"
+#include "pipe.h"
 
 
 Folder* rootFolder = new Folder(ROOT_FOLDER,nullptr);
@@ -111,10 +112,10 @@ THandle createFile(std::string fullFilePath, size_t flags)
 int writeFile(THandle file, std::string buffer, size_t flag)
 {
 	File *tmpFile = getFileByTHandle(file);
-	Stdout* out = dynamic_cast<Stdout*>(tmpFile);
+	
 	int numberOfBytes = (int)tmpFile->write(buffer, flag);
 	if (numberOfBytes < 0) {
-		std::cout << "File " << tmpFile->name << " is NOT opened\nUnable to write into the file\n";
+		std::cout << "FILE " << tmpFile->name << " IS NOT OPENED - UNABLE TO WRITE\n";
 		SetLastError(errorIO);
 	}
 	return numberOfBytes;
@@ -131,7 +132,7 @@ int appendFile(THandle file, std::string buffer)
 	File *tmpFile = getFileByTHandle(file);
 	int numberOfBytes = (int)tmpFile->append(buffer);
 	if (numberOfBytes < 0) {
-		std::cout << "File " << tmpFile->name << " is NOT opened\nUnable to write into the file\n";
+		std::cout << "FILE " << tmpFile->name << " IS NOT OPENED - UNABLE TO WRITE\n";
 		SetLastError(errorIO);
 	}
 	return numberOfBytes;
@@ -147,8 +148,7 @@ std::string readFile(THandle file)
 
 bool closeFile(THandle file)
 {
-	File *tmpFile = getFileByTHandle(file);
-	std::cout << "Zaviram soubor " << tmpFile->name << ".\n";
+	File *tmpFile = removeFileFromFDTable(file);
 	return tmpFile->setClosed();
 }
 
@@ -159,7 +159,6 @@ THandle createFolder(std::string fullFolderPath)
 		std::cout << "Bad path of file (root C is missing)!\n";
 		return NULL;
 	}
-	std::cout << "Vytvarim slozku: " << fullFolderPath << "\n";
 	std::vector<std::string> partsOfPath = parsePath(fullFolderPath);
 
 	
@@ -350,6 +349,19 @@ THandle putFileIntoFDTable(File* file) {
 	return (THandle)newFD->getId();
 }
 
+File* removeFileFromFDTable(THandle fileDescriptor) {
+	size_t id = (size_t)fileDescriptor;
+	for (size_t i = 0; i < FileDescriptorTable.size(); i++)
+	{
+		if (FileDescriptorTable[i]->getId() == id) {
+			File* file = FileDescriptorTable[i]->filePointer;
+			FileDescriptorTable.erase(FileDescriptorTable.begin() + i);
+			return file;
+		}
+	}
+	return NULL;
+}
+
 File* getFileByTHandle(THandle fileDescriptor) {
 	size_t id = (size_t)fileDescriptor;
 	for (size_t i = 0; i < FileDescriptorTable.size(); i++)
@@ -358,26 +370,21 @@ File* getFileByTHandle(THandle fileDescriptor) {
 			return FileDescriptorTable[i]->filePointer;
 		}
 	}
-	return nullptr;
+	return NULL;
 }
 
 void init()
 {
 	std::string path = ROOT_FOLDER;
 	path += "name";
-	Stdin* std_in = new Stdin("std_in", NULL, path);
-	Stdout* std_out = new Stdout("std_out", NULL, path);
+	Stdin* std_in = new Stdin("std_in", path);
+	Stdout* std_out = new Stdout("std_out", path);
 
 	FileDescriptorBlock* std_inFD = new FileDescriptorBlock(std_in->path, FILE_SHARE_READ, std_in);
-	FileDescriptorBlock* std_outFD = new FileDescriptorBlock(std_in->path, FILE_SHARE_READ, std_out);
+	FileDescriptorBlock* std_outFD = new FileDescriptorBlock(std_in->path, FILE_SHARE_WRITE, std_out);
 
 	FileDescriptorTable.push_back(std_inFD);
 	FileDescriptorTable.push_back(std_outFD);
-	std::cout << "Cykl: \n";
-	for (int i = 0; i < FileDescriptorTable.size(); i++) {
-		std::cout << FileDescriptorTable[i]->filePointer->name << "\n";
-	}
-	
 }
 
 THandle getStdIn() {
@@ -387,6 +394,15 @@ THandle getStdIn() {
 	THandle std_in = (THandle)0;
 
 	return std_in;
+}
+
+bool createPipe(THandle* input, THandle *output)
+{
+	Pipe* newPipe = new Pipe("Pajpa", "C:\\asdf");
+	*input = putFileIntoFDTable(newPipe);
+	*output = putFileIntoFDTable(newPipe);
+	
+	return true;
 }
 
 THandle getStdOut() {

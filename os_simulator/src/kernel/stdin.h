@@ -10,7 +10,7 @@ public:
 	virtual std::string read();
 
 	//Konstruktor
-	Stdin::Stdin(std::string name, FileDescriptor* parent, std::string path) : File(name, parent, path) {
+	Stdin::Stdin(std::string name, std::string path) : File(name, NULL, path) {
 		
 	}
 };

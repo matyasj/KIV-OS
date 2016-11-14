@@ -138,6 +138,11 @@ void HandleIO(CONTEXT &regs) {
 			std::string buffer = (char *)regs.Rdi;
 			std::string arg = (char *)regs.Rcx;
 		}break;
+		case scGetPipe: {
+			THandle* pipeOutput = (THandle*)regs.Rdx;
+			THandle* pipeInput = (THandle*)regs.Rcx;
+			createPipe(pipeInput, pipeOutput);
+		}break;
 		
 	}
 }

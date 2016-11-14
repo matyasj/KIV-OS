@@ -39,10 +39,10 @@ THandle* mujPrvniSoubor = Create_File("C/jmeno.txt", FILE_SHARE_READ); // flags 
 */
 THandle Create_File(const char* file_name, size_t flags) {
 	CONTEXT regs = Prepare_SysCall_Context(scIO, scCreateFile);
-	regs.Rdx = (decltype(regs.Rdx)) file_name;
+	regs.Rdx = (decltype(regs.Rdx))file_name;
 	regs.Rcx = flags;
 	Do_SysCall(regs);
-	return (THandle) regs.Rax;
+	return (THandle)regs.Rax;
 }
 
 /*
@@ -115,9 +115,8 @@ bool Set_In_File_Position(const THandle file_handle, const size_t new_position) 
 	CONTEXT regs = Prepare_SysCall_Context(scIO, scSetInFilePosition);
 	regs.Rdx = (decltype(regs.Rdx))file_handle;
 	regs.Rcx = new_position;
-	const bool result = Do_SysCall(regs);
 	
-	return result;
+	return Do_SysCall(regs);;
 }
 
 /*
@@ -167,7 +166,8 @@ bool Create_Folder(const std::string file_name, size_t flags) {
 	regs.Rdx = (decltype(regs.Rdx))file_name.c_str();
 	regs.Rcx = flags;
 	Do_SysCall(regs);
-	return (bool)regs.Rax;
+	
+	return Do_SysCall(regs);;
 }
 /*
 Pouziti:
@@ -178,9 +178,31 @@ bool Delete_Folder(const std::string file_name, size_t flags) {
 	CONTEXT regs = Prepare_SysCall_Context(scIO, scDeleteFolder);
 	regs.Rdx = (decltype(regs.Rdx))file_name.c_str();
 	regs.Rcx = flags;
-	Do_SysCall(regs);
-	return (bool)regs.Rax;
+	
+	return Do_SysCall(regs);;
 }
+/*
+Pouziti:
+size_t pocet = 0;
+THandle input, output;  //vstup a vystup Pipe
+bool success = Create_Pipe(&output, &input);
+
+Write_File(input, "nejaky string1", 20, pocet);
+Write_File(input, "nejaky string2", 20, pocet);
+
+std::string line = "";
+Read_File(output, &line, 0, pocet);
+*/
+bool Create_Pipe(THandle *pipe_output, THandle *pipe_input) {
+	CONTEXT regs = Prepare_SysCall_Context(scIO, scGetPipe);
+	regs.Rdx = (decltype(regs.Rdx))pipe_output;
+	regs.Rcx = (decltype(regs.Rcx))pipe_input;
+	
+	return Do_SysCall(regs);;
+}
+
+
+
 /*bool Print_Folder(THandle handle, std::string arg, const void *buffer) {
 	CONTEXT regs = Prepare_SysCall_Context(scBooth, scPrintFolder);
 	regs.Rdx = (decltype(regs.Rdx))handle;
@@ -233,6 +255,6 @@ bool Start_Program(Command command, bool end) {
 	CONTEXT regs = Prepare_SysCall_Context(scProgram, scProgramStart);
 	regs.Rdx = (decltype(regs.Rdx))&command;
 	regs.Rbx = end;
-	Do_SysCall(regs);
-	return (bool)regs.Rax;
+	
+	return Do_SysCall(regs);
 }
