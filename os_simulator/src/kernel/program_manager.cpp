@@ -42,7 +42,7 @@ void handleProgram(CONTEXT &regs) {
 			t = openFile(command->redirect_files.name, FILE_READ_ACCESS);
 			regs.Rbx = (decltype(regs.Rbx))t;
 
-			std::cout << "Vstup programu je presmerovan ze souboru " << command->redirect_files.name << std::endl;
+			//std::cout << "Vstup programu je presmerovan ze souboru " << command->redirect_files.name << std::endl;
 		}
 		// vstup je prazdny (cte se z konzole)
 		else {
@@ -67,13 +67,15 @@ void handleProgram(CONTEXT &regs) {
 		// vypis do souboru
 		if (command->has_redirect_out) {
 			// prepise soubor
+
+			//std::cout << "test: " << command->redirect_files.name << std::endl;
 			if (command->redirect_files_out.type_redirect == RED_OUT) {
 
 				// ziskej THandle na vystupni soubor a uloz ho do fronty
-				t = openFile(command->redirect_files.name, FILE_WRITE_ACCESS);
+				t = createFile(command->redirect_files_out.name, FILE_WRITE_ACCESS);
 				regs.Rbx = (decltype(regs.Rcx))t;
 
-				std::cout << "Vystup programu je presmerovan do souboru " << command->redirect_files_out.name << std::endl;
+				//std::cout << "Vystup programu je presmerovan do souboru " << command->redirect_files_out.name << std::endl;
 			}
 			// vypis na konec souboru
 			else if (command->redirect_files_out.type_redirect == RED_OUT_ADD) {
@@ -83,7 +85,7 @@ void handleProgram(CONTEXT &regs) {
 				t = 0;
 				regs.Rbx = (decltype(regs.Rcx))t;
 
-				std::cout << "Vystup programu je presmerovan na konec souboru " << command->redirect_files_out.name << std::endl;
+				//std::cout << "Vystup programu je presmerovan na konec souboru " << command->redirect_files_out.name << std::endl;
 			}
 		}
 		// neni vypis do souboru - uloz vystup na konzoli
@@ -95,17 +97,14 @@ void handleProgram(CONTEXT &regs) {
 	}
 	else {
 
-		// vystup je do noveho THandlu
-		t = getStdOut();
+		// vytvori pipe
+		createPipe(&t, &last_handle);
 		regs.Rcx = (decltype(regs.Rbx))t;
-
-		// ulozeni handlu pro nasleduji program
-		last_handle = t;
 	}
 
 	// spousteni programu pomoci Thread Management
 	do_thread(program, regs);
-	std::cout << "Spousteni programu " << program_name << std::endl;
+	//std::cout << "Spousteni programu " << program_name << std::endl;
 
 	// spusteni programu pote co jsou vsechny zpracovany
 	if (end) {
