@@ -45,6 +45,19 @@ public:
 	std::string print();
 
 
+	/* TODO: by maty*/
+	// Ziska string soucasny pracovni adresar procesu/vlakna podle id
+	std::string get_thread_current_folder(int id);
+	// Prida do TCB tabulky novy filehandler vlaknu s id
+	bool add_filehandler(int id, THandle file_descriptor);
+	// Odebere z TCB tabulky filehandler vlaku s id
+	bool remove_filehandler(int id, THandle file_descriptor);
+	// Test, zda vlakno s id obsahuje filedescriptor (true=obsahuje handler)
+	bool contain_filehandler(int id, THandle file_descriptor);
+
+
+
+
 private:
 	std::vector<Thread *> threads;
 };

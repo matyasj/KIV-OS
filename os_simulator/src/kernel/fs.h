@@ -41,9 +41,17 @@ bool containRoot(std::string fullFolderPath);
 THandle putFileIntoFDTable(File* file, size_t flags);
 File* getFileByTHandle(THandle fileDescriptor);
 File* removeFileFromFDTable(THandle fileDescriptor);
-void init();
+
+// Testy prav na cteni/zapis
+bool canRead(THandle fileDescriptor);
+bool canWrite(THandle fileDescriptor);
+bool shareOpen(std::string fileName, size_t flags);
+
+
+// Standartni vstupy/vystupy
 THandle getStdOut();
 THandle getStdIn();
+void init(); // init metoda
 
 // Create Pipe
 bool createPipe(THandle* input, THandle *output);

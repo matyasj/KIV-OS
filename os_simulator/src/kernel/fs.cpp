@@ -29,6 +29,7 @@ THandle openFile(std::string fullFilePath, size_t flags)
 				std::cout << "Soubor nalezen: " << partsOfPath[i] << "\n";
 				File *foundedFile = tmpFolder->getFileByName(partsOfPath[i]);
 				if (foundedFile->isOpened) {
+					
 					SetLastError(errorFileIsUsed);
 					std::cout << "FILE IS OPENED EXCEPTION\n";
 					return nullptr;
@@ -78,6 +79,11 @@ THandle createFile(std::string fullFilePath, size_t flags)
 				SetLastError(errorAlreadyExist);
 				std::cout << "FILE ALREADY EXISTS!\n";
 				File *foundFile = tmpFolder->getFileByName(partsOfPath[i]);
+				if (foundFile->isOpened) {
+					SetLastError(errorFileIsUsed);
+					std::cout << "FILE IS OPENED EXCEPTION\n";
+					return nullptr;
+				}
 				foundFile->setOpened();
 				THandle newFileDescriptor = putFileIntoFDTable(foundFile, flags);
 				if ((size_t)newFileDescriptor != -1) {
@@ -112,13 +118,18 @@ THandle createFile(std::string fullFilePath, size_t flags)
 int writeFile(THandle file, std::string buffer, size_t flag)
 {
 	File *tmpFile = getFileByTHandle(file);
-	
-	int numberOfBytes = (int)tmpFile->write(buffer, flag);
-	if (numberOfBytes < 0) {
-		std::cout << "FILE " << tmpFile->name << " IS NOT OPENED - UNABLE TO WRITE\n";
-		SetLastError(errorIO);
+	if (canWrite(file)) {
+		int numberOfBytes = (int)tmpFile->write(buffer, flag);
+		if (numberOfBytes < 0) {
+			std::cout << "FILE " << tmpFile->name << " IS NOT OPENED - UNABLE TO WRITE\n";
+			SetLastError(errorIO);
+		}
+		return numberOfBytes;
 	}
-	return numberOfBytes;
+	std::cout << "FILE " << tmpFile->name << " HAS NOT WRITE PERMESSION FOR THIS PROCESS - UNABLE TO WRITE\n";
+	SetLastError(errorIO);
+	return NULL;
+	
 }
 
 bool setInFilePosition(THandle file, int newPosition)
@@ -141,9 +152,16 @@ int appendFile(THandle file, std::string buffer)
 std::string readFile(THandle file)
 {
 	File *tmpFile = getFileByTHandle(file);
-	std::string str(tmpFile->read());
+	if (canRead(file)) {
+		std::string str(tmpFile->read());
+		return str;
+	}
+	std::cout << "FILE " << tmpFile->name << " HAS NOT READ PERMESSION FOR THIS PROCESS - UNABLE TO WRITE\n";
+	SetLastError(errorIO);
+	return NULL;
 	
-	return str;
+	
+	
 }
 
 bool closeFile(THandle file)
@@ -361,6 +379,59 @@ File* removeFileFromFDTable(THandle fileDescriptor) {
 	}
 	return NULL;
 }
+
+bool canRead(THandle fileDescriptor)
+{
+	size_t id = (size_t)fileDescriptor;
+	for (FileDescriptorBlock* f : FileDescriptorTable) {
+		if (f->getId() == id) {
+			if (f->flags & FILE_SHARE_READ) {
+				return true;
+			}
+			else if(f->flags & GENERIC_READ) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		
+	}
+	return false;
+}
+
+bool canWrite(THandle fileDescriptor)
+{
+	size_t id = (size_t)fileDescriptor;
+	for (FileDescriptorBlock* f : FileDescriptorTable) {
+		if (f->getId() == id) {
+			if (f->flags & FILE_SHARE_WRITE) {
+				return true;
+			}
+			if(f->flags & GENERIC_WRITE) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+	}
+	return false;
+}
+
+bool shareOpen(std::string fileName, size_t flags)
+{
+	if ((flags & FILE_SHARE_WRITE)) {
+
+	}
+	for (FileDescriptorBlock *f : FileDescriptorTable) {
+		if (f->filePointer->name == fileName) {
+
+		}
+	}
+	return false;
+}
+
 
 File* getFileByTHandle(THandle fileDescriptor) {
 	size_t id = (size_t)fileDescriptor;
