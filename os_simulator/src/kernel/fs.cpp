@@ -14,6 +14,7 @@ std::vector<FileDescriptorBlock*> FileDescriptorTable;
 
 THandle openFile(std::string fullFilePath, size_t flags)
 {
+	std::cout << "test flagu1: " << flags << "\n";
 	if (!containRoot(fullFilePath)) {
 		SetLastError(errorBadPath);
 		std::cout << "Bad path of file (root C is missing)!\n";
@@ -34,7 +35,7 @@ THandle openFile(std::string fullFilePath, size_t flags)
 					return nullptr;
 				}
 				foundedFile->setOpened();
-				THandle newFileDescriptor = putFileIntoFDTable(foundedFile);
+				THandle newFileDescriptor = putFileIntoFDTable(foundedFile, flags);
 				return newFileDescriptor;
 			}
 			else {
@@ -56,6 +57,7 @@ THandle openFile(std::string fullFilePath, size_t flags)
 
 THandle createFile(std::string fullFilePath, size_t flags)
 {
+	std::cout << "test flagu2: " << flags << "\n";
 	if (fullFilePath == "CONOUT$") {
 		return getStdOut();
 	}
@@ -79,7 +81,7 @@ THandle createFile(std::string fullFilePath, size_t flags)
 				std::cout << "FILE ALREADY EXISTS!\n";
 				File *foundFile = tmpFolder->getFileByName(partsOfPath[i]);
 				foundFile->setOpened();
-				THandle newFileDescriptor = putFileIntoFDTable(foundFile);
+				THandle newFileDescriptor = putFileIntoFDTable(foundFile, flags);
 				if ((size_t)newFileDescriptor != -1) {
 					return newFileDescriptor;
 				}
@@ -93,7 +95,7 @@ THandle createFile(std::string fullFilePath, size_t flags)
 				File* newFile = new File(partsOfPath[i], tmpFolder, fullFilePath);
 				newFile->setOpened();
 				tmpFolder->addFile(newFile);
-				THandle newFileDescriptor = putFileIntoFDTable(newFile);
+				THandle newFileDescriptor = putFileIntoFDTable(newFile, flags);
 				
 				return newFileDescriptor;
 			}
@@ -291,13 +293,14 @@ bool deleteFile(THandle file)
 std::vector<std::string> parsePath(std::string path) {
 	std::vector<std::string> arrayOfPartsOfPath;
 	std::string tmp = "";
-	for (int i = 0; i < path.length(); i++) {
-		if (path[i] == FILE_SEPARATOR) {
+	
+	for (char charAtPosition : path) {
+		if (charAtPosition == FILE_SEPARATOR) {
 			arrayOfPartsOfPath.push_back(tmp);
 			tmp = "";
 		}
 		else {
-			tmp += path[i];
+			tmp += charAtPosition;
 		}
 			
 	}
@@ -314,13 +317,12 @@ void printFSTree()
 void recursePrintTree(Folder * startNode, std::string prefix)
 {
 	std::cout << "" << prefix << startNode->name << "\n";
-
-	for (int i = 0; i < startNode->files.size(); i++) {
-		std::cout << prefix << "|-" << startNode->files[i]->name << "\n";
+	for(File* tmpFile : startNode->files){
+		std::cout << prefix << "|-" << tmpFile->name << "\n";
 	}
 
-	for (int i = 0; i < startNode->folders.size(); i++) {
-		recursePrintTree(startNode->folders[i], prefix + "|-");
+	for(Folder* tmpFolder : startNode->folders){
+		recursePrintTree(tmpFolder, prefix + "|-");
 	}
 	
 }
@@ -339,11 +341,11 @@ bool containRoot(std::string fullFolderPath)
 /*
  * @return FileDescriptor of new created FileDescriptor
 */
-THandle putFileIntoFDTable(File* file) {
+THandle putFileIntoFDTable(File* file, size_t flags) {
 	if (FileDescriptorTable.size() == 0) {
 		init();
 	}
-	FileDescriptorBlock* newFD = new FileDescriptorBlock(file->path, FILE_SHARE_READ, file);
+	FileDescriptorBlock* newFD = new FileDescriptorBlock(file->path, flags, file);
 	FileDescriptorTable.push_back(newFD);
 
 	return (THandle)newFD->getId();
@@ -364,10 +366,11 @@ File* removeFileFromFDTable(THandle fileDescriptor) {
 
 File* getFileByTHandle(THandle fileDescriptor) {
 	size_t id = (size_t)fileDescriptor;
-	for (size_t i = 0; i < FileDescriptorTable.size(); i++)
+	
+	for(FileDescriptorBlock *f : FileDescriptorTable)
 	{
-		if (FileDescriptorTable[i]->getId() == id) {
-			return FileDescriptorTable[i]->filePointer;
+		if (f->getId() == id) {
+			return f->filePointer;
 		}
 	}
 	return NULL;
@@ -399,8 +402,8 @@ THandle getStdIn() {
 bool createPipe(THandle* input, THandle *output)
 {
 	Pipe* newPipe = new Pipe("Pajpa", "C:\\asdf");
-	*input = putFileIntoFDTable(newPipe);
-	*output = putFileIntoFDTable(newPipe);
+	*input = putFileIntoFDTable(newPipe, FILE_GENERIC_WRITE);
+	*output = putFileIntoFDTable(newPipe, FILE_GENERIC_READ);
 	
 	return true;
 }

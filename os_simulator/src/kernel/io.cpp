@@ -32,7 +32,7 @@ void HandleIO(CONTEXT &regs) {
 
 
 	/*
-		Priklad pouziti metodo pro praci se slozkami
+		Priklad pouziti metod pro praci se slozkami
 
 		createFolder("C/slozka");
 		createFolder("C/slozka2");
@@ -52,7 +52,7 @@ void HandleIO(CONTEXT &regs) {
 	switch (Get_AL((__int16) regs.Rax)) {
 		case scCreateFile: {
 			// Zatim funguje primo jako shared_read | generic_write
-			regs.Rax = (decltype(regs.Rax)) createFile((char*)regs.Rdx, GENERIC_READ | GENERIC_WRITE);
+			regs.Rax = (decltype(regs.Rax)) createFile((char*)regs.Rdx, (size_t)regs.Rcx);
 			Set_Error(regs.Rax == 0, regs);
 		//	printFSTree();
 			}
@@ -81,7 +81,7 @@ void HandleIO(CONTEXT &regs) {
 			break; //scWriteFile
 
 		case scOpenFile: {
-			File* tmpFile = (File*)openFile((char*)regs.Rdx, GENERIC_READ | GENERIC_WRITE);
+			File* tmpFile = (File*)openFile((char*)regs.Rdx, (size_t)regs.Rcx);
 			/*if (tmpFile != nullptr) {
 				std::cout << "Soubor: " << tmpFile->name << "\n";
 			}*/

@@ -40,7 +40,7 @@ THandle* mujPrvniSoubor = Create_File("C/jmeno.txt", FILE_SHARE_READ); // flags 
 THandle Create_File(const char* file_name, size_t flags) {
 	CONTEXT regs = Prepare_SysCall_Context(scIO, scCreateFile);
 	regs.Rdx = (decltype(regs.Rdx))file_name;
-	regs.Rcx = flags;
+	regs.Rcx = (decltype(regs.Rcx))flags;
 	Do_SysCall(regs);
 	return (THandle)regs.Rax;
 }
@@ -63,7 +63,7 @@ bool Write_File(const THandle file_handle, const void *buffer, const size_t flag
 	CONTEXT regs = Prepare_SysCall_Context(scIO, scWriteFile);
 	regs.Rdx = (decltype(regs.Rdx))file_handle;
 	regs.Rdi = (decltype(regs.Rdi))buffer;
-	regs.Rcx = flag;
+	regs.Rcx = (decltype(regs.Rcx))flag;
 
 	const bool result = Do_SysCall(regs);
 	written = regs.Rax;

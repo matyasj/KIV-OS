@@ -5,6 +5,11 @@
 #include "FileDescriptor.h"
 #include "Folder.h"
 
+
+//TODO 
+//zpracování absolutní X relativní cesta
+// ..
+// flags
 #define FILE_SEPARATOR '\\'
 #define ROOT_FOLDER "C:"
 
@@ -33,7 +38,7 @@ bool containRoot(std::string fullFolderPath);
 
 
 // File Descriptors
-THandle putFileIntoFDTable(File* file);
+THandle putFileIntoFDTable(File* file, size_t flags);
 File* getFileByTHandle(THandle fileDescriptor);
 File* removeFileFromFDTable(THandle fileDescriptor);
 void init();
