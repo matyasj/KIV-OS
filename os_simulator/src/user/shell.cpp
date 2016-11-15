@@ -14,7 +14,7 @@ size_t __stdcall shell(const CONTEXT &regs) {
 	Close_File(stdin);*/
 
 	// Standardni vystup - chova se jako soubor -> pri vzpisu na konzoli volat napr: Write_File(std_out, "retezec", strlen("retezec"), written);
-	THandle std_out = Create_File("CONOUT$", GENERIC_READ);
+	THandle std_out = Create_File("CONOUT$", FILE_SHARE_WRITE);
 	size_t written;
 	// Standardni vstup - chova se jako soubor -> pri vzpisu na konzoli volat napr: Write_File(std_out, "retezec", strlen("retezec"), written);
 	THandle std_in = Create_File("CONIN$", FILE_SHARE_READ);
@@ -24,12 +24,7 @@ size_t __stdcall shell(const CONTEXT &regs) {
 	int id = (int)regs.Rax;
 	Parser parser;
 	bool run = 1;
-	size_t a = FILE_SHARE_READ;
-
-	if (a & GENERIC_READ) {
-		std::cout << "GENERIC_READ\n";
-	}
-
+	
 	while (run) {
 
 		// TODO vypise cestu
