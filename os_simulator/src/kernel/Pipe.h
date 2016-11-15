@@ -5,7 +5,6 @@
 #include <queue>
 #include <iostream>
 
-#define BUFFER_SIZE 16
 
 class Pipe : public File {
 public:
@@ -18,7 +17,7 @@ public:
 	virtual std::string read();
 
 	//Konstruktor
-	Pipe::Pipe(std::string name, std::string path) : File(name, NULL, path) {
+	Pipe::Pipe(std::string name) : File(name, NULL, NULL) {
 		this->buffer_occupancy = 0;
 	}
 

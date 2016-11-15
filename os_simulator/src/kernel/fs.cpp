@@ -14,7 +14,6 @@ std::vector<FileDescriptorBlock*> FileDescriptorTable;
 
 THandle openFile(std::string fullFilePath, size_t flags)
 {
-	std::cout << "test flagu1: " << flags << "\n";
 	if (!containRoot(fullFilePath)) {
 		SetLastError(errorBadPath);
 		std::cout << "Bad path of file (root C is missing)!\n";
@@ -57,7 +56,6 @@ THandle openFile(std::string fullFilePath, size_t flags)
 
 THandle createFile(std::string fullFilePath, size_t flags)
 {
-	std::cout << "test flagu2: " << flags << "\n";
 	if (fullFilePath == "CONOUT$") {
 		return getStdOut();
 	}
@@ -199,7 +197,7 @@ THandle createFolder(std::string fullFolderPath)
 
 bool deleteFolderByPath(std::string fullFolderPath)
 {
-	if (containRoot(fullFolderPath)) {
+	if (!containRoot(fullFolderPath)) {
 		SetLastError(errorBadPath);
 		std::cout << "Bad path of file (root C is missing)!\n";
 		return false;
@@ -251,7 +249,7 @@ bool deleteFolder(THandle folder)
 }
 
 bool deleteFileByPath(std::string fullFilePath){
-	if (containRoot(fullFilePath)) {
+	if (!containRoot(fullFilePath)) {
 		SetLastError(errorBadPath);
 		std::cout << "Bad path of file (root C is missing)!\n";
 		return NULL;
@@ -401,7 +399,7 @@ THandle getStdIn() {
 
 bool createPipe(THandle* input, THandle *output)
 {
-	Pipe* newPipe = new Pipe("Pajpa", "C:\\asdf");
+	Pipe* newPipe = new Pipe("New-Pipe");
 	*input = putFileIntoFDTable(newPipe, FILE_GENERIC_WRITE);
 	*output = putFileIntoFDTable(newPipe, FILE_GENERIC_READ);
 	
