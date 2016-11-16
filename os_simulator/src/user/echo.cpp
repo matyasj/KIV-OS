@@ -17,8 +17,9 @@ size_t __stdcall echo(const CONTEXT &regs) {
 	std::vector<std::string> lines;
 	if (com->has_argument) {
 		std::string argument = com->arguments.at(0);
-		std::cout << argument;
-		//Write_File(output, out.c_str(), 0, written);
+		//std::cout << argument;
+		size_t written;
+		Write_File(output, argument.c_str(), 0, written);
 	}
 	else {
 		// TODO - chyba

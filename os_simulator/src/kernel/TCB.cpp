@@ -1,15 +1,27 @@
 #include"TCB.h"
+#include "fs.h"
 #include<mutex>
 #include <sstream>
+#include <algorithm>
 std::mutex mutex;
-TCB::TCB() {
+/*TCB::TCB() {
 	Thread *thread = new Thread(SHELL, "C/", RUN, -1, nullptr, nullptr);
 	threads.push_back(thread);
 }
 
 TCB::~TCB() { threads.clear(); }
+*/
+std::vector<Thread*> threads;
 
-int TCB::add_thread(int type_command, std::string current_folder, Thread_State state, int parent_id, THandle inputHandle, THandle outputHandle)
+void closeFiles(Thread* t) {
+	for (Handle_TCB h : t->handles) {
+		if (h.handle != nullptr) {
+			closeFile(h.handle);
+		}
+	}
+}
+
+int add_thread(int type_command, std::string current_folder, Thread_State state, int parent_id, THandle inputHandle, THandle outputHandle)
 {
 	Thread *thread = new Thread(type_command, current_folder, state, parent_id,inputHandle,outputHandle);
 	std::lock_guard<std::mutex> guard(mutex);
@@ -17,7 +29,7 @@ int TCB::add_thread(int type_command, std::string current_folder, Thread_State s
 	return thread->id;
 }
 
-Thread* TCB::get_thread(int id)
+Thread* get_thread(int id)
 {
 	std::lock_guard<std::mutex> guard(mutex);
 	for (Thread* t : threads) {
@@ -26,25 +38,37 @@ Thread* TCB::get_thread(int id)
 	SetLastError(threadNotFound);
 	return nullptr;
 }
-Thread* TCB::get_active_thread_by_type(int type_command) {
+Thread* get_active_thread_by_type(int type_command) {
 	std::lock_guard<std::mutex> guard(mutex);
-	for (Thread* t : threads) {
-		if ((t->type_command == type_command) && t->state == RUN) return t;
+	auto thread_it = std::find_if(threads.begin(), threads.end(), [type_command](Thread*  f) { return f->type_command == type_command && f->state == RUN; });
+	if (thread_it != std::end(threads)) {
+		return (*thread_it);
+		/*for (Thread* t : threads) {
+			if ((t->type_command == type_command) && t->state == RUN) return t;
+		}*/
 	}
 	SetLastError(threadNotFound);
 	return nullptr;
 }
 
-int TCB::execute_thread(int id)
+int execute_thread_tcb(int id)
 {
 	std::lock_guard<std::mutex> guard(mutex);
 	int index=-1;
-	for (Thread* t : threads) {
+	bool find = false;
+	auto thread_it = std::find_if(threads.begin(), threads.end(), [id](Thread*  f) { return f->id == id; });
+	if (thread_it != std::end(threads)) {
+		Thread* t = (*thread_it);
+	/*for (Thread* t : threads) {
 		index++;
-		if (t->id == id) break;
-	}
-	if (index != -1) {
-		threads.erase(threads.begin() + index);
+		if (t->id == id) {
+			find = true;
+			break;
+		}
+	}*/
+	//if (find) {
+		closeFiles(t);
+		threads.erase(thread_it);
 	}
 	else {
 		SetLastError(threadNotFound);
@@ -53,7 +77,7 @@ int TCB::execute_thread(int id)
 	return 0;
 }
 
-int TCB::change_thread_state(int id, Thread_State state)
+int change_thread_state(int id, Thread_State state)
 {
 	std::lock_guard<std::mutex> guard(mutex);
 	for (Thread* t : threads) {
@@ -66,7 +90,7 @@ int TCB::change_thread_state(int id, Thread_State state)
 	return threadNotFound;
 }
 
-int TCB::change_thread_current_folder(int id, std::string* folder)
+int change_thread_current_folder(int id, std::string* folder)
 {
 	std::lock_guard<std::mutex> guard(mutex);
 	for (Thread* t : threads) {
@@ -78,7 +102,8 @@ int TCB::change_thread_current_folder(int id, std::string* folder)
 	SetLastError(threadNotFound);
 	return threadNotFound;;
 }
-std::string TCB::print() {
+
+std::string print_tcb() {
 	std::lock_guard<std::mutex> guard(mutex);
 	std::stringstream str;
 	str << "id \t typ prikazu \t rodic \t stav \t aktualni slozka \t " << std::endl;
@@ -94,5 +119,68 @@ std::string TCB::print() {
 		str<< t->current_folder << std::endl;
 	}
 	return str.str();
+}
+std::string get_thread_current_folder(int id) {
+	std::lock_guard<std::mutex> guard(mutex);
+	for (Thread* t : threads) {
+		if (t->id == id) {
+			return t->current_folder;
+		}
+	}
+	SetLastError(threadNotFound);
+	return "";
+}
+// Prida do TCB tabulky novy filehandler vlaknu s id
+bool add_filehandler(int id, THandle file_descriptor) {
+	std::lock_guard<std::mutex> guard(mutex);
+	auto thread_it = std::find_if(threads.begin(), threads.end(), [id](Thread * f) { return f->id == id; });
+	if (thread_it != std::end(threads)) {
+		Thread* t = (*thread_it);
+		if (t->id == id) {
+			t->handles.push_back(Handle_TCB(file_descriptor, READ_WRITE));
+			return true;
+		}
+	}
+	return false;
+}
+// Odebere z TCB tabulky filehandler vlaku s id
+bool remove_filehandler(int id, THandle file_descriptor) {
+	//TODO: kdyz odstrani, je zavren?
+	std::lock_guard<std::mutex> guard(mutex);
+	auto thread_it = std::find_if(threads.begin(), threads.end(), [id](Thread * f) { return f->id == id; });
+	if (thread_it != std::end(threads)) {
+		Thread* t = (*thread_it);
+		if (t->id == id) {
+			std::vector<Handle_TCB> v = t->handles;
+			int index = -1;
+			bool find = false;
+			auto it = std::find_if(v.begin(), v.end(), [file_descriptor](Handle_TCB & f) { return f.handle == file_descriptor; });
+			if (it != std::end(v)) {
+				v.erase(it);
+				return true;
+			}
+			return false;
+		}
+	}
+	return false;
+}
+// Test, zda vlakno s id obsahuje filedescriptor (true=obsahuje handler)
+bool contain_filehandler(int id, THandle file_descriptor) {
+	std::lock_guard<std::mutex> guard(mutex);
+	auto thread_it = std::find_if(threads.begin(), threads.end(), [id](Thread * f) { return f->id == id; });
+	if (thread_it != std::end(threads)) {
+		Thread* t = (*thread_it);
+		if (t->id == id) {
+			std::vector<Handle_TCB> v = t->handles;
+			int index = -1;
+			bool find = false;
+			auto it = std::find_if(v.begin(), v.end(), [file_descriptor](Handle_TCB  f) { return f.handle == file_descriptor; });
+			if (it != std::end(v)) {
+				v.erase(it);
+				return true;
+			}
+		}
+	}
+	return false;
 }
 

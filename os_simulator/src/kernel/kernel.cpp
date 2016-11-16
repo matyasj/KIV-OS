@@ -45,6 +45,7 @@ void Run_VM() {
 	if (shell) {
 		CONTEXT regs;  //ted je regs jenom nejak vyplneno kvuli preakladci
 		GetThreadContext(GetCurrentThread(), &regs);  //ale pak bude jeden z registru ukazovat na nejaky startup info blok
+		add_first();	// TODO zatim - predelat...
 		shell(regs);
 	}
 	

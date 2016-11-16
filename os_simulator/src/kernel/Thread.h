@@ -1,5 +1,6 @@
 #pragma once
 #include<string>
+#include<vector>
 
 #ifndef thread_H
 #define thread_H
@@ -30,11 +31,11 @@ public:
 	int parent_id = -1;		// id rodice
 	Thread_State state;		// stav vlakna
 	std::string current_folder;		// aktualni slozka
-	Handle_TCB* inputHandle;		//vstupni handle
-	Handle_TCB* outputHandle;	//vystupni handle
+	//Handle_TCB inputHandle;		//vstupni handle
+	//Handle_TCB outputHandle;	//vystupni handle
+	std::vector<Handle_TCB> handles;	//handes
 
-	//Thread(int type_command,std::string current_folder);
-	//Thread(int type_command, std::string current_folder,Thread_State state);
+	
 	Thread(int type_command, std::string current_folder,Thread_State state, int parent_id,THandle inputHandle,THandle outputHandle);
 	~Thread();
 	

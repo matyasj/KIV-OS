@@ -3,7 +3,7 @@
 #include<thread>
 #include<iostream>
 
-TCB *tcb = new TCB();
+//TCB *tcb = new TCB();
 
 /*
 
@@ -15,10 +15,16 @@ void handleThread(CONTEXT &regs) {
 	case scPs:
 		std::string* buffer;
 		buffer = (std::string*)regs.Rdx;
-		std::string buf = tcb->print();
+		std::string buf = print_tcb();
 		*buffer = buf;
 	}
 }
+void add_first() {
+	int id = add_thread(SHELL, "C/", RUN, -1, nullptr, nullptr);
+}
+
+
+
 
 void thread(TEntryPoint program, CONTEXT &regs,int id) {
 	GetThreadContext(GetCurrentThread(), &regs);
@@ -26,9 +32,9 @@ void thread(TEntryPoint program, CONTEXT &regs,int id) {
 		program(regs);		//todo - nebude cekat
 	}
 	else {
-		std::cout << "Neznami program";
+		std::cout << "Neznamý program";
 	}
-	tcb->execute_thread(id);
+	execute_thread(id);
 }
 /*
 rax Command, rbx input, rcx output, rdx arguments
@@ -47,12 +53,12 @@ void do_thread(TEntryPoint program, CONTEXT &regs) {
 	int type_command = comm->type_command;
 	std::string arguments = "";
 	if (comm->has_argument) arguments = comm->arguments.at(0);
-	Thread* shell = tcb->get_active_thread_by_type(SHELL);
+	Thread* shell = get_active_thread_by_type(SHELL);
 	int parrent_id = shell->id;
 	THandle handleIn = (THandle)regs.Rbx;
 	THandle handleOut = (THandle)regs.Rcx;
 	std::string current_folder = shell->current_folder;
-	int id = tcb->add_thread(type_command, current_folder, RUN,parrent_id,handleIn,handleOut);
+	int id = add_thread(type_command, current_folder, RUN,parrent_id,handleIn,handleOut);
 	regs.Rdi = id;
 	Thread_ready t;
 	t.id = id;
@@ -76,6 +82,6 @@ void start() {
 /*int create_thread(int type_command, std::string current_folder, int parrent_id) {
 	return tcb->add_thread(type_command, current_folder, parrent_id);
 }*/
-int execute_thread(int id) {
-	return tcb->execute_thread(id);
+void execute_thread(int id) {
+	execute_thread_tcb(id);
 }

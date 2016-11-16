@@ -73,7 +73,7 @@ void handleProgram(CONTEXT &regs) {
 
 				// ziskej THandle na vystupni soubor a uloz ho do fronty
 				t = createFile(command->redirect_files_out.name, FILE_WRITE_ACCESS);
-				regs.Rbx = (decltype(regs.Rcx))t;
+				regs.Rcx = (decltype(regs.Rcx))t;
 
 				//std::cout << "Vystup programu je presmerovan do souboru " << command->redirect_files_out.name << std::endl;
 			}
@@ -83,7 +83,7 @@ void handleProgram(CONTEXT &regs) {
 				// ziskej THandle na vystupni soubor a uloz ho do registru
 				// TODO Append file command->redirect_files.name
 				t = 0;
-				regs.Rbx = (decltype(regs.Rcx))t;
+				regs.Rcx = (decltype(regs.Rcx))t;
 
 				//std::cout << "Vystup programu je presmerovan na konec souboru " << command->redirect_files_out.name << std::endl;
 			}
@@ -92,14 +92,14 @@ void handleProgram(CONTEXT &regs) {
 		else {
 			// vypis na konzoli
 			t = getStdOut();
-			regs.Rbx = (decltype(regs.Rcx))t;
+			regs.Rcx = (decltype(regs.Rcx))t;
 		}
 	}
 	else {
 
 		// vytvori pipe
 		createPipe(&t, &last_handle);
-		regs.Rcx = (decltype(regs.Rbx))t;
+		regs.Rcx = (decltype(regs.Rcx))t;
 	}
 
 	// spousteni programu pomoci Thread Management

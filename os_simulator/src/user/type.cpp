@@ -42,8 +42,8 @@ size_t __stdcall type(const CONTEXT &regs) {
 			else {
 				//const THandle file_handle, const void *buffer, const size_t buffer_size, size_t &written
 				size_t written;
-				//Write_File(output, buffer.c_str(), 0, written);
-				std::cout << buffer;
+				Write_File(output, buffer.c_str(), 0, written);
+				//std::cout << buffer;
 			}
 		}
 	}
