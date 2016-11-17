@@ -13,14 +13,15 @@ size_t __stdcall echo(const CONTEXT &regs) {
 	int id = (int)regs.Rdi;
 	THandle input = (THandle)regs.Rbx;
 	THandle output = (THandle)regs.Rcx;
-	Command* com = (Command*)regs.Rdx;
-
+	std::string arg = (char *)regs.Rdx;
 	std::vector<std::string> lines;
-	if (com->has_argument) {
+	if (!arg.empty()) {
+		std::string arg_str = arg;
 		std::stringstream str;
-		str << com->arguments.at(0)<<std::endl;
+		str << arg_str << std::endl;
 		size_t written;
-		Write_File(output, str.str().c_str(), 0, written);
+		std::string strr = str.str();
+		Write_File(output, strr.c_str(), 2, written);
 	}
 	else {
 		// TODO - chyba

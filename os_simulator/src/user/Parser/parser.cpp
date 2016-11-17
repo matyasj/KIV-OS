@@ -195,6 +195,7 @@ std::vector<Command> Parser::parse_line(std::string line) {
 	}
 	
 	std::string token = trim(data.back());
+	//std::string token = trim(data.at(i));
 	Command com = parse_instruction_arg(token);
 	Command* first;
 	if (commands.empty()) {

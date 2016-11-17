@@ -38,6 +38,7 @@ void exit(int id_actual_shell) {
 
 void thread(TEntryPoint program, CONTEXT &regs,int id,int type_command) {
 	GetThreadContext(GetCurrentThread(), &regs);
+	//int type_command = com->type_command;
 	change_thread_state(id, RUN);
 	if (program) {
 		if (type_command == SHELL) {
@@ -60,20 +61,24 @@ rax Command, rbx input, rcx output, rdx arguments
 pøedám ti program a regs ... z regs si vytáhneš Handlery a nastavíš práva, z regs rax si z command vytáhneš typ abys to mohl uložit do TCB, 
 jinak s regs nic nedìláš a pošleš je programu pomocí thread(program, regs), uložíš si do TCB a všechny ty vìci kolem
 
-rdx Command
+vstup
+rdx argument
 rbx input Handler
 rcx output Handler
 rax error
 
-do rdi prida id thread
+vystup
+rbx input Handler
+rcx output Handler
+rax error
+Rdx - arguments
+Rdi - id_thread;
 */
 void do_thread(TEntryPoint program, CONTEXT &regs) {
 	Command* comm = ((Command*)regs.Rdx);
 	THandle handleIn = (THandle)regs.Rbx;
 	THandle handleOut = (THandle)regs.Rcx;
 	int type_command = comm->type_command;
-	std::string arguments = "";
-	if (comm->has_argument) arguments = comm->arguments.at(0);
 	int parrent_id = get_active_thread_by_type(SHELL);
 	std::string current_folder = "C:\\";
 	if (parrent_id != -1)
@@ -83,7 +88,14 @@ void do_thread(TEntryPoint program, CONTEXT &regs) {
 	int id = add_thread(type_command,comm->name ,current_folder, READY ,parrent_id,handleIn,handleOut);
 	regs.Rdi = id;
 	Thread_ready t;
-	t.type_command = type_command;
+	t.type_instruction = type_command;
+	//t.command = *comm;
+	std::string arg = "";
+	if (comm->has_argument) {
+		arg = (comm->arguments.at(0));
+		//regs.Rdx = (decltype(regs.Rdx))&arg;
+	}
+	t.arg = arg;
 	t.id = id;
 	t.program = program;
 	t.regs = regs;
@@ -92,7 +104,10 @@ void do_thread(TEntryPoint program, CONTEXT &regs) {
 void start() {
 	std::vector<std::thread> threads;
 	for (Thread_ready t : thread_ready) {
-		threads.push_back(std::thread(thread, t.program,t.regs,t.id,t.type_command));
+		Command* comm = ((Command*)t.regs.Rdx);
+		int id = t.id;
+		t.regs.Rdx = (decltype(t.regs.Rdx))(t.arg.c_str());
+		threads.push_back(std::thread(thread, t.program,t.regs,t.id,t.type_instruction));
 	}
 	thread_ready.clear();
 	bool b = thread_ready.empty();

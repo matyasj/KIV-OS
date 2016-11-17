@@ -33,7 +33,7 @@ void count(std::string text, int& lines, int& bytes, int& words) {
 }
 std::string print(int& lines, int& bytes, int& words, std::string name) {
 	std::stringstream str;
-	str << lines << "\t" << words << "\t" << bytes << "\t" << name;
+	str << lines << "\t" << words << "\t" << bytes << "\t" << name << std::endl;
 	return str.str();
 }
 
@@ -41,15 +41,15 @@ size_t __stdcall wc(const CONTEXT &regs) {
 	int id = (int)regs.Rdi;
 	THandle input = (THandle)regs.Rbx;
 	THandle output = (THandle)regs.Rcx;
-	Command* com = (Command*)regs.Rdx;
-
+	std::string arg = (char *)regs.Rdx;
+	std::string buffer;
+	size_t read;
+	size_t written;
 	int lines = 0, words = 0, bytes = 0;
-	if (com->has_argument) {
-		std::string argument = com->arguments.at(0);
-		create_wc(argument);								// TODO - delete - ted pro test
-		THandle file = Open_File(argument.c_str(), FILE_READ_ACCESS);
-		std::string buffer;
-		size_t read;
+	if (!arg.empty()) {
+		//std::string argument = com->arguments.at(0);
+		//create_wc(argument);								// TODO - delete - ted pro test
+		THandle file = Open_File(arg.c_str(), FILE_READ_ACCESS);
 		if (Get_Last_Error() == 0)
 		{
 			bool succes = Read_File(file, &buffer, 0, read);
@@ -64,15 +64,24 @@ size_t __stdcall wc(const CONTEXT &regs) {
 					buffer += '\n';
 				}
 				count(buffer,lines,bytes,words);
-				std::string out = print(lines,bytes,words,argument);
-				size_t written;
-				//std::cout << out;
+				std::string out = print(lines,bytes,words, arg);
 				Write_File(output, out.c_str(), 0, written);
 			}
 		}
 	}
 	else {
 		//TODO - read z input
+		size_t was_read = 0;
+		while (true)
+		{
+			bool succes = Read_File(input, &buffer, 0, read);
+			if (read == was_read) break;
+			count(buffer, lines, bytes, words);
+			was_read = read;
+			
+		}
+		std::string out = print(lines, bytes, words, "");
+		Write_File(output, out.c_str(), 0, written);
 	}
 
 	return 0;

@@ -8,10 +8,11 @@
 class Thread_ready
 {
 public:
-	int type_command;
 	TEntryPoint program;
 	CONTEXT regs;
 	int id;
+	int type_instruction;
+	std::string arg;
 
 	Thread_ready();
 	~Thread_ready();

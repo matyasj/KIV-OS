@@ -18,7 +18,7 @@ public:
 	virtual std::string read();
 
 	//Konstruktor
-	Pipe::Pipe(std::string name) : File(name, NULL, NULL) {
+	Pipe::Pipe(std::string name) : File(name, nullptr,"") {
 		this->buffer_occupancy = 0;
 	}
 

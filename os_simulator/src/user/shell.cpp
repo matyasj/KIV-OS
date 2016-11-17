@@ -68,7 +68,7 @@ size_t __stdcall shell(const CONTEXT &regs) {
 			else {
 				end = false;
 			}
-
+			Command com = commands[i];
 			Start_Program(commands[i], end);
 		}
 		// ##################################################################################################		

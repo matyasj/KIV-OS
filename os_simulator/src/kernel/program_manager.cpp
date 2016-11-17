@@ -16,11 +16,19 @@ Spousti jednotlive prikazy a prirazuje jim spravne vstupny a vystupni proudy
 Rax - Error
 Rbx - IN THandle / END flag (END flag se zjisti ulozi a pote prepise - dale uz neni treba)
 Rcx - OUT THandle
-Rdx - Command
+
+
 */
 void handleProgram(CONTEXT &regs) {
 
 	Command* command = (Command*)regs.Rdx;
+	/*if (command->has_argument) {
+		regs.Rdx = (decltype(regs.Rdx)) (command->arguments.at(0)).c_str();
+	}
+	else {
+		regs.Rdx = (decltype(regs.Rdx))nullptr;
+	}
+	regs.Rdi = (decltype(regs.Rdi))command->type_command;*/
 	bool end = (bool)regs.Rbx;
 
 	LPCSTR program_name = command->name.c_str();
