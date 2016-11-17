@@ -4,7 +4,13 @@
 #include "shell.h"
 #include "Parser/parser.h"
 #include "rtl.h"
-
+/*
+rdx Command
+rbx input Handler
+rcx output Handler
+rax error
+rdi - id thread
+*/
 size_t __stdcall shell(const CONTEXT &regs) {
 	/*THandle stdin = Create_File("CONOUT$", FILE_SHARE_WRITE);	//nahradte systemovym resenim, zatim viz Console u CreateFile na MSDN
 	const char* hello = "Hello world from shell!\n";
@@ -16,22 +22,25 @@ size_t __stdcall shell(const CONTEXT &regs) {
 	//THandle std_out = Create_File("CONOUT$", FILE_SHARE_WRITE);
 	THandle std_in = (THandle)regs.Rbx;
 	THandle std_out = (THandle)regs.Rcx;
-	Close_File(std_in);
+	//Close_File(std_in);
 	size_t written;
 	// Standardni vstup - chova se jako soubor -> pri vzpisu na konzoli volat napr: Write_File(std_out, "retezec", strlen("retezec"), written);
 	//THandle std_in = Create_File("CONIN$", FILE_SHARE_READ);
 	size_t pocet = 0;
 	
 	/* TODO - prozatim, jen at se muze testovat */
-	int id = (int)regs.Rax;
+	int id = (int)regs.Rdi;
 	Parser parser;
-	bool run = 1;
 	
+	bool run = true;
 	while (run) {
 
 		// TODO vypise cestu
 		//std::cout << "Zadej prikaz: ";
-		Write_File(std_out, "Zadej prikaz: ", 1, written);
+		std::string start_text;
+		printf_current_folder(id, &start_text);
+		start_text += ">";
+		Write_File(std_out, start_text.c_str(), 2, written);
 		std::string line = "";
 		Read_File(std_in, &line, 0, pocet);
 
@@ -50,8 +59,8 @@ size_t __stdcall shell(const CONTEXT &regs) {
 		for (int i = 0; i < commands.size(); i++) {
 
 			if (commands[i].type_command == EXIT) {
-				run = 0;
-			}
+				run = false;
+			} 
 
 			if (i == commands.size() - 1) {
 				end = true;
@@ -64,7 +73,7 @@ size_t __stdcall shell(const CONTEXT &regs) {
 		}
 		// ##################################################################################################		
 	}
-	Close_File(std_out);
+	//Close_File(std_out);
 
 	return 0;
 }

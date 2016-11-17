@@ -1,5 +1,6 @@
 #include "echo.h"
 #include <iostream>
+#include<sstream>
 
 /*
 Parametry:
@@ -16,9 +17,10 @@ size_t __stdcall echo(const CONTEXT &regs) {
 
 	std::vector<std::string> lines;
 	if (com->has_argument) {
-		std::string argument = com->arguments.at(0);
+		std::stringstream str;
+		str << com->arguments.at(0)<<std::endl;
 		size_t written;
-		Write_File(output, argument.c_str(), 0, written);
+		Write_File(output, str.str().c_str(), 0, written);
 	}
 	else {
 		// TODO - chyba

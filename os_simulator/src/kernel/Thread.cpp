@@ -7,8 +7,9 @@ Handle_TCB::Handle_TCB(THandle handle, Access access) {
 }
 Handle_TCB::~Handle_TCB() {
 }
-Thread::Thread(int type_command, std::string current_folder, Thread_State state, int parent_id, THandle inputHandle, THandle outputHandle) {
+Thread::Thread(int type_command,std::string name_command, std::string current_folder, Thread_State state, int parent_id, THandle inputHandle, THandle outputHandle) {
 	this->current_folder = current_folder;
+	this->name_command = name_command;
 	this->type_command = type_command;
 	this->id = id_counter;
 	id_counter++;

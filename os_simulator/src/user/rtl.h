@@ -47,8 +47,8 @@ void print_ps(const void *buffer);
 //vytvori vlakno a vrati jeho id. Pokud nema rodice, parrent_id = -1;
 int Execute_Thread(THandle id);
 //ukonci vlakno s  id
-THandle search_runing_thread(int type_command);
-bool printf_current_folder(THandle h, const void* buffer);*/
+THandle search_runing_thread(int type_command);*/
+bool printf_current_folder(int id, const void* buffer);
 
 // spusti program s uvedenymi parametry
 bool Start_Program(Command command, bool end);

@@ -29,6 +29,7 @@ class Thread {
 public:
 	int id;		// id
 	int type_command;		// typ prikazu;
+	std::string name_command;		// jmeno prikazu
 	int parent_id = -1;		// id rodice
 	Thread_State state;		// stav vlakna
 	std::string current_folder;		// aktualni slozka
@@ -37,7 +38,7 @@ public:
 	std::vector<Handle_TCB> handles;	//handes
 
 	
-	Thread(int type_command, std::string current_folder,Thread_State state, int parent_id,THandle inputHandle,THandle outputHandle);
+	Thread(int type_command, std::string name_command, std::string current_folder,Thread_State state, int parent_id,THandle inputHandle,THandle outputHandle);
 	~Thread();
 	
 

@@ -14,9 +14,9 @@ void closeFiles(Thread* t) {
 	}
 }
 
-int add_thread(int type_command, std::string current_folder, Thread_State state, int parent_id, THandle inputHandle, THandle outputHandle)
+int add_thread(int type_command, std::string name_command ,std::string current_folder, Thread_State state, int parent_id, THandle inputHandle, THandle outputHandle)
 {
-	Thread *thread = new Thread(type_command, current_folder, state, parent_id,inputHandle,outputHandle);
+	Thread *thread = new Thread(type_command,name_command, current_folder, state, parent_id,inputHandle,outputHandle);
 	std::lock_guard<std::mutex> guard(mutex);
 	threads.push_back(thread);
 	return thread->id;
@@ -32,7 +32,7 @@ Thread* get_thread(int id)
 }
 int get_active_thread_by_type(int type_command) {
 	std::lock_guard<std::mutex> guard(mutex);
-	auto thread_it = std::find_if(threads.begin(), threads.end(), [type_command](Thread*  f) { return f->type_command == type_command && f->state == RUN; });
+	auto thread_it = std::find_if(threads.begin(), threads.end(), [type_command](Thread*  f) { return ((f->type_command == type_command) && (f->state == RUN)); });
 	if (thread_it != std::end(threads)) {
 		return (*thread_it)->id;
 	}
@@ -61,11 +61,10 @@ int execute_thread_tcb(int id)
 int change_thread_state(int id, Thread_State state)
 {
 	std::lock_guard<std::mutex> guard(mutex);
-	for (Thread* t : threads) {
-		if (t->id == id) {
-			t->state = state;
-			return 0;
-		}
+	auto thread_it = std::find_if(threads.begin(), threads.end(), [id](Thread*  f) { return f->id == id; });
+	if (thread_it != std::end(threads)) {
+		(*thread_it)->state = state;
+		return 0;
 	}
 	SetLastError(threadNotFound);
 	return threadNotFound;
@@ -74,22 +73,25 @@ int change_thread_state(int id, Thread_State state)
 int change_thread_current_folder(int id, std::string* folder)
 {
 	std::lock_guard<std::mutex> guard(mutex);
-	for (Thread* t : threads) {
-		if (t->id == id) {
-			t->current_folder = *folder;
-			return 0;
-		}
+	auto thread_it = std::find_if(threads.begin(), threads.end(), [id](Thread*  f) { return f->id == id; });
+	if (thread_it != std::end(threads)) {
+		(*thread_it)->current_folder = *folder;
+		return 0;
 	}
 	SetLastError(threadNotFound);
 	return threadNotFound;;
 }
-
+int get_parent_id(int id) {
+	auto thread_it = std::find_if(threads.begin(), threads.end(), [id](Thread*  f) { return f->id == id; });
+	if (thread_it != std::end(threads)) return (*thread_it)->parent_id;
+	return -1;
+}
 std::string print_tcb() {
 	std::lock_guard<std::mutex> guard(mutex);
 	std::stringstream str;
 	str << "id \t typ prikazu \t rodic \t stav \t aktualni slozka \t " << std::endl;
 	for (Thread* t : threads) {
-		str << t->id << "\t" << t->type_command << "\t" << t->parent_id << "\t";
+		str << t->id << "\t" << t->name_command << "\t" << t->parent_id << "\t";
 		switch (t->state) {
 		case RUN: str << "RUN \t";break;
 		case READY: str << "READY \t";break;

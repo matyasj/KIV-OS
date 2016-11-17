@@ -89,8 +89,8 @@ const __int8 scGetPipe = 12;
 //al hodnoty pro scThread
 /*const __int8 scCreateThread = 1;
 const __int8 scExecuteThread = 2;
-const __int8 scSearchThread = 3;
-const __int8 scPrintCurrentFolder = 4;*/
+const __int8 scSearchThread = 3;*/
+const __int8 scPrintCurrentFolder = 4;
 const __int8 scPs = 1;
 
 // booth

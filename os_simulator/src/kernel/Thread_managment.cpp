@@ -7,27 +7,51 @@
 std::vector<Thread_ready> thread_ready;
 void handleThread(CONTEXT &regs) {
 	switch (Get_AL((__int16)regs.Rax)) {
-	case scPs:
+	case scPs: {
 		std::string* buffer;
 		buffer = (std::string*)regs.Rdx;
 		std::string buf = print_tcb();
 		*buffer = buf;
+	}break;
+	case scPrintCurrentFolder: {
+		std::string* buffer;
+		buffer = (std::string*)regs.Rdx;
+		int id = (int)regs.Rdi;
+		std::string buf = get_thread_current_folder(id);
+		*buffer = buf;
+	}break;
 	}
 }
-void add_first() {
-	int id = add_thread(SHELL, "C/", RUN, -1, nullptr, nullptr);
+/*void add_first() {
+	int id = add_thread(SHELL, "C:\\", RUN, -1, nullptr, nullptr);
+}*/
+void exit(int id_actual_shell) {
+	int parrent_id = get_parent_id(id_actual_shell);
+	if (parrent_id != -1)
+	{
+		change_thread_state(parrent_id, RUN);
+		execute_thread(id_actual_shell);
+	}
 }
 
 
 
-
-void thread(TEntryPoint program, CONTEXT &regs,int id) {
+void thread(TEntryPoint program, CONTEXT &regs,int id,int type_command) {
 	GetThreadContext(GetCurrentThread(), &regs);
+	change_thread_state(id, RUN);
 	if (program) {
-		program(regs);		//todo - nebude cekat
+		if (type_command == SHELL) {
+			int parrent_id = get_parent_id(id);
+			change_thread_state(parrent_id, WAIT);
+		}
+		program(regs);
 	}
 	else {
-		std::cout << "Neznamý program";
+		if (type_command == EXIT) {
+			int parrent_id = get_active_thread_by_type(SHELL);
+			exit(parrent_id);	
+		}
+		//std::cout << "Neznamý program";
 	}
 	execute_thread(id);
 }
@@ -56,27 +80,40 @@ void do_thread(TEntryPoint program, CONTEXT &regs) {
 	{
 		current_folder = get_thread_current_folder(parrent_id);
 	}
-	int id = add_thread(type_command, current_folder, RUN,parrent_id,handleIn,handleOut);
+	int id = add_thread(type_command,comm->name ,current_folder, READY ,parrent_id,handleIn,handleOut);
 	regs.Rdi = id;
 	Thread_ready t;
+	t.type_command = type_command;
 	t.id = id;
 	t.program = program;
 	t.regs = regs;
 	thread_ready.push_back(t);
-	//std::thread thread(thread,program,regs,id);
-	//thread.join();
 }
 void start() {
 	std::vector<std::thread> threads;
 	for (Thread_ready t : thread_ready) {
-		threads.push_back(std::thread(thread, t.program,t.regs,t.id));
+		threads.push_back(std::thread(thread, t.program,t.regs,t.id,t.type_command));
 	}
+	thread_ready.clear();
+	bool b = thread_ready.empty();
 	//wait for them to complete
 	for (auto& th : threads)
 		th.join();
-	thread_ready.clear();
 }
 
 void execute_thread(int id) {
 	execute_thread_tcb(id);
+}
+
+
+
+
+
+
+Thread_ready::Thread_ready()
+{
+}
+
+Thread_ready::~Thread_ready()
+{
 }

@@ -5,12 +5,19 @@
 
 #ifndef Thread_managment_H
 #define Thread_managment_H
-struct Thread_ready
+class Thread_ready
 {
+public:
+	int type_command;
 	TEntryPoint program;
 	CONTEXT regs;
 	int id;
+
+	Thread_ready();
+	~Thread_ready();
 };
+
+
 void handleThread(CONTEXT &regs);
 void do_thread(TEntryPoint program, CONTEXT &regs);
 void start();

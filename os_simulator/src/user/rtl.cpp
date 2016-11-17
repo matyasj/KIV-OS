@@ -240,14 +240,14 @@ THandle search_runing_thread(int type_command) {
 	regs.Rdx = type_command;
 	Do_SysCall(regs);
 	return (THandle)regs.Rax;
-}
-bool printf_current_folder(THandle h, const void* buffer) {
+}*/
+bool printf_current_folder(int id, const void* buffer) {
 	CONTEXT regs = Prepare_SysCall_Context(scThread, scPrintCurrentFolder);
-	regs.Rdx = (decltype(regs.Rdx))h;
-	regs.Rdi = (decltype(regs.Rdi))buffer;
+	regs.Rdx = (decltype(regs.Rdx))buffer;
+	regs.Rdi = (decltype(regs.Rdi))id;
 	Do_SysCall(regs);
 	return (bool)regs.Rax;
-}*/
+}
 
 
 /*---------------------- PROGRAM -------------------*/
