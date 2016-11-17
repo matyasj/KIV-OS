@@ -66,8 +66,8 @@ size_t __stdcall wc(const CONTEXT &regs) {
 				count(buffer,lines,bytes,words);
 				std::string out = print(lines,bytes,words,argument);
 				size_t written;
-				std::cout << out;
-				//Write_File(output, out.c_str(), 0, written);
+				//std::cout << out;
+				Write_File(output, out.c_str(), 0, written);
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 #include"parser.h"
 #include"my_string.h"
-#include"instruction.h"
+#include"..\..\common\instruction.h"
 #include<iostream>
 #include <vector>
 

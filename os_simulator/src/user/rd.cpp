@@ -32,4 +32,5 @@ size_t __stdcall rd(const CONTEXT &regs) {
 	else {
 		//TODO chyba
 	}
+	return 0;
 }

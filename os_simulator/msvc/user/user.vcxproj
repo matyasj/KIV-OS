@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\common\command.cpp" />
     <ClCompile Include="..\..\src\user\buffer.cpp" />
     <ClCompile Include="..\..\src\user\cd.cpp" />
     <ClCompile Include="..\..\src\user\dir.cpp" />
@@ -28,7 +29,6 @@
     <ClCompile Include="..\..\src\user\exit.cpp" />
     <ClCompile Include="..\..\src\user\freq.cpp" />
     <ClCompile Include="..\..\src\user\md.cpp" />
-    <ClCompile Include="..\..\src\user\Parser\command.cpp" />
     <ClCompile Include="..\..\src\user\Parser\error.cpp" />
     <ClCompile Include="..\..\src\user\Parser\my_string.cpp" />
     <ClCompile Include="..\..\src\user\Parser\parser.cpp" />
@@ -44,6 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\common\api.h" />
+    <ClInclude Include="..\..\src\common\command.h" />
+    <ClInclude Include="..\..\src\common\instruction.h" />
     <ClInclude Include="..\..\src\user\buffer.h" />
     <ClInclude Include="..\..\src\user\cd.h" />
     <ClInclude Include="..\..\src\user\dir.h" />
@@ -52,9 +54,7 @@
     <ClInclude Include="..\..\src\user\exit.h" />
     <ClInclude Include="..\..\src\user\freq.h" />
     <ClInclude Include="..\..\src\user\md.h" />
-    <ClInclude Include="..\..\src\user\Parser\command.h" />
     <ClInclude Include="..\..\src\user\Parser\error.h" />
-    <ClInclude Include="..\..\src\user\Parser\instruction.h" />
     <ClInclude Include="..\..\src\user\Parser\my_string.h" />
     <ClInclude Include="..\..\src\user\Parser\parser.h" />
     <ClInclude Include="..\..\src\user\program.h" />

@@ -4,13 +4,6 @@
 #include <sstream>
 #include <algorithm>
 std::mutex mutex;
-/*TCB::TCB() {
-	Thread *thread = new Thread(SHELL, "C/", RUN, -1, nullptr, nullptr);
-	threads.push_back(thread);
-}
-
-TCB::~TCB() { threads.clear(); }
-*/
 std::vector<Thread*> threads;
 
 void closeFiles(Thread* t) {
@@ -32,23 +25,19 @@ int add_thread(int type_command, std::string current_folder, Thread_State state,
 Thread* get_thread(int id)
 {
 	std::lock_guard<std::mutex> guard(mutex);
-	for (Thread* t : threads) {
-		if (t->id == id) return t;
-	}
+	auto thread_it = std::find_if(threads.begin(), threads.end(), [id](Thread*  f) { return f->id == id; });
+	if (thread_it != std::end(threads)) return (*thread_it);
 	SetLastError(threadNotFound);
 	return nullptr;
 }
-Thread* get_active_thread_by_type(int type_command) {
+int get_active_thread_by_type(int type_command) {
 	std::lock_guard<std::mutex> guard(mutex);
 	auto thread_it = std::find_if(threads.begin(), threads.end(), [type_command](Thread*  f) { return f->type_command == type_command && f->state == RUN; });
 	if (thread_it != std::end(threads)) {
-		return (*thread_it);
-		/*for (Thread* t : threads) {
-			if ((t->type_command == type_command) && t->state == RUN) return t;
-		}*/
+		return (*thread_it)->id;
 	}
 	SetLastError(threadNotFound);
-	return nullptr;
+	return -1;
 }
 
 int execute_thread_tcb(int id)
@@ -59,14 +48,6 @@ int execute_thread_tcb(int id)
 	auto thread_it = std::find_if(threads.begin(), threads.end(), [id](Thread*  f) { return f->id == id; });
 	if (thread_it != std::end(threads)) {
 		Thread* t = (*thread_it);
-	/*for (Thread* t : threads) {
-		index++;
-		if (t->id == id) {
-			find = true;
-			break;
-		}
-	}*/
-	//if (find) {
 		closeFiles(t);
 		threads.erase(thread_it);
 	}
@@ -131,13 +112,13 @@ std::string get_thread_current_folder(int id) {
 	return "";
 }
 // Prida do TCB tabulky novy filehandler vlaknu s id
-bool add_filehandler(int id, THandle file_descriptor) {
+bool add_filehandler(int id, THandle file_descriptor, Access access) {
 	std::lock_guard<std::mutex> guard(mutex);
 	auto thread_it = std::find_if(threads.begin(), threads.end(), [id](Thread * f) { return f->id == id; });
 	if (thread_it != std::end(threads)) {
 		Thread* t = (*thread_it);
 		if (t->id == id) {
-			t->handles.push_back(Handle_TCB(file_descriptor, READ_WRITE));
+			t->handles.push_back(Handle_TCB(file_descriptor, access));
 			return true;
 		}
 	}
@@ -150,17 +131,14 @@ bool remove_filehandler(int id, THandle file_descriptor) {
 	auto thread_it = std::find_if(threads.begin(), threads.end(), [id](Thread * f) { return f->id == id; });
 	if (thread_it != std::end(threads)) {
 		Thread* t = (*thread_it);
-		if (t->id == id) {
-			std::vector<Handle_TCB> v = t->handles;
-			int index = -1;
-			bool find = false;
-			auto it = std::find_if(v.begin(), v.end(), [file_descriptor](Handle_TCB & f) { return f.handle == file_descriptor; });
-			if (it != std::end(v)) {
-				v.erase(it);
-				return true;
-			}
-			return false;
+		std::vector<Handle_TCB> v = t->handles;
+		int index = -1;
+		auto it = std::find_if(v.begin(), v.end(), [file_descriptor](Handle_TCB & f) { return f.handle == file_descriptor; });
+		if (it != std::end(v)) {
+			v.erase(it);
+			return true;
 		}
+		return false;
 	}
 	return false;
 }
@@ -170,15 +148,10 @@ bool contain_filehandler(int id, THandle file_descriptor) {
 	auto thread_it = std::find_if(threads.begin(), threads.end(), [id](Thread * f) { return f->id == id; });
 	if (thread_it != std::end(threads)) {
 		Thread* t = (*thread_it);
-		if (t->id == id) {
-			std::vector<Handle_TCB> v = t->handles;
-			int index = -1;
-			bool find = false;
-			auto it = std::find_if(v.begin(), v.end(), [file_descriptor](Handle_TCB  f) { return f.handle == file_descriptor; });
-			if (it != std::end(v)) {
-				v.erase(it);
-				return true;
-			}
+		std::vector<Handle_TCB> v = t->handles;
+		auto it = std::find_if(v.begin(), v.end(), [file_descriptor](Handle_TCB  f) { return f.handle == file_descriptor; });
+		if (it != std::end(v)) {
+			return true;
 		}
 	}
 	return false;

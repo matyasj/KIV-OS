@@ -1,7 +1,6 @@
 #pragma once
 #include "..\common\api.h"
-#include "..\user\Parser\command.h"
-#include "..\user\Parser\instruction.h"
+#include "..\common\command.h"
 #include "Thread_managment.h"
 #include "kernel.h"
 #include "fs.h"

@@ -1,14 +1,9 @@
 #include"Thread_managment.h"
-#include"../user/Parser/command.h"
+#include "..\common\command.h"
 #include<thread>
 #include<iostream>
 
-//TCB *tcb = new TCB();
 
-/*
-
-
-*/
 std::vector<Thread_ready> thread_ready;
 void handleThread(CONTEXT &regs) {
 	switch (Get_AL((__int16)regs.Rax)) {
@@ -50,14 +45,17 @@ do rdi prida id thread
 */
 void do_thread(TEntryPoint program, CONTEXT &regs) {
 	Command* comm = ((Command*)regs.Rdx);
+	THandle handleIn = (THandle)regs.Rbx;
+	THandle handleOut = (THandle)regs.Rcx;
 	int type_command = comm->type_command;
 	std::string arguments = "";
 	if (comm->has_argument) arguments = comm->arguments.at(0);
-	Thread* shell = get_active_thread_by_type(SHELL);
-	int parrent_id = shell->id;
-	THandle handleIn = (THandle)regs.Rbx;
-	THandle handleOut = (THandle)regs.Rcx;
-	std::string current_folder = shell->current_folder;
+	int parrent_id = get_active_thread_by_type(SHELL);
+	std::string current_folder = "C:\\";
+	if (parrent_id != -1)
+	{
+		current_folder = get_thread_current_folder(parrent_id);
+	}
 	int id = add_thread(type_command, current_folder, RUN,parrent_id,handleIn,handleOut);
 	regs.Rdi = id;
 	Thread_ready t;
@@ -79,9 +77,6 @@ void start() {
 	thread_ready.clear();
 }
 
-/*int create_thread(int type_command, std::string current_folder, int parrent_id) {
-	return tcb->add_thread(type_command, current_folder, parrent_id);
-}*/
 void execute_thread(int id) {
 	execute_thread_tcb(id);
 }

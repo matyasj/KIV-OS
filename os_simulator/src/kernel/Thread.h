@@ -15,7 +15,8 @@ enum Thread_State {
 enum Access {
 	READ,
 	WRITE,
-	READ_WRITE
+	READ_WRITE,
+	APPEND
 };
 class Handle_TCB {
 public:

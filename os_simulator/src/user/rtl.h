@@ -1,7 +1,7 @@
 #pragma once
 
 #include "..\common\api.h"
-#include "Parser\command.h"
+#include "..\common\command.h"
 #include<string>
 
 size_t Get_Last_Error();

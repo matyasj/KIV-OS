@@ -25,4 +25,5 @@ size_t __stdcall md(const CONTEXT &regs) {
 	else {
 		//TODO - indikovat chybu
 	}
+	return 0;
 }
