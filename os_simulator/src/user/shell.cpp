@@ -2,7 +2,6 @@
 #include <thread>
 
 #include "shell.h"
-#include "Parser/instruction.h"
 #include "Parser/parser.h"
 #include "rtl.h"
 
@@ -14,10 +13,12 @@ size_t __stdcall shell(const CONTEXT &regs) {
 	Close_File(stdin);*/
 
 	// Standardni vystup - chova se jako soubor -> pri vzpisu na konzoli volat napr: Write_File(std_out, "retezec", strlen("retezec"), written);
-	THandle std_out = Create_File("CONOUT$", FILE_SHARE_WRITE);
+	//THandle std_out = Create_File("CONOUT$", FILE_SHARE_WRITE);
+	THandle std_in = (THandle)regs.Rbx;
+	THandle std_out = (THandle)regs.Rcx;
 	size_t written;
 	// Standardni vstup - chova se jako soubor -> pri vzpisu na konzoli volat napr: Write_File(std_out, "retezec", strlen("retezec"), written);
-	THandle std_in = Create_File("CONIN$", FILE_SHARE_READ);
+	//THandle std_in = Create_File("CONIN$", FILE_SHARE_READ);
 	size_t pocet = 0;
 	
 	/* TODO - prozatim, jen at se muze testovat */
@@ -29,7 +30,7 @@ size_t __stdcall shell(const CONTEXT &regs) {
 
 		// TODO vypise cestu
 		//std::cout << "Zadej prikaz: ";
-		Write_File(std_out, "Zadej prikaz: ", strlen("Zadej prikaz: "), written);
+		Write_File(std_out, "Zadej prikaz: ", 1, written);
 		std::string line = "";
 		Read_File(std_in, &line, 0, pocet);
 

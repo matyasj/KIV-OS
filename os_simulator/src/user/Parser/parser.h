@@ -1,6 +1,6 @@
 #include<string>
 #include<vector>
-#include"command.h"
+#include "..\..\common\command.h"
 #include"error.h"
 
 #ifndef parser_H

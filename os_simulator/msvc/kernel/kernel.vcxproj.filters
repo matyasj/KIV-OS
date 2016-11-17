@@ -72,6 +72,9 @@
     <ClCompile Include="..\..\src\kernel\Pipe.cpp">
       <Filter>Source Files\fs</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\common\command.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\common\api.h">
@@ -118,6 +121,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\kernel\Pipe.h">
       <Filter>Header Files\fs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\command.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\instruction.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

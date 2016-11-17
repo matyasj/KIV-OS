@@ -2,6 +2,7 @@
 
 #include "kernel.h"
 #include "io.h"
+#include "..\common\command.h"
 #include "Thread_managment.h"
 #include "program_manager.h"
 
@@ -36,7 +37,11 @@ void SysCall(CONTEXT &regs) {
 	}
 
 }
-
+/*
+Rax - Error
+Rbx - IN THandle / END flag(END flag se zjisti ulozi a pote prepise - dale uz neni treba)
+Rcx - OUT THandle
+Rdx - Command*/
 void Run_VM() {
 	Initialize_Kernel();
 
@@ -44,9 +49,15 @@ void Run_VM() {
 	TEntryPoint shell = (TEntryPoint)GetProcAddress(User_Programs, "shell");
 	if (shell) {
 		CONTEXT regs;  //ted je regs jenom nejak vyplneno kvuli preakladci
-		GetThreadContext(GetCurrentThread(), &regs);  //ale pak bude jeden z registru ukazovat na nejaky startup info blok
+		Command com = Command();
+		com.type_command = SHELL;
+		com.name = SHELL_CHAR;
+		regs.Rbx = true;		// je posledni
+		regs.Rdx = (decltype(regs.Rdx))&com;
+		handleProgram(regs);
+		/*GetThreadContext(GetCurrentThread(), &regs);  //ale pak bude jeden z registru ukazovat na nejaky startup info blok
 		add_first();	// TODO zatim - predelat...
-		shell(regs);
+		shell(regs);*/
 	}
 	
 	Shutdown_Kernel();

@@ -23,7 +23,7 @@ static const int RED_OUT = 97;//>
 static const int RED_OUT_ADD = 96;// >>
 
 /* char */
-static const std::string  SHELL_CHAR = "cmd";
+static const std::string  SHELL_CHAR = "shell";
 static const std::string  EXIT_CHAR = "exit";
 static const std::string  TYPE_CHAR = "type";
 static const std::string  MD_CHAR = "md";

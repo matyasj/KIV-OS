@@ -4,19 +4,7 @@
 #include<vector>
 #ifndef TCB_H
 #define TCB_H
-/*class TCB
-{
-public:
-	TCB();
-	~TCB();
-	
 
-
-
-
-private:
-	std::vector<Thread *> threads;
-};*/
 
 /*
 type_command - typ prikazu
@@ -29,11 +17,11 @@ int add_thread(int type_command, std::string current_folder, Thread_State state,
 id - id hledaneho procesu
 pokud nenajde, vrati nullptr
 */
-Thread* get_thread(int id);
+//Thread* get_thread(int id);
 /*
 najde running thread podle jeho typu
 */
-Thread* get_active_thread_by_type(int type_command);
+int get_active_thread_by_type(int type_command);
 /*
 id - id hledaneho procesu
 vrati cislo chyby. Vse ok == 0
@@ -58,7 +46,7 @@ std::string print_tcb();
 // Ziska string soucasny pracovni adresar procesu/vlakna podle id
 std::string get_thread_current_folder(int id);
 // Prida do TCB tabulky novy filehandler vlaknu s id
-bool add_filehandler(int id, THandle file_descriptor);
+bool add_filehandler(int id, THandle file_descriptor, Access access);
 // Odebere z TCB tabulky filehandler vlaku s id
 bool remove_filehandler(int id, THandle file_descriptor);
 // Test, zda vlakno s id obsahuje filedescriptor (true=obsahuje handler)

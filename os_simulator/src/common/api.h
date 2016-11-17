@@ -1,5 +1,5 @@
 #pragma once
-#include"../user/Parser/instruction.h"
+#include"instruction.h"
 #include <Windows.h>
 
 typedef HANDLE THandle;
