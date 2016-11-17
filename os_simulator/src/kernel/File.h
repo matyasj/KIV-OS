@@ -13,7 +13,7 @@ public:
 	std::string path;
 
 	bool setOpened();
-	bool setClosed();
+	virtual bool setClosed();
 
 	std::string getContentFromPosition();
 	virtual size_t write(std::string str, size_t flag);

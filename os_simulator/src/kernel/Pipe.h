@@ -12,8 +12,9 @@ public:
 	std::condition_variable cv;
 	int buffer_occupancy;
 	std::queue<std::string> my_queue;
-
-	virtual size_t write(std::string str, size_t flag);
+	
+	virtual bool setClosed();
+	virtual size_t write(std::string str, size_t flag);	
 	virtual std::string read();
 
 	//Konstruktor

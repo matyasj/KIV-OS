@@ -8,3 +8,8 @@ size_t Stdout::write(std::string str, size_t flag)
 	this->append(str);
 	return str.size();
 }
+
+bool Stdout::setClosed()
+{
+	return true;
+}

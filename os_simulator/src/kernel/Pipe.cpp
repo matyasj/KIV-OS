@@ -1,5 +1,10 @@
 #include "Pipe.h"
 
+bool Pipe::setClosed()
+{
+	return true;
+}
+
 size_t Pipe::write(std::string str, size_t flag)
 {
 	std::unique_lock<std::mutex> lck(mtx);

@@ -10,3 +10,8 @@ std::string Stdin::read()
 	
 	return line;
 }
+
+bool Stdin::setClosed()
+{
+	return true;
+}
