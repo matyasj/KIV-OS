@@ -16,6 +16,7 @@ size_t __stdcall shell(const CONTEXT &regs) {
 	//THandle std_out = Create_File("CONOUT$", FILE_SHARE_WRITE);
 	THandle std_in = (THandle)regs.Rbx;
 	THandle std_out = (THandle)regs.Rcx;
+	Close_File(std_in);
 	size_t written;
 	// Standardni vstup - chova se jako soubor -> pri vzpisu na konzoli volat napr: Write_File(std_out, "retezec", strlen("retezec"), written);
 	//THandle std_in = Create_File("CONIN$", FILE_SHARE_READ);

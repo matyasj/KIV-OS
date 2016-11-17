@@ -167,6 +167,7 @@ std::string readFile(THandle file)
 bool closeFile(THandle file)
 {
 	File *tmpFile = removeFileFromFDTable(file);
+	
 	return tmpFile->setClosed();
 }
 
@@ -373,7 +374,10 @@ File* removeFileFromFDTable(THandle fileDescriptor) {
 	{
 		if (FileDescriptorTable[i]->getId() == id) {
 			File* file = FileDescriptorTable[i]->filePointer;
-			FileDescriptorTable.erase(FileDescriptorTable.begin() + i);
+			if (getStdIn() != fileDescriptor && getStdOut() != fileDescriptor) {
+				FileDescriptorTable.erase(FileDescriptorTable.begin() + i);
+			}
+			
 			return file;
 		}
 	}
