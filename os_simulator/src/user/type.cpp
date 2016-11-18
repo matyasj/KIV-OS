@@ -25,9 +25,9 @@ size_t __stdcall type(const CONTEXT &regs) {
 	int id = (int)regs.Rdi;
 	THandle input = (THandle)regs.Rbx;
 	THandle output = (THandle)regs.Rcx;
-	Command* com = (Command*)regs.Rdx;
-	if (com->has_argument) {
-		std::string argument = com->arguments.at(0);	// umoznijeme jen 1 argument
+	std::string arg = (char *)regs.Rdx;
+	if (!arg.empty()) {
+		std::string argument = arg;
 		//create(argument);								// TODO - delete - ted pro test
 		THandle file = Open_File(argument.c_str(), FILE_READ_ACCESS);
 		std::string buffer;
@@ -48,7 +48,7 @@ size_t __stdcall type(const CONTEXT &regs) {
 		}
 	}
 	else {
-		//TODO - cist z input
+		// chyba - ma argument
 	}
 	return 0;
 }

@@ -74,7 +74,7 @@ bool File::setPosition(int newPosition)
 
 std::string File::read()
 {
-	return this->content;
+	return this->content+'\0';
 }
 
 File::File(std::string name, FileDescriptor* parent, std::string path)

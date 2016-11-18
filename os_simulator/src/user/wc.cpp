@@ -17,10 +17,13 @@ void create_wc(std::string name) {
 	Write_File(fileHelp, str.str().c_str(), 0, written);
 	Close_File(fileHelp);
 }
-void count(std::string text, int& lines, int& bytes, int& words) {
+bool count(std::string text, int& lines, int& bytes, int& words) {
 	for (int i = 0;i < text.size();i++) {
-		bytes++;
 		char ch = text.at(i);
+		if (ch == '\0') {
+			return true;
+		}
+		bytes++;
 		if (ch == '\n') {
 			lines++;
 		}
@@ -30,6 +33,7 @@ void count(std::string text, int& lines, int& bytes, int& words) {
 				words++;
 		}
 	}
+	return false;
 }
 std::string print(int& lines, int& bytes, int& words, std::string name) {
 	std::stringstream str;
@@ -70,14 +74,13 @@ size_t __stdcall wc(const CONTEXT &regs) {
 		}
 	}
 	else {
-		size_t was_read = 0;
 		while (true)
 		{
+			//std::sstream stream
 			bool succes = Read_File(input, &buffer, 0, read);
-			if (read == was_read) break;
-			count(buffer, lines, bytes, words);
-			was_read = read;
-			break;		// todo - prubezna cteni			
+			//if (read == 0) break;
+			bool eof = count(buffer, lines, bytes, words);
+			if (eof) break;			
 		}
 		std::string out = print(lines, bytes, words, "");
 		Write_File(output, out.c_str(), 0, written);

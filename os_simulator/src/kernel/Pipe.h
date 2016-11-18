@@ -12,6 +12,7 @@ public:
 	std::condition_variable cv;
 	int buffer_occupancy;
 	std::queue<std::string> my_queue;
+	bool closed_write = false;
 	
 	virtual bool setClosed();
 	virtual size_t write(std::string str, size_t flag);	
