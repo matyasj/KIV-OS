@@ -1,5 +1,6 @@
 #pragma once
 #include "..\common\api.h"
+#include"..\common\command.h"
 #include"TCB.h"
 #include "kernel.h"
 
@@ -13,6 +14,7 @@ public:
 	int id;
 	int type_instruction;
 	std::string arg;
+	Command com;
 
 	Thread_ready();
 	~Thread_ready();

@@ -53,7 +53,6 @@ std::vector<std::string> sort(std::string buf) {
 				 lines = sort(buffer);
 				 std::string out = sort_vector(lines);
 				 size_t written;
-				// std::cout << out;
 				 Write_File(output, out.c_str(), 0, written);
 			 }
 		 }

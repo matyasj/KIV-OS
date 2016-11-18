@@ -36,19 +36,23 @@ void exit(int id_actual_shell) {
 
 
 
-void thread(TEntryPoint program, CONTEXT &regs,int id,int type_command) {
-	GetThreadContext(GetCurrentThread(), &regs);
+void thread(TEntryPoint program, CONTEXT &regs, Thread_ready t) {
+	
+	int id = t.id;
+	std::string str = (t.arg);
+	regs.Rdx = (decltype(t.regs.Rdx))(str.c_str());
 	//int type_command = com->type_command;
+	GetThreadContext(GetCurrentThread(), &regs);
 	change_thread_state(id, RUN);
 	if (program) {
-		if (type_command == SHELL) {
+		if (t.type_instruction == SHELL) {
 			int parrent_id = get_parent_id(id);
 			change_thread_state(parrent_id, WAIT);
 		}
 		program(regs);
 	}
 	else {
-		if (type_command == EXIT) {
+		if (t.type_instruction == EXIT) {
 			int parrent_id = get_active_thread_by_type(SHELL);
 			exit(parrent_id);	
 		}
@@ -96,6 +100,7 @@ void do_thread(TEntryPoint program, CONTEXT &regs) {
 		//regs.Rdx = (decltype(regs.Rdx))&arg;
 	}
 	t.arg = arg;
+	t.com = *comm;
 	t.id = id;
 	t.program = program;
 	t.regs = regs;
@@ -103,11 +108,8 @@ void do_thread(TEntryPoint program, CONTEXT &regs) {
 }
 void start() {
 	std::vector<std::thread> threads;
-	for (Thread_ready t : thread_ready) {
-		Command* comm = ((Command*)t.regs.Rdx);
-		int id = t.id;
-		t.regs.Rdx = (decltype(t.regs.Rdx))(t.arg.c_str());
-		threads.push_back(std::thread(thread, t.program,t.regs,t.id,t.type_instruction));
+	for (Thread_ready t : thread_ready) {			
+		threads.push_back(std::thread(thread, t.program,t.regs,t));
 	}
 	thread_ready.clear();
 	bool b = thread_ready.empty();

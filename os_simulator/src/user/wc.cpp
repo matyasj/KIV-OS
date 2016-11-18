@@ -70,7 +70,6 @@ size_t __stdcall wc(const CONTEXT &regs) {
 		}
 	}
 	else {
-		//TODO - read z input
 		size_t was_read = 0;
 		while (true)
 		{
@@ -78,7 +77,7 @@ size_t __stdcall wc(const CONTEXT &regs) {
 			if (read == was_read) break;
 			count(buffer, lines, bytes, words);
 			was_read = read;
-			
+			break;		// todo - prubezna cteni			
 		}
 		std::string out = print(lines, bytes, words, "");
 		Write_File(output, out.c_str(), 0, written);
