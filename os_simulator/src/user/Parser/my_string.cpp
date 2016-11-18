@@ -29,7 +29,10 @@ std::vector<std::string> split_string(std::string str, std::string delimiter) {
 		data.push_back(trim(str.substr(0, pos)));
 		str.erase(0, pos + delimiter.length());
 	}
-	data.push_back(trim(str));
+	str = trim(str);
+	if (!str.empty()) {
+		data.push_back(str);
+	}
 	return data;
 }
 /**

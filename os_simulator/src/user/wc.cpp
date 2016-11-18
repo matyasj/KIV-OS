@@ -8,19 +8,11 @@ Parametry:
 x   Muze fungovat pro vice souboru - pak vypise souhrnou statistiku - mame jeden argument
 */
 
-
-void create_wc(std::string name) {
-	THandle fileHelp = Create_File(name.c_str(), FILE_WRITE_ACCESS);
-	size_t written;
-	std::stringstream str;
-	str << "ahoj jak se mas a co delas" << std::endl << "ja se mam dobre" << std::endl << "a ja na hovno... nesnasim KIV/OS"<<std::endl;
-	Write_File(fileHelp, str.str().c_str(), 0, written);
-	Close_File(fileHelp);
-}
 bool count(std::string text, int& lines, int& bytes, int& words) {
 	for (int i = 0;i < text.size();i++) {
 		char ch = text.at(i);
 		if (ch == '\0') {
+			lines++;
 			return true;
 		}
 		bytes++;
@@ -51,8 +43,6 @@ size_t __stdcall wc(const CONTEXT &regs) {
 	size_t written;
 	int lines = 0, words = 0, bytes = 0;
 	if (!arg.empty()) {
-		//std::string argument = com->arguments.at(0);
-		//create_wc(argument);								// TODO - delete - ted pro test
 		THandle file = Open_File(arg.c_str(), FILE_READ_ACCESS);
 		if (Get_Last_Error() == 0)
 		{
@@ -62,11 +52,6 @@ size_t __stdcall wc(const CONTEXT &regs) {
 
 			}
 			else {
-				//const THandle file_handle, const void *buffer, const size_t buffer_size, size_t &written
-				char a = buffer.at(buffer.size() - 1);
-				if (a != '\n') {
-					buffer += '\n';
-				}
 				count(buffer,lines,bytes,words);
 				std::string out = print(lines,bytes,words, arg);
 				Write_File(output, out.c_str(), 0, written);
@@ -76,9 +61,7 @@ size_t __stdcall wc(const CONTEXT &regs) {
 	else {
 		while (true)
 		{
-			//std::sstream stream
 			bool succes = Read_File(input, &buffer, 0, read);
-			//if (read == 0) break;
 			bool eof = count(buffer, lines, bytes, words);
 			if (eof) break;			
 		}

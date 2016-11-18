@@ -11,5 +11,7 @@ EXPORTS
 	rgen
 	freq
 	ps
+  dir
+  cd
 	
 	

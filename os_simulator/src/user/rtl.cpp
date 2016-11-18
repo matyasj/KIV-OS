@@ -181,6 +181,20 @@ bool Delete_Folder(const std::string file_name, size_t flags) {
 	
 	return Do_SysCall(regs);;
 }
+
+bool Print_Folder(int id_thread, const char* path,const void* buffer) {
+	CONTEXT regs = Prepare_SysCall_Context(scIO, scChangeFolder);
+	regs.Rdx = (decltype(regs.Rdx))path;
+	regs.Rcx = (decltype(regs.Rdi))buffer;
+	regs.Rdi = id_thread;
+	return Do_SysCall(regs);
+}
+bool Change_Folder(int id_thread, const char* path) {
+	CONTEXT regs = Prepare_SysCall_Context(scIO, scChangeFolder);
+	regs.Rdx = (decltype(regs.Rdx))path;
+	regs.Rdi = id_thread;
+	return Do_SysCall(regs);;
+}
 /*
 Pouziti:
 size_t pocet = 0;

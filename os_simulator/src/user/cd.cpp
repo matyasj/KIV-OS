@@ -11,17 +11,18 @@ Prepinace
 /D  Zmeni aktualni jednotku (to se nas asi netyka)
 
 */
-void Cd::run(void) {
-
-/*	THandle main = search_runing_thread(SHELL);
-	std::string name = "";
-	if (_arguments.size() == 0) {
-		std::string str;
-		printf_current_folder(main, &str);
-		save_whole_output(str, true);
+size_t __stdcall cd(const CONTEXT &regs){
+	int id = (int)regs.Rdi;
+	THandle input = (THandle)regs.Rbx;
+	THandle output = (THandle)regs.Rcx;
+	std::string arg = (char *)regs.Rdx;
+	size_t written;
+	std::string buffer;
+	if (arg.empty()) {
+		bool success = Print_Folder(id, arg.c_str(), &buffer);
+		Write_File(output, buffer.c_str(), 0, written);
 	}
 	else {
 
-	}*/
-	save_whole_output("Zobrazi aktualni adresar nebo se presune na zadanou cestu", true);
+	}
 }

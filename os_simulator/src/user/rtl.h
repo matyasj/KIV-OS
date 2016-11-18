@@ -34,7 +34,10 @@ THandle Open_File(const char* file_name, size_t flags);
 bool Create_Folder(const std::string file_name, size_t flags);
 //odstrani slozku s uvedenou cestou a flags
 bool Delete_Folder(const std::string file_name, size_t flags);
-
+//change folder - id_thread. a path
+bool Change_Folder(int id_thread, const char* path);
+//dir - id vlakna a cesta
+bool Print_Folder(int id_thread, const char* path, const void* buffer);
 //Vytvori Pipe a vrati jeji vstupni a vystupni filedescriptor, ktere pak lze pouzivat jako soubor
 bool Create_Pipe(THandle *pipe_output, THandle *pipe_input);
 

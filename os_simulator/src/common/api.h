@@ -82,6 +82,8 @@ const __int8 scCreateFolder = 7;
 const __int8 scDeleteFolder = 8;
 const __int8 scSetInFilePosition = 9;
 const __int8 scDeleteFile = 10;
+const __int8 scDir = 11;
+const __int8 scChangeFolder = 13;
 
 //Pipe
 const __int8 scGetPipe = 12;
@@ -92,9 +94,7 @@ const __int8 scExecuteThread = 2;
 const __int8 scSearchThread = 3;*/
 const __int8 scPrintCurrentFolder = 4;
 const __int8 scPs = 1;
-
-// booth
-const __int8 scPrintFolder = 11;
+//const __int8 scPrintFolder = 11;
 
 // program
 const __int8 scProgramStart = 1;

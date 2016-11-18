@@ -31,13 +31,14 @@ std::vector<std::string> sort(std::string buf) {
 	 int id = (int)regs.Rdi;
 	 THandle input = (THandle)regs.Rbx;
 	 THandle output = (THandle)regs.Rcx;
-	 Command* com = (Command*)regs.Rdx;
-
+	 std::string arg = (char *)regs.Rdx;
+	 std::string buffer;
+	 size_t read;
+	 size_t written;
 	 std::vector<std::string> lines;
-	 if (com->has_argument) {
-		 std::string argument = com->arguments.at(0);
-		 create_sort(argument);								// TODO - delete - ted pro test
-		 THandle file = Open_File(argument.c_str(), FILE_READ_ACCESS);
+	 if (!arg.empty()) {
+		 //create_sort(argument);								// TODO - delete - ted pro test
+		 THandle file = Open_File(arg.c_str(), FILE_READ_ACCESS);
 		 std::string buffer;
 		 size_t read;
 		 if (Get_Last_Error() == 0)
@@ -49,7 +50,7 @@ std::vector<std::string> sort(std::string buf) {
 			 }
 			 else {
 				 //const THandle file_handle, const void *buffer, const size_t buffer_size, size_t &written
-				
+				 if (read > 0) buffer.erase(read - 1);
 				 lines = sort(buffer);
 				 std::string out = sort_vector(lines);
 				 size_t written;
@@ -58,7 +59,23 @@ std::vector<std::string> sort(std::string buf) {
 		 }
 	 }
 	 else {
-		 //TODO - read z input
+		 bool running = true;
+		 while (running)
+		 {
+			 //std::sstream stream
+			 bool succes = Read_File(input, &buffer, 0, read);
+			 if (read > 0) {
+				 if (buffer.at(read - 1) == '\0') {
+					 if(read==1)break;
+					 buffer.erase(read - 1);
+					 running = false;
+				 }
+			 }
+			 std::vector<std::string> pom = sort(buffer);
+			 lines.insert(std::end(lines), std::begin(pom), std::end(pom));
+		 }
+		 std::string out = sort_vector(lines);
+		 Write_File(output, out.c_str(), 0, written);
 	 }
 	 return 0; 
  }

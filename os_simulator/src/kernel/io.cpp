@@ -133,16 +133,32 @@ void HandleIO(CONTEXT &regs) {
 			Set_Error(!success, regs);
 		}
 			break; //deleteFolder
-		case scPrintFolder: {
+		/*case scPrintFolder: {
 			std::string thread = (char*)regs.Rdx;
 			std::string buffer = (char *)regs.Rdi;
 			std::string arg = (char *)regs.Rcx;
-		}break;
+		}break;*/
 		case scGetPipe: {
 			THandle* pipeOutput = (THandle*)regs.Rdx;
 			THandle* pipeInput = (THandle*)regs.Rcx;
 			createPipe(pipeInput, pipeOutput);
 		}break;
+		case scDir: {
+			int id = (int)regs.Rdi;
+			char* argument = (char*)regs.Rdx;	//cesta ke slozce -> pripojit k te v TCB
+			std::string* buffer = (std::string*)regs.Rcx;
+			//todo - vytisknout obsah slozky do bufferu
+			*buffer = "DIR READY";
+		}
+		case scChangeFolder: {
+			int id = (int)regs.Rdi;
+			char* argument = (char*)regs.Rdx;	//cesta k slozce -> pripojit k te v TCB
+			//todo - overit zpravnost a prepnout v tcb
+			
+			//jak se provede prepnuti v tcb
+			//int id_shell = get_active_thread_by_type(SHELL);	//zjistit aktualni aktivni shell
+			//int return_value = change_thread_current_folder(id_shell, argument);	// ulozit zmenu
+		}
 		
 	}
 }
