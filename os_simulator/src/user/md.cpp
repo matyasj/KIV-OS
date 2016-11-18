@@ -9,12 +9,9 @@ size_t __stdcall md(const CONTEXT &regs) {
 	int id = (int)regs.Rdi;
 	THandle input = (THandle)regs.Rbx;
 	THandle output = (THandle)regs.Rcx;
-	Command* com = (Command*)regs.Rdx;
-
-	std::vector<std::string> lines;
-	if (com->has_argument) {
-		std::string argument = com->arguments.at(0);
-		bool succes = Create_Folder(argument, 0);
+	std::string arg = (char *)regs.Rdx;
+	if (!arg.empty()) {
+		bool succes = Create_Folder(arg, 0);
 		if (succes) {
 			return 0;
 		}
