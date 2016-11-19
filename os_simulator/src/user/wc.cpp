@@ -45,7 +45,7 @@ size_t __stdcall wc(const CONTEXT &regs) {
 	size_t written;
 	int lines = 0, words = 0, bytes = 0;
 	if (!arg.empty()) {
-		THandle file = Open_File(id,arg.c_str(), FILE_READ_ACCESS);
+		THandle file = Open_File(id,arg.c_str(), FILE_SHARE_READ);
 		if (Get_Last_Error() == 0)
 		{
 			bool succes = Read_File(id,file, &buffer, 0, read);

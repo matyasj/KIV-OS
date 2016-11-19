@@ -4,6 +4,7 @@
 #include "shell.h"
 #include "Parser/parser.h"
 #include "rtl.h"
+#include "rtl_error.h"
 /*
 rdx Command
 rbx input Handler
@@ -22,6 +23,7 @@ size_t __stdcall shell(const CONTEXT &regs) {
 	//THandle std_out = Create_File("CONOUT$", FILE_SHARE_WRITE);
 	THandle std_in = (THandle)regs.Rbx;
 	THandle std_out = (THandle)regs.Rcx;
+	THandle error = (THandle)regs.Rax;
 	//Close_File(std_in);
 	size_t written;
 	// Standardni vstup - chova se jako soubor -> pri vzpisu na konzoli volat napr: Write_File(std_out, "retezec", strlen("retezec"), written);
@@ -35,8 +37,6 @@ size_t __stdcall shell(const CONTEXT &regs) {
 	bool run = true;
 	while (run) {
 
-		// TODO vypise cestu
-		//std::cout << "Zadej prikaz: ";
 		std::string start_text;
 		printf_current_folder(id, &start_text);
 		start_text += ">";
@@ -45,10 +45,12 @@ size_t __stdcall shell(const CONTEXT &regs) {
 		Read_File(id,std_in, &line, 0, pocet);
 
 		// TODO vyresit pres cteni ze souboru (nebo jak se to bude resit)
-		//std::string line;
-		//std::cin.clear();
-		//std::getline(std::cin, line);
+
 		std::vector<Command> commands = parser.parse_line(line);
+		if (parser.error_class.has_error) {
+			Write_File(id, error, parser.error_class.print_last_error().c_str(), 2, written);
+			continue;
+		}
 		if (commands.empty()) continue;
 
 
@@ -69,11 +71,13 @@ size_t __stdcall shell(const CONTEXT &regs) {
 				end = false;
 			}
 			Command com = commands[i];
-			Start_Program(commands[i], end);
+			bool successs = Start_Program(commands[i], end);
+			if (!successs) {
+				Write_File(id, error, print_error(Get_Last_Error()).c_str(), 0, written);
+			}
 		}
 		// ##################################################################################################		
 	}
-	//Close_File(std_out);
 
 	return 0;
 }

@@ -19,6 +19,7 @@ public:
 	std::vector<Command> parse_line(std::string line);
 
 private:
+	Command Parser::isSingleCommand(std::string line);
 	std::string parse_argument(std::string argument);
 	std::vector<Redirect_file>  parse_redirect(std::string str, Command& command);
 	Command parse_instruction_arg(std::string& instruction);

@@ -68,11 +68,13 @@ bool Command::add_redirect_file(std::string name, std::string type_redirect){
 	return true;
 }
 bool Command::add_redirect_file_in(Redirect_file file) {
+	if (this->has_redirect) return false;
 	this->has_redirect = true;
 	this->redirect_files = file;
 	return true;
 }
 bool Command::add_redirect_file_out(Redirect_file file) {
+	if (this->has_redirect_out) return false;
 	this->has_redirect_out = true;
 	this->redirect_files_out = file;
 	return true;

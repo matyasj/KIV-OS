@@ -93,11 +93,11 @@
     <ClCompile Include="..\..\src\user\rtl_error.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\user\Parser\parser.cpp">
-      <Filter>Source Files\Program Management</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\common\command.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\user\Parser\parser.cpp">
+      <Filter>Source Files\Parser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

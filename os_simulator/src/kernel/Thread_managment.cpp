@@ -22,18 +22,7 @@ void handleThread(CONTEXT &regs) {
 	}break;
 	}
 }
-/*void add_first() {
-	int id = add_thread(SHELL, "C:\\", RUN, -1, nullptr, nullptr);
-}*/
-void exit(int id_actual_shell) {
-	/*int parrent_id = get_parent_id(id_actual_shell);
-	if (parrent_id != -1)
-	{
-		change_thread_state(parrent_id, RUN);
-		execute_thread(id_actual_shell);
-	}*/
-	exit_shell(id_actual_shell);
-}
+
 
 
 
@@ -55,7 +44,7 @@ void thread(TEntryPoint program, CONTEXT &regs, Thread_ready t) {
 	else {
 		if (t.type_instruction == EXIT) {
 			int parrent_id = get_active_thread_by_type(SHELL);
-			exit(parrent_id);	
+			exit_shell(parrent_id);
 		}
 		//std::cout << "Neznamý program";
 	}

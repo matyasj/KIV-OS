@@ -269,8 +269,7 @@ bool printf_current_folder(int id, const void* buffer) {
 	CONTEXT regs = Prepare_SysCall_Context(scThread, scPrintCurrentFolder);
 	regs.Rdx = (decltype(regs.Rdx))buffer;
 	regs.Rdi = (decltype(regs.Rdi))id;
-	Do_SysCall(regs);
-	return (bool)regs.Rax;
+	return Do_SysCall(regs);
 }
 
 

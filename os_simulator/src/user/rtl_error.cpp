@@ -3,7 +3,7 @@
 
 
 
-std::string print_error(int type_error) {
+std::string print_error(size_t type_error) {
 	std::string text;
 	switch (type_error)
 	{
@@ -35,5 +35,5 @@ std::string print_error(int type_error) {
 		text = "neznama chyba";
 		break;
 	}
-	return text;
+	return text+"\n";
 }

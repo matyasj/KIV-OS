@@ -39,7 +39,7 @@ std::vector<std::string> sort(std::string buf) {
 	 size_t written;
 	 std::vector<std::string> lines;
 	 if (!arg.empty()) {
-		 THandle file = Open_File(id,arg.c_str(), FILE_READ_ACCESS);
+		 THandle file = Open_File(id,arg.c_str(), FILE_SHARE_READ);
 		 std::string buffer;
 		 size_t read;
 		 if (Get_Last_Error() == 0)
