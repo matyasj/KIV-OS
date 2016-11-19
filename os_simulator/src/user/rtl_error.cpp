@@ -8,7 +8,7 @@ std::string print_error(int type_error) {
 	switch (type_error)
 	{
 	case errorFileNotFound:
-		text = "Soubor nenalezeno";
+		text = "Soubor nenalezen";
 		break;
 	case errorFileIsUsed:
 		text = "Soubor/slozka uz je otevrena";
@@ -27,6 +27,9 @@ std::string print_error(int type_error) {
 		break;
 	case wrongArgument:
 		text = "Spatny argument";
+		break;
+	case onlyOn:
+		text = "Prikaz je pouze out";
 		break;
 	default:
 		text = "neznama chyba";

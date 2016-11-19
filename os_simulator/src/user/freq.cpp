@@ -1,4 +1,5 @@
 #include "freq.h"
+#include"rtl_error.h"
 #include<sstream>
 
 
@@ -10,13 +11,13 @@ size_t __stdcall freq(const CONTEXT &regs) {
 	int id = (int)regs.Rdi;
 	THandle input = (THandle)regs.Rbx;
 	THandle output = (THandle)regs.Rcx;
+	THandle error = (THandle)regs.Rax;
 	std::string arg = (char *)regs.Rdx;
 	std::map<char, int> map;
 	std::string buffer;
 	size_t read;
 	if (!arg.empty()) {
-		// todo - error;
-		Write_File(output, "bez arg", 0, read);
+		Write_File(error, print_error(wrongArgument).c_str(), 0, read);
 	}else {
 		bool run = true;
 		while (run) {

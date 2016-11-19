@@ -109,7 +109,8 @@ void handleProgram(CONTEXT &regs) {
 		createPipe(&t, &last_handle);
 		regs.Rcx = (decltype(regs.Rcx))t;
 	}
-
+	//error handle
+	regs.Rax = (decltype(regs.Rax))getStdOut();
 	// spousteni programu pomoci Thread Management
 	do_thread(program, regs);
 	//std::cout << "Spousteni programu " << program_name << std::endl;
