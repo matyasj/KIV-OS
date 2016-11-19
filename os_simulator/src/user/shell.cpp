@@ -40,9 +40,9 @@ size_t __stdcall shell(const CONTEXT &regs) {
 		std::string start_text;
 		printf_current_folder(id, &start_text);
 		start_text += ">";
-		Write_File(std_out, start_text.c_str(), 2, written);
+		Write_File(id,std_out, start_text.c_str(), 2, written);
 		std::string line = "";
-		Read_File(std_in, &line, 0, pocet);
+		Read_File(id,std_in, &line, 0, pocet);
 
 		// TODO vyresit pres cteni ze souboru (nebo jak se to bude resit)
 		//std::string line;

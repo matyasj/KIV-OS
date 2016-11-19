@@ -22,14 +22,8 @@ Rcx - OUT THandle
 void handleProgram(CONTEXT &regs) {
 
 	Command* command = (Command*)regs.Rdx;
-	/*if (command->has_argument) {
-		regs.Rdx = (decltype(regs.Rdx)) (command->arguments.at(0)).c_str();
-	}
-	else {
-		regs.Rdx = (decltype(regs.Rdx))nullptr;
-	}
-	regs.Rdi = (decltype(regs.Rdi))command->type_command;*/
-	bool end = (bool)regs.Rbx;
+	
+	int end = (int)regs.Rbx;
 
 	LPCSTR program_name = command->name.c_str();
 	TEntryPoint program = (TEntryPoint)GetProcAddress(User_Programs, program_name);
@@ -37,7 +31,8 @@ void handleProgram(CONTEXT &regs) {
 	THandle t;
 
 	// --- INPUT THandle ---
-
+	int id = create_thread(command);
+	regs.Rdi = (decltype(regs.Rdi))id;
 	// prvni program v serii
 	if (first_program) {
 
@@ -47,7 +42,7 @@ void handleProgram(CONTEXT &regs) {
 		if (command->has_redirect && command->redirect_files.type_redirect == RED_IN) {
 
 			// ziskej THandle na vstupni soubor a uloz ho do registru
-			t = openFile(command->redirect_files.name, FILE_READ_ACCESS);
+			t = openFile(id,command->redirect_files.name, FILE_READ_ACCESS);
 			regs.Rbx = (decltype(regs.Rbx))t;
 
 			//std::cout << "Vstup programu je presmerovan ze souboru " << command->redirect_files.name << std::endl;
@@ -80,7 +75,7 @@ void handleProgram(CONTEXT &regs) {
 			if (command->redirect_files_out.type_redirect == RED_OUT) {
 
 				// ziskej THandle na vystupni soubor a uloz ho do fronty
-				t = createFile(command->redirect_files_out.name, FILE_WRITE_ACCESS);
+				t = createFile(id,command->redirect_files_out.name, FILE_WRITE_ACCESS);
 				regs.Rcx = (decltype(regs.Rcx))t;
 
 				//std::cout << "Vystup programu je presmerovan do souboru " << command->redirect_files_out.name << std::endl;

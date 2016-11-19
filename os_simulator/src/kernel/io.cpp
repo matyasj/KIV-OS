@@ -53,7 +53,7 @@ void HandleIO(CONTEXT &regs) {
 		case scCreateFile: {
 			int id = (int)regs.Rdi;
 			// Zatim funguje primo jako shared_read | generic_write
-			regs.Rax = (decltype(regs.Rax)) createFile((char*)regs.Rdx, (size_t)regs.Rcx);
+			regs.Rax = (decltype(regs.Rax)) createFile(id,(char*)regs.Rdx, (size_t)regs.Rcx);
 			Set_Error(regs.Rax == 0, regs);
 		//	printFSTree();
 			}
@@ -85,7 +85,7 @@ void HandleIO(CONTEXT &regs) {
 
 		case scOpenFile: {
 			int id = (int)regs.Rdi;
-			THandle tmpFile = openFile((char*)regs.Rdx, (size_t)regs.Rcx);
+			THandle tmpFile = openFile(id,(char*)regs.Rdx, (size_t)regs.Rcx);
 			/*if (tmpFile != nullptr) {
 				std::cout << "Soubor: " << tmpFile->name << "\n";
 			}*/

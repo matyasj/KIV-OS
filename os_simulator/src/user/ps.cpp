@@ -15,12 +15,12 @@ size_t __stdcall ps(const CONTEXT &regs) {
 	std::string arg = (char *)regs.Rdx;
 	size_t written;
 	if (!arg.empty()) {
-		Write_File(error, print_error(wrongArgument).c_str(), 0, written);
+		Write_File(id,error, print_error(wrongArgument).c_str(), 0, written);
 	}
 	else {
 		std::string result;
 		print_ps(&result);
-		Write_File(output, result.c_str(), 0, written);
+		Write_File(id,output, result.c_str(), 0, written);
 	}
 	
 	return 0;

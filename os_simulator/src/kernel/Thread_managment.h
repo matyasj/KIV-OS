@@ -20,7 +20,7 @@ public:
 	~Thread_ready();
 };
 
-
+int create_thread(Command* comm);
 void handleThread(CONTEXT &regs);
 void do_thread(TEntryPoint program, CONTEXT &regs);
 void start();

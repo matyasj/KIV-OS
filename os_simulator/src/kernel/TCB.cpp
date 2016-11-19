@@ -14,9 +14,9 @@ void closeFiles(Thread* t) {
 	}
 }
 
-int add_thread(int type_command, std::string name_command ,std::string current_folder, Thread_State state, int parent_id, THandle inputHandle, THandle outputHandle)
+int add_thread(int type_command, std::string name_command ,std::string current_folder, Thread_State state, int parent_id)
 {
-	Thread *thread = new Thread(type_command,name_command, current_folder, state, parent_id,inputHandle,outputHandle);
+	Thread* thread = new Thread(type_command,name_command, current_folder, state, parent_id);
 	std::lock_guard<std::mutex> guard(mutex);
 	threads.push_back(thread);
 	return thread->id;
@@ -39,17 +39,15 @@ int get_active_thread_by_type(int type_command) {
 	SetLastError(threadNotFound);
 	return -1;
 }
-
-int execute_thread_tcb(int id)
-{
-	std::lock_guard<std::mutex> guard(mutex);
-	int index=-1;
+int execute_thread_tcb_lock_manually(int id){
+	int index = -1;
 	bool find = false;
 	auto thread_it = std::find_if(threads.begin(), threads.end(), [id](Thread*  f) { return f->id == id; });
 	if (thread_it != std::end(threads)) {
 		Thread* t = (*thread_it);
 		closeFiles(t);
 		threads.erase(thread_it);
+		delete(t);
 	}
 	else {
 		SetLastError(threadNotFound);
@@ -57,10 +55,14 @@ int execute_thread_tcb(int id)
 	}
 	return 0;
 }
-
-int change_thread_state(int id, Thread_State state)
+int execute_thread_tcb(int id)
 {
 	std::lock_guard<std::mutex> guard(mutex);
+	return execute_thread_tcb_lock_manually(id);
+}
+
+int change_thread_state_lock_manually(int id, Thread_State state)
+{
 	auto thread_it = std::find_if(threads.begin(), threads.end(), [id](Thread*  f) { return f->id == id; });
 	if (thread_it != std::end(threads)) {
 		(*thread_it)->state = state;
@@ -69,7 +71,21 @@ int change_thread_state(int id, Thread_State state)
 	SetLastError(threadNotFound);
 	return threadNotFound;
 }
-
+int change_thread_state(int id, Thread_State state)
+{
+	std::lock_guard<std::mutex> guard(mutex);
+	return change_thread_state_lock_manually(id, state);
+	
+}
+void exit_shell(int id) {
+	std::lock_guard<std::mutex> guard(mutex);
+	int parrent_id = get_parent_id(id);
+	if (parrent_id != -1)
+	{
+		change_thread_state_lock_manually(parrent_id, RUN);
+		execute_thread_tcb_lock_manually(id);
+	}
+}
 int change_thread_current_folder(int id, std::string* folder)
 {
 	std::lock_guard<std::mutex> guard(mutex);

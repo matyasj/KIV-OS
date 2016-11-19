@@ -4,18 +4,18 @@
 #include <chrono>
 
 std::atomic<bool> run;
-void catch_ctrl_z(THandle input) {
+void catch_ctrl_z(THandle input,int id) {
 	std::string buffer;
 	size_t read;
 	while (true) {
-		bool succes = Read_File(input, &buffer, 0, read);
+		bool succes = Read_File(id,input, &buffer, 0, read);
 		if (read > 0) {
 			if (buffer.at(read - 1) == '\0') break;
 		}
 	}
 	run = false;
 }
-void generate(THandle output) {
+void generate(THandle output,int id) {
 	int min = 0;
 	int max = 9;
 
@@ -25,7 +25,7 @@ void generate(THandle output) {
 	while (run) {
 		number = ((double)rand() / (double)RAND_MAX);
 		str = std::to_string(number) + "\n";
-		Write_File(output, str.c_str(), 0, write);
+		Write_File(id,output, str.c_str(), 0, write);
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 }
@@ -39,8 +39,8 @@ size_t __stdcall rgen(const CONTEXT &regs) {
 	THandle output = (THandle)regs.Rcx;
 	std::string arg = (char *)regs.Rdx;
 	run = true;
-	std::thread catch_end(catch_ctrl_z, input);
-	std::thread gen(generate, output);
+	std::thread catch_end(catch_ctrl_z, input,id);
+	std::thread gen(generate, output,id);
 	catch_end.join();
 	gen.join();
 	return 0;

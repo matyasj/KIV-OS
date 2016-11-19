@@ -45,30 +45,30 @@ size_t __stdcall wc(const CONTEXT &regs) {
 	size_t written;
 	int lines = 0, words = 0, bytes = 0;
 	if (!arg.empty()) {
-		THandle file = Open_File(arg.c_str(), FILE_READ_ACCESS);
+		THandle file = Open_File(id,arg.c_str(), FILE_READ_ACCESS);
 		if (Get_Last_Error() == 0)
 		{
-			bool succes = Read_File(file, &buffer, 0, read);
-			Close_File(file);
+			bool succes = Read_File(id,file, &buffer, 0, read);
+			Close_File(id,file);
 			if (!succes) {
-				Write_File(error, print_error(Get_Last_Error()).c_str(), 0, written);
+				Write_File(id, error, print_error(Get_Last_Error()).c_str(), 0, written);
 			}
 			else {
 				count(buffer,lines,bytes,words);
 				std::string out = print(lines,bytes,words, arg);
-				Write_File(output, out.c_str(), 0, written);
+				Write_File(id, output, out.c_str(), 0, written);
 			}
 		}
 	}
 	else {
 		while (true)
 		{
-			bool succes = Read_File(input, &buffer, 0, read);
+			bool succes = Read_File(id, input, &buffer, 0, read);
 			bool eof = count(buffer, lines, bytes, words);
 			if (eof) break;			
 		}
 		std::string out = print(lines, bytes, words, "");
-		Write_File(output, out.c_str(), 0, written);
+		Write_File(id, output, out.c_str(), 0, written);
 	}
 	return 0;
 }

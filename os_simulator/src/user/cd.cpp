@@ -22,12 +22,12 @@ size_t __stdcall cd(const CONTEXT &regs){
 	std::string buffer;
 	if (arg.empty()) {
 		bool success = Print_Folder(id, arg.c_str(), &buffer);
-		Write_File(output, buffer.c_str(), 0, written);
+		Write_File(id,output, buffer.c_str(), 0, written);
 	}
 	else {
 		bool success = Change_Folder(id, arg.c_str());
 		if (!success) {
-			Write_File(error, print_error(Get_Last_Error()).c_str(), 0, written);
+			Write_File(id,error, print_error(Get_Last_Error()).c_str(), 0, written);
 		}
 	}
 	return 0;

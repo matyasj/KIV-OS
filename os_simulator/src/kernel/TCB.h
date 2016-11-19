@@ -12,7 +12,7 @@ current_folder - vychozi adresar
 parrent_id - id rodicovskeho thread
 return id vytvoreneho vlakna
 */
-int add_thread(int type_command, std::string name_command, std::string current_folder, Thread_State state, int parent_id, THandle inputHandle, THandle outputHandle);
+int add_thread(int type_command, std::string name_command, std::string current_folder, Thread_State state, int parent_id);
 /*
 id - id hledaneho procesu
 pokud nenajde, vrati nullptr
@@ -41,6 +41,7 @@ vrati cislo chyby. Vse ok == 0
 int change_thread_current_folder(int id, std::string* folder);
 std::string print_tcb();
 int get_parent_id(int id);
+void exit_shell(int id);
 
 
 /* TODO: by maty*/

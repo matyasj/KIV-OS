@@ -26,12 +26,13 @@ void handleThread(CONTEXT &regs) {
 	int id = add_thread(SHELL, "C:\\", RUN, -1, nullptr, nullptr);
 }*/
 void exit(int id_actual_shell) {
-	int parrent_id = get_parent_id(id_actual_shell);
+	/*int parrent_id = get_parent_id(id_actual_shell);
 	if (parrent_id != -1)
 	{
 		change_thread_state(parrent_id, RUN);
 		execute_thread(id_actual_shell);
-	}
+	}*/
+	exit_shell(id_actual_shell);
 }
 
 
@@ -60,6 +61,15 @@ void thread(TEntryPoint program, CONTEXT &regs, Thread_ready t) {
 	}
 	execute_thread(id);
 }
+int create_thread(Command* comm) {
+	int parrent_id = get_active_thread_by_type(SHELL);
+	std::string current_folder = "C:\\";
+	if (parrent_id != -1)
+	{
+		current_folder = get_thread_current_folder(parrent_id);
+	}
+	return add_thread(comm->type_command, comm->name, current_folder, INIT, parrent_id);
+}
 /*
 rax Command, rbx input, rcx output, rdx arguments
 pøedám ti program a regs ... z regs si vytáhneš Handlery a nastavíš práva, z regs rax si z command vytáhneš typ abys to mohl uložit do TCB, 
@@ -82,22 +92,17 @@ void do_thread(TEntryPoint program, CONTEXT &regs) {
 	Command* comm = ((Command*)regs.Rdx);
 	THandle handleIn = (THandle)regs.Rbx;
 	THandle handleOut = (THandle)regs.Rcx;
-	int type_command = comm->type_command;
-	int parrent_id = get_active_thread_by_type(SHELL);
-	std::string current_folder = "C:\\";
-	if (parrent_id != -1)
-	{
-		current_folder = get_thread_current_folder(parrent_id);
-	}
-	int id = add_thread(type_command,comm->name ,current_folder, READY ,parrent_id,handleIn,handleOut);
-	regs.Rdi = id;
+	THandle handleError = (THandle)regs.Rax;
+	int id = (int)regs.Rdi;
+	add_filehandler(id,handleError,WRITE);
+	add_filehandler(id, handleIn, READ);
+	add_filehandler(id, handleOut, WRITE);
+	change_thread_state(id, READY);
 	Thread_ready t;
-	t.type_instruction = type_command;
-	//t.command = *comm;
+	t.type_instruction = comm->type_command;
 	std::string arg = "";
 	if (comm->has_argument) {
 		arg = (comm->arguments.at(0));
-		//regs.Rdx = (decltype(regs.Rdx))&arg;
 	}
 	t.arg = arg;
 	t.com = *comm;
@@ -113,7 +118,6 @@ void start() {
 	}
 	thread_ready.clear();
 	bool b = thread_ready.empty();
-	//wait for them to complete
 	for (auto& th : threads)
 		th.join();
 }
