@@ -37,8 +37,9 @@ Pouziti:
 
 THandle* mujPrvniSoubor = Create_File("C/jmeno.txt", FILE_SHARE_READ); // flags -> zatim funguje nativne jako SHARED_READ | GENERIC_WRITE
 */
-THandle Create_File(const char* file_name, size_t flags) {
+THandle Create_File(int id_thread, const char* file_name, size_t flags) {
 	CONTEXT regs = Prepare_SysCall_Context(scIO, scCreateFile);
+	regs.Rdi = (decltype(regs.Rdi))id_thread;
 	regs.Rdx = (decltype(regs.Rdx))file_name;
 	regs.Rcx = (decltype(regs.Rcx))flags;
 	Do_SysCall(regs);
@@ -59,10 +60,11 @@ flag = 2 // write bude nastavovat novy obsah souboru na buffer      |
 !!! Pri vicenasobnem pouziti funkce Write_File() se zapisuje od konce souboru. Pro zapsani napr. od zacatku se musi nastavit pozice v souboru Set_In_File_Position()
 
 */
-bool Write_File(const THandle file_handle, const void *buffer, const size_t flag, size_t &written) {
+bool Write_File(int id_thread, const THandle file_handle, const void *buffer, const size_t flag, size_t &written) {
 	CONTEXT regs = Prepare_SysCall_Context(scIO, scWriteFile);
+	regs.Rdi = (decltype(regs.Rdi))id_thread;
 	regs.Rdx = (decltype(regs.Rdx))file_handle;
-	regs.Rdi = (decltype(regs.Rdi))buffer;
+	regs.Rbx = (decltype(regs.Rbx))buffer;
 	regs.Rcx = (decltype(regs.Rcx))flag;
 
 	const bool result = Do_SysCall(regs);
@@ -78,10 +80,11 @@ Append_File(openedFile, "ahoj", 6, zapsano);
 
 Podobny jako write, ale zapisuje vzdy nakonec souboru nehlede na pozici v souboru.
 */
-bool Append_File(const THandle file_handle, const void *buffer, const size_t buffer_size, size_t &written) {
+bool Append_File(int id_thread, const THandle file_handle, const void *buffer, const size_t buffer_size, size_t &written) {
 	CONTEXT regs = Prepare_SysCall_Context(scIO, scAppendFile);
+	regs.Rdi = (decltype(regs.Rdi))id_thread;
 	regs.Rdx = (decltype(regs.Rdx))file_handle;
-	regs.Rdi = (decltype(regs.Rdi))buffer;
+	regs.Rbx = (decltype(regs.Rbx))buffer;
 	regs.Rcx = buffer_size;
 
 	const bool result = Do_SysCall(regs);
@@ -96,10 +99,11 @@ std::string a = "";
 size_t pocet = 0; // neni potreba pri praci se std::string
 Read_File(mujPrvniSoubor, &a, 0, pocet);
 */
-bool Read_File(const THandle file_handle, const void *buffer, const size_t buffer_size, size_t &read) {
+bool Read_File(int id_thread, const THandle file_handle, const void *buffer, const size_t buffer_size, size_t &read) {
 	CONTEXT regs = Prepare_SysCall_Context(scIO, scReadFile);
+	regs.Rdi = (decltype(regs.Rdi))id_thread;
 	regs.Rdx = (decltype(regs.Rdx))file_handle;
-	regs.Rdi = (decltype(regs.Rdi))buffer;
+	regs.Rbx = (decltype(regs.Rbx))buffer;
 	regs.Rcx = buffer_size;
 	const bool result = Do_SysCall(regs);
 	read = regs.Rax;
@@ -111,8 +115,9 @@ Pouziti:
 
 Set_In_File_Position(openedFile,0); // Nastavi pozici v souboru openedFile na zacatek
 */
-bool Set_In_File_Position(const THandle file_handle, const size_t new_position) {
+bool Set_In_File_Position(int id_thread, const THandle file_handle, const size_t new_position) {
 	CONTEXT regs = Prepare_SysCall_Context(scIO, scSetInFilePosition);
+	regs.Rdi = (decltype(regs.Rdi))id_thread;
 	regs.Rdx = (decltype(regs.Rdx))file_handle;
 	regs.Rcx = new_position;
 	
@@ -125,8 +130,9 @@ Pouziti:
 THandle openedFile = Open_File("C/slozka/jmenoSouboru.txt", FILE_SHARE_READ);
 Close_File(openedFile);
 */
-bool Close_File(const THandle file_handle) {
+bool Close_File(int id_thread, const THandle file_handle) {
 	CONTEXT regs = Prepare_SysCall_Context(scIO, scCloseFile);
+	regs.Rdi = (decltype(regs.Rdi))id_thread;
 	regs.Rdx = (decltype(regs.Rdx))file_handle;
 	return Do_SysCall(regs);
 }
@@ -137,8 +143,9 @@ Pouziti:
 THandle openedFile = Open_File("C/slozka/jmenoSouboru.txt", FILE_SHARE_READ);
 Delete_File(openedFile);
 */
-bool Delete_File(const THandle file_handle) {
+bool Delete_File(int id_thread, const THandle file_handle) {
 	CONTEXT regs = Prepare_SysCall_Context(scIO, scDeleteFile);
+	regs.Rdi = (decltype(regs.Rdi))id_thread;
 	regs.Rdx = (decltype(regs.Rdx))file_handle;
 	return Do_SysCall(regs);
 }
@@ -148,8 +155,9 @@ Pouziti:
 
 THandle openedFile = Open_File("C/slozka/jmenoSouboru.txt", FILE_SHARE_READ);
 */
-THandle Open_File(const char* file_name, size_t flags) {
+THandle Open_File(int id_thread, const char* file_name, size_t flags) {
 	CONTEXT regs = Prepare_SysCall_Context(scIO, scOpenFile);
+	regs.Rdi = (decltype(regs.Rdi))id_thread;
 	regs.Rdx = (decltype(regs.Rdx))file_name;
 	regs.Rcx = flags;
 	Do_SysCall(regs);
@@ -161,8 +169,9 @@ Pouziti:
 Create_Folder("C/slozka", 0); // nejjednodussi pripad jak vytvorit slozku
 Create_Folder("C/slozka/slozka2", 0);
 */
-bool Create_Folder(const std::string file_name, size_t flags) {
+bool Create_Folder(int id_thread, const std::string file_name, size_t flags) {
 	CONTEXT regs = Prepare_SysCall_Context(scIO, scCreateFolder);
+	regs.Rdi = (decltype(regs.Rdi))id_thread;
 	regs.Rdx = (decltype(regs.Rdx))file_name.c_str();
 	regs.Rcx = flags;
 	Do_SysCall(regs);
@@ -174,8 +183,9 @@ Pouziti:
 
 Delete_Folder("C/slozka/slozka2",0);
 */
-bool Delete_Folder(const std::string file_name, size_t flags) {
+bool Delete_Folder(int id_thread, const std::string file_name, size_t flags) {
 	CONTEXT regs = Prepare_SysCall_Context(scIO, scDeleteFolder);
+	regs.Rdi = (decltype(regs.Rdi))id_thread;
 	regs.Rdx = (decltype(regs.Rdx))file_name.c_str();
 	regs.Rcx = flags;
 	
@@ -185,7 +195,7 @@ bool Delete_Folder(const std::string file_name, size_t flags) {
 bool Print_Folder(int id_thread, const char* path,const void* buffer) {
 	CONTEXT regs = Prepare_SysCall_Context(scIO, scChangeFolder);
 	regs.Rdx = (decltype(regs.Rdx))path;
-	regs.Rcx = (decltype(regs.Rdi))buffer;
+	regs.Rcx = (decltype(regs.Rcx))buffer;
 	regs.Rdi = id_thread;
 	return Do_SysCall(regs);
 }

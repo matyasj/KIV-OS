@@ -51,6 +51,7 @@ void HandleIO(CONTEXT &regs) {
 
 	switch (Get_AL((__int16) regs.Rax)) {
 		case scCreateFile: {
+			int id = (int)regs.Rdi;
 			// Zatim funguje primo jako shared_read | generic_write
 			regs.Rax = (decltype(regs.Rax)) createFile((char*)regs.Rdx, (size_t)regs.Rcx);
 			Set_Error(regs.Rax == 0, regs);
@@ -60,10 +61,11 @@ void HandleIO(CONTEXT &regs) {
 
 
 		case scWriteFile: {
+			int id = (int)regs.Rdi;
 			//DWORD written;
-			//const bool failed = !WriteFile((HANDLE)regs.Rdx, (void*)regs.Rdi, (DWORD)regs.Rcx, &written, NULL);
+			//const bool failed = !WriteFile((HANDLE)regs.Rdx, (void*)regs.Rbx, (DWORD)regs.Rcx, &written, NULL);
 			size_t flag = regs.Rcx;
-			std::string buffer = (char*)regs.Rdi;
+			std::string buffer = (char*)regs.Rbx;
 			int written = writeFile((THandle)regs.Rdx, buffer, flag);
 			regs.Rax = written;
 			Set_Error(written < 0, regs);
@@ -71,9 +73,10 @@ void HandleIO(CONTEXT &regs) {
 			break; //scWriteFile
 
 		case scAppendFile: {
+			int id = (int)regs.Rdi;
 			//DWORD written;
-			//const bool failed = !WriteFile((HANDLE)regs.Rdx, (void*)regs.Rdi, (DWORD)regs.Rcx, &written, NULL);
-			std::string buffer = (char*)regs.Rdi;
+			//const bool failed = !WriteFile((HANDLE)regs.Rdx, (void*)regs.Rbx, (DWORD)regs.Rcx, &written, NULL);
+			std::string buffer = (char*)regs.Rbx;
 			int written = appendFile((THandle)regs.Rdx, buffer);
 			Set_Error(written < 0, regs);
 			regs.Rax = written;
@@ -81,7 +84,8 @@ void HandleIO(CONTEXT &regs) {
 			break; //scWriteFile
 
 		case scOpenFile: {
-			File* tmpFile = (File*)openFile((char*)regs.Rdx, (size_t)regs.Rcx);
+			int id = (int)regs.Rdi;
+			THandle tmpFile = openFile((char*)regs.Rdx, (size_t)regs.Rcx);
 			/*if (tmpFile != nullptr) {
 				std::cout << "Soubor: " << tmpFile->name << "\n";
 			}*/
@@ -91,14 +95,17 @@ void HandleIO(CONTEXT &regs) {
 		}
 			break; //scOpenFile
 		case scCloseFile: {
+			int id = (int)regs.Rdi;
 			Set_Error(!closeFile((THandle*)regs.Rdx), regs);
 		}
 			break;	//CloseFile
 		case scDeleteFile: {
+			int id = (int)regs.Rdi;
 			Set_Error(!deleteFile((THandle*)regs.Rdx), regs);
 		}
 			break;	//CloseFile
 		case scCreateFolder:{
+			int id = (int)regs.Rdi;
 			std::string name = (char*)regs.Rdx;
 			regs.Rax = (decltype(regs.Rax))createFolder(name);
 			Set_Error(regs.Rax == false, regs);
@@ -106,6 +113,7 @@ void HandleIO(CONTEXT &regs) {
 			break;
 		}
 		case scDeleteFolder: {
+			int id = (int)regs.Rdi;
 			std::string name = (char*)regs.Rdx;
 			regs.Rax = (decltype(regs.Rax))deleteFolderByPath(name);
 			Set_Error(regs.Rax == false, regs);
@@ -113,9 +121,10 @@ void HandleIO(CONTEXT &regs) {
 		}
 			break; //deleteFolder
 		case scReadFile: {
+			int id = (int)regs.Rdi;
 			THandle* file = (THandle*)regs.Rdx;
 			std::string* buffer;
-			buffer = (std::string*)regs.Rdi;
+			buffer = (std::string*)regs.Rbx;
 			
 			std::string buf = readFile(file);
 			*buffer = buf;

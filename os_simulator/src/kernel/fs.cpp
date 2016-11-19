@@ -7,16 +7,17 @@
 #include "stdin.h"
 #include "stdout.h"
 #include "pipe.h"
+#include "TCB.h"
 
 
 Folder* rootFolder = new Folder(ROOT_FOLDER,nullptr);
 std::vector<FileDescriptorBlock*> FileDescriptorTable;
 
-THandle openFile(std::string fullFilePath, size_t flags)
+THandle openFile(int procesId, std::string fullFilePath, size_t flags)
 {
 	if (!containRoot(fullFilePath)) {
 		SetLastError(errorBadPath);
-		std::cout << "Bad path of file (root C is missing)!\n";
+		std::cout << "Bad path of file "<< fullFilePath <<"\n";
 		return NULL;
 	}
 	
@@ -55,7 +56,7 @@ THandle openFile(std::string fullFilePath, size_t flags)
 	return nullptr;
 }
 
-THandle createFile(std::string fullFilePath, size_t flags)
+THandle createFile(int procesId, std::string fullFilePath, size_t flags)
 {
 	if (fullFilePath == "CONOUT$") {
 		return getStdOut();
@@ -355,6 +356,12 @@ bool containRoot(std::string fullFolderPath)
 	return true;
 }
 
+std::string getAbsolutePathFromRelative(int procesId, std::string relativePath)
+{
+	//std::string workDirectory = 
+	return std::string();
+}
+
 /*
  * @return FileDescriptor of new created FileDescriptor
 */
@@ -423,17 +430,26 @@ bool canWrite(THandle fileDescriptor)
 	return false;
 }
 
-bool shareOpen(std::string fileName, size_t flags)
+bool canOpen(std::string fullFilePath, size_t flags)
 {
 	if ((flags & FILE_SHARE_WRITE)) {
 
 	}
 	for (FileDescriptorBlock *f : FileDescriptorTable) {
-		if (f->filePointer->name == fileName) {
-
+		if (f->filePointer->path == fullFilePath) {
+			if ((flags & FILE_SHARE_WRITE) || f->flags & GENERIC_WRITE) {
+				if (f->flags & GENERIC_WRITE) {
+					return false;
+				}
+			}
+			if ((flags & FILE_SHARE_READ) || f->flags & GENERIC_READ) {
+				if (f->flags & GENERIC_READ) {
+					return false;
+				}
+			}
 		}
 	}
-	return false;
+	return true;
 }
 
 

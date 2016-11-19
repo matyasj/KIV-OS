@@ -14,8 +14,8 @@
 #define ROOT_FOLDER "C:"
 
 //	Pøíklad cesty: C\slozka1\slozka2\soubor.txt   Nazvy slozek a souboru mohou obsahovat napr. i mezery.
-THandle openFile(std::string fullFilePath, size_t flags);
-THandle createFile(std::string fullFilePath, size_t flags);
+THandle openFile(int procesId, std::string fullFilePath, size_t flags);
+THandle createFile(int procesId, std::string fullFilePath, size_t flags);
 
 int writeFile(THandle file, std::string buffer, size_t flag);
 bool setInFilePosition(THandle file, int newPosition);
@@ -35,7 +35,7 @@ void printFSTree();
 void recursePrintTree(Folder* startNode, std::string prefix);
 
 bool containRoot(std::string fullFolderPath);
-
+std::string getAbsolutePathFromRelative(int procesId, std::string relativePath);
 
 // File Descriptors
 THandle putFileIntoFDTable(File* file, size_t flags);
@@ -45,7 +45,7 @@ File* removeFileFromFDTable(THandle fileDescriptor);
 // Testy prav na cteni/zapis
 bool canRead(THandle fileDescriptor);
 bool canWrite(THandle fileDescriptor);
-bool shareOpen(std::string fileName, size_t flags);
+bool canOpen(std::string fullFilePath, size_t flags);
 
 
 // Standartni vstupy/vystupy

@@ -6,34 +6,34 @@
 
 size_t Get_Last_Error();
 
-THandle Create_File(const char* file_name, size_t flags);
+THandle Create_File(int id_thread, const char* file_name, size_t flags);
 		//podle flags otevre, vytvori soubor a vrati jeho deskriptor
 		//vraci nenulovy handle, kdyz vse OK
-bool Write_File(const THandle file_handle, const void *buffer, const size_t flag, size_t &written);
+bool Write_File(int id_thread, const THandle file_handle, const void *buffer, const size_t flag, size_t &written);
 		//zapise do souboru identifikovaneho deskriptor data z buffer o velikosti buffer_size a vrati pocet zapsanych dat ve writtent
 		//vraci true, kdyz vse OK
-bool Append_File(const THandle file_handle, const void *buffer, const size_t buffer_size, size_t &written);
+bool Append_File(int id_thread, const THandle file_handle, const void *buffer, const size_t buffer_size, size_t &written);
 		//zapise na konec souboru identifikovaneho deskriptor data z buffer o velikosti buffer_size a vrati pocet zapsanych dat ve writtent
 		//vraci true, kdyz vse OK
-bool Read_File(const THandle file_handle, const void *buffer, const size_t buffer_size, size_t &read);
+bool Read_File(int id_thread, const THandle file_handle, const void *buffer, const size_t buffer_size, size_t &read);
 		//zapise do souboru identifikovaneho deskriptor data z buffer o velikosti buffer_size a vrati pocet zapsanych dat ve writtent
 		//vraci true, kdyz vse OK
-bool Set_In_File_Position(const THandle file_handle, const size_t new_position);
+bool Set_In_File_Position(int id_thread, const THandle file_handle, const size_t new_position);
 		//nastavi novou pozici v souboru, od ktere se bude psat do souboru
-bool Close_File(const THandle file_handle);
+bool Close_File(int id_thread, const THandle file_handle);
 		//uzavre soubor identifikovany pomoci deskriptoru
 		//vraci true, kdyz vse OK
-bool Delete_File(const THandle file_handle);
+bool Delete_File(int id_thread, const THandle file_handle);
 		//Smaze soubor identifikovany pomoci deskriptoru
 		//vraci true, kdyz vse OK
-THandle Open_File(const char* file_name, size_t flags);
+THandle Open_File(int id_thread, const char* file_name, size_t flags);
 //podle flags otevre, vytvori soubor a vrati jeho deskriptor
 //vraci nenulovy handle, kdyz vse OK
 
 //vytvori slozku s uvedenou cestou a flags
-bool Create_Folder(const std::string file_name, size_t flags);
+bool Create_Folder(int id_thread, const std::string file_name, size_t flags);
 //odstrani slozku s uvedenou cestou a flags
-bool Delete_Folder(const std::string file_name, size_t flags);
+bool Delete_Folder(int id_thread, const std::string file_name, size_t flags);
 //change folder - id_thread. a path
 bool Change_Folder(int id_thread, const char* path);
 //dir - id vlakna a cesta
