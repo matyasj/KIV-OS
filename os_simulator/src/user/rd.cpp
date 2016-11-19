@@ -1,5 +1,5 @@
 #include "rd.h"
-
+#include"rtl_error.h"
 
 /*
 Parametry:
@@ -16,18 +16,17 @@ size_t __stdcall rd(const CONTEXT &regs) {
 	int id = (int)regs.Rdi;
 	THandle input = (THandle)regs.Rbx;
 	THandle output = (THandle)regs.Rcx;
+	THandle error = (THandle)regs.Rax;
 	std::string arg = (char *)regs.Rdx;
+	size_t written;
 	if (!arg.empty()) {
 		bool success = Delete_Folder(arg, 0);
-		if (success) {
-			return 0;
-		}
-		else {
-			//TODO chyba
+		if (!success) {
+			Write_File(error, print_error(Get_Last_Error()).c_str(), 0, written);
 		}
 	}
 	else {
-		//TODO chyba
+		Write_File(error, print_error(wrongArgument).c_str(), 0, written);
 	}
 	return 0;
 }

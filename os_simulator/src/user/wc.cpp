@@ -1,5 +1,6 @@
 #include "wc.h"
 #include"Parser\my_string.h"
+#include"rtl_error.h"
 #include <sstream>
 #include <iostream>
 /*
@@ -37,6 +38,7 @@ size_t __stdcall wc(const CONTEXT &regs) {
 	int id = (int)regs.Rdi;
 	THandle input = (THandle)regs.Rbx;
 	THandle output = (THandle)regs.Rcx;
+	THandle error = (THandle)regs.Rax;
 	std::string arg = (char *)regs.Rdx;
 	std::string buffer;
 	size_t read;
@@ -49,7 +51,7 @@ size_t __stdcall wc(const CONTEXT &regs) {
 			bool succes = Read_File(file, &buffer, 0, read);
 			Close_File(file);
 			if (!succes) {
-
+				Write_File(error, print_error(Get_Last_Error()).c_str(), 0, written);
 			}
 			else {
 				count(buffer,lines,bytes,words);
@@ -68,6 +70,5 @@ size_t __stdcall wc(const CONTEXT &regs) {
 		std::string out = print(lines, bytes, words, "");
 		Write_File(output, out.c_str(), 0, written);
 	}
-
 	return 0;
 }

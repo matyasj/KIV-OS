@@ -117,6 +117,8 @@ const __int8 errorIO = 5;
 const __int8 threadNotFound = 6;
 // spatny argument
 const __int8 wrongArgument = 7;
+// prikaz je pouze out
+const __int8 onlyOn = 8;
 
 
 constexpr __int16 Compose_AX(const __int8 ah, const __int8 al) {
