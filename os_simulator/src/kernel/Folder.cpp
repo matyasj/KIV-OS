@@ -21,6 +21,7 @@ bool Folder::addFolder(Folder* folder)
 		return false;
 	}
 	else {
+		folder->parentFolder = this;
 		this->folders.push_back(folder);
 		return true;
 	}

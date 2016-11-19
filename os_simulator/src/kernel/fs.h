@@ -22,12 +22,12 @@ bool setInFilePosition(THandle file, int newPosition);
 int appendFile(THandle file, std::string buffer);
 std::string readFile(THandle file);
 bool closeFile(THandle file);
-bool deleteFileByPath(std::string fullFilePath);
-bool deleteFile(THandle file);
+bool deleteFileByPath(int procesId, std::string fullFilePath);
+bool deleteFile(int procesId, THandle file);
 
-THandle createFolder(std::string fullFolderPath);
-bool deleteFolderByPath(std::string fullFolderPath);
-bool deleteFolder(THandle folder);
+THandle createFolder(int procesId, std::string fullFolderPath);
+bool deleteFolderByPath(int procesId, std::string fullFolderPath);
+bool deleteFolder(int procesId, THandle folder);
 
 std::vector<std::string> parsePath(std::string path);
 
@@ -35,6 +35,7 @@ void printFSTree();
 void recursePrintTree(Folder* startNode, std::string prefix);
 
 bool containRoot(std::string fullFolderPath);
+bool containColon(std::string str);
 std::string getAbsolutePathFromRelative(int procesId, std::string relativePath);
 
 // File Descriptors

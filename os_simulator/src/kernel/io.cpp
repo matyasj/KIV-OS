@@ -51,9 +51,9 @@ void HandleIO(CONTEXT &regs) {
 
 	switch (Get_AL((__int16) regs.Rax)) {
 		case scCreateFile: {
-			int id = (int)regs.Rdi;
+			int proces_id = (int)regs.Rdi;
 			// Zatim funguje primo jako shared_read | generic_write
-			regs.Rax = (decltype(regs.Rax)) createFile(id,(char*)regs.Rdx, (size_t)regs.Rcx);
+			regs.Rax = (decltype(regs.Rax)) createFile(proces_id,(char*)regs.Rdx, (size_t)regs.Rcx);
 			Set_Error(regs.Rax == 0, regs);
 		//	printFSTree();
 			}
@@ -61,7 +61,7 @@ void HandleIO(CONTEXT &regs) {
 
 
 		case scWriteFile: {
-			int id = (int)regs.Rdi;
+			int proces_id = (int)regs.Rdi;
 			//DWORD written;
 			//const bool failed = !WriteFile((HANDLE)regs.Rdx, (void*)regs.Rbx, (DWORD)regs.Rcx, &written, NULL);
 			size_t flag = regs.Rcx;
@@ -84,8 +84,8 @@ void HandleIO(CONTEXT &regs) {
 			break; //scWriteFile
 
 		case scOpenFile: {
-			int id = (int)regs.Rdi;
-			THandle tmpFile = openFile(id,(char*)regs.Rdx, (size_t)regs.Rcx);
+			int proces_id = (int)regs.Rdi;
+			THandle tmpFile = openFile(proces_id,(char*)regs.Rdx, (size_t)regs.Rcx);
 			/*if (tmpFile != nullptr) {
 				std::cout << "Soubor: " << tmpFile->name << "\n";
 			}*/
@@ -101,21 +101,21 @@ void HandleIO(CONTEXT &regs) {
 			break;	//CloseFile
 		case scDeleteFile: {
 			int id = (int)regs.Rdi;
-			Set_Error(!deleteFile((THandle*)regs.Rdx), regs);
+			Set_Error(!deleteFile(id, (THandle*)regs.Rdx), regs);
 		}
 			break;	//CloseFile
 		case scCreateFolder:{
-			int id = (int)regs.Rdi;
+			int proces_id = (int)regs.Rdi;
 			std::string name = (char*)regs.Rdx;
-			regs.Rax = (decltype(regs.Rax))createFolder(name);
+			regs.Rax = (decltype(regs.Rax))createFolder(proces_id, name);
 			Set_Error(regs.Rax == false, regs);
 	//		printFSTree();
 			break;
 		}
 		case scDeleteFolder: {
-			int id = (int)regs.Rdi;
+			int proces_id = (int)regs.Rdi;
 			std::string name = (char*)regs.Rdx;
-			regs.Rax = (decltype(regs.Rax))deleteFolderByPath(name);
+			regs.Rax = (decltype(regs.Rax))deleteFolderByPath(proces_id, name);
 			Set_Error(regs.Rax == false, regs);
 //			printFSTree();
 		}
