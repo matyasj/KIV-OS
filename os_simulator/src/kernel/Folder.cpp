@@ -96,15 +96,17 @@ bool Folder::removeFolder(std::string name)
 	return false;
 }
 
-void Folder::printChildren()
+std::string Folder::printChildren()
 {
-	std::cout << this->name + "\n";
+	std::string printSTR = "";
+	printSTR += this->name + "\n";
 	for (int i = 0; i != this->folders.size(); i++) {
-		std::cout << "|- FOLDER::" + this->folders[i]->name + "\n";
+		printSTR += "|- FOLDER::" + this->folders[i]->name + "\n";
 	}
 	for (int i = 0; i != this->files.size(); i++) {
-		std::cout << "|- FILE::" + this->files[i]->name + "\n";
+		printSTR += "|- FILE::" + this->files[i]->name + "\n";
 	}
+	return printSTR;
 }
 
 bool Folder::containFile(std::string name)

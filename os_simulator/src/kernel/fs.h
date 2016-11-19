@@ -33,6 +33,8 @@ std::vector<std::string> parsePath(std::string path);
 
 void printFSTree();
 void recursePrintTree(Folder* startNode, std::string prefix);
+std::string printFolder(int procesId, std::string fullFolderPath);
+bool changeWorkDirectory(int procesId, std::string fullFolderPath);
 
 bool containRoot(std::string fullFolderPath);
 bool containColon(std::string str);

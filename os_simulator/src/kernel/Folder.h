@@ -29,7 +29,7 @@ public:
 	File* Folder::getFileByName(std::string name);
 	Folder* Folder::getFolderByName(std::string name);
 
-	void printChildren();
+	std::string printChildren();
 
 	Folder(std::string name, Folder* parent);
 	~Folder();
