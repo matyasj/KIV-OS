@@ -86,10 +86,10 @@ Command Parser::parse_instruction_arg(std::string& instruction) {
 	int command_type = error_class.ERROR_INSTRUCTION;
 	const std::string com = data.at(0);
 	if (com == EXIT_CHAR) {
-		command_type = EXIT;
+		error_class.parser_error(error_class.EXIT_IN_PIPE);
 	}
 	if (com == SHELL_CHAR) {
-		command_type = SHELL;
+		error_class.parser_error(error_class.SHELL_IN_PIPE);
 	}
 	if (com == TYPE_CHAR) {
 		command_type = TYPE;
@@ -177,11 +177,32 @@ std::vector<Redirect_file> Parser::parse_redirect(std::string str, Command& comm
 	}
 	return files;
 	}
-
+Command Parser::isSingleCommand(std::string line) {
+	Command com;
+	com.type_command = this->error_class.ERROR_INSTRUCTION;
+	if (line == EXIT_CHAR) {
+		com.type_command = EXIT;
+		com.name = EXIT_CHAR;
+		return com;
+	}
+	if (line == SHELL_CHAR) {
+		com.type_command = SHELL;
+		com.name = SHELL_CHAR;
+		return com;
+	}
+	return com;
+}
 std::vector<Command> Parser::parse_line(std::string line) {
+	std::vector<Command> commands;
+	line = trim(line);
+	if (line.empty())return commands;
+	Command comm = isSingleCommand(line);
+	if (comm.type_command != this->error_class.ERROR_INSTRUCTION) {
+		commands.push_back(comm);
+		return commands;
+	}
 	std::vector<std::string> data = split_string(line, PIPE_CHAR); // rozdelit dle pipe
 	bool is_first = true;
-	std::vector<Command> commands;
 	error_class.reset_parser_error();
 	int i = 0;
 	for (i = 0;i < data.size()-1;i++) {
@@ -195,7 +216,6 @@ std::vector<Command> Parser::parse_line(std::string line) {
 	}
 	
 	std::string token = trim(data.back());
-	//std::string token = trim(data.at(i));
 	Command com = parse_instruction_arg(token);
 	Command* first;
 	if (commands.empty()) {
@@ -214,6 +234,9 @@ std::vector<Command> Parser::parse_line(std::string line) {
 			}
 			else {
 				succes = com.add_redirect_file_out(f);
+			}
+			if (!succes) {
+				error_class.parser_error(error_class.TOO_MANY_REDIRECT);
 			}
 		}
 	}

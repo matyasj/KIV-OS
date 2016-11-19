@@ -31,7 +31,7 @@ size_t __stdcall type(const CONTEXT &regs) {
 	size_t written;
 	if (!arg.empty()) {
 		std::string argument = arg;
-		THandle file = Open_File(id,argument.c_str(), FILE_READ_ACCESS);
+		THandle file = Open_File(id,argument.c_str(), FILE_SHARE_READ);
 		std::string buffer;
 		size_t read;
 		if (Get_Last_Error() == 0)

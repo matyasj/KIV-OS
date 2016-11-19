@@ -42,7 +42,11 @@ void handleProgram(CONTEXT &regs) {
 		if (command->has_redirect && command->redirect_files.type_redirect == RED_IN) {
 
 			// ziskej THandle na vstupni soubor a uloz ho do registru
-			t = openFile(id,command->redirect_files.name, FILE_READ_ACCESS);
+			t = openFile(id,command->redirect_files.name, FILE_SHARE_READ);
+			if (t == nullptr) {
+				Set_Error(true, regs);
+				return;
+			}
 			regs.Rbx = (decltype(regs.Rbx))t;
 
 			//std::cout << "Vstup programu je presmerovan ze souboru " << command->redirect_files.name << std::endl;
@@ -75,7 +79,14 @@ void handleProgram(CONTEXT &regs) {
 			if (command->redirect_files_out.type_redirect == RED_OUT) {
 
 				// ziskej THandle na vystupni soubor a uloz ho do fronty
-				t = createFile(id,command->redirect_files_out.name, FILE_WRITE_ACCESS);
+				t = openFile(id, command->redirect_files_out.name, GENERIC_WRITE);
+				if (t==nullptr) {
+					t = createFile(id, command->redirect_files_out.name, GENERIC_WRITE);
+				}
+				if (t == nullptr) {
+					Set_Error(true, regs);
+					return;
+				}
 				regs.Rcx = (decltype(regs.Rcx))t;
 
 				//std::cout << "Vystup programu je presmerovan do souboru " << command->redirect_files_out.name << std::endl;
@@ -87,7 +98,10 @@ void handleProgram(CONTEXT &regs) {
 				// TODO Append file command->redirect_files.name
 				t = 0;
 				regs.Rcx = (decltype(regs.Rcx))t;
-
+				if (t == nullptr) {
+					Set_Error(true, regs);
+					return;
+				}
 				//std::cout << "Vystup programu je presmerovan na konec souboru " << command->redirect_files_out.name << std::endl;
 			}
 		}
@@ -114,4 +128,5 @@ void handleProgram(CONTEXT &regs) {
 	if (end) {
 		start();
 	}
+	Set_Error(false, regs);
 }
