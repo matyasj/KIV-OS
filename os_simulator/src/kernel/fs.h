@@ -6,12 +6,9 @@
 #include "Folder.h"
 
 
-//TODO 
-//zpracování absolutní X relativní cesta
-// ..
-// flags
 #define FILE_SEPARATOR '\\'
 #define ROOT_FOLDER "C:"
+#define UPPER_DIRECTORY ".."
 
 //	Pøíklad cesty: C\slozka1\slozka2\soubor.txt   Nazvy slozek a souboru mohou obsahovat napr. i mezery.
 THandle openFile(int procesId, std::string fullFilePath, size_t flags);
@@ -30,6 +27,8 @@ bool deleteFolderByPath(int procesId, std::string fullFolderPath);
 bool deleteFolder(int procesId, THandle folder);
 
 std::vector<std::string> parsePath(std::string path);
+std::vector<std::string> correctPath(std::vector<std::string> pathParts);
+std::vector<std::string> checkPath(int proces_id, std::string fullPath);
 
 void printFSTree();
 void recursePrintTree(Folder* startNode, std::string prefix);

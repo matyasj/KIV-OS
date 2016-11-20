@@ -15,36 +15,21 @@ std::vector<FileDescriptorBlock*> FileDescriptorTable;
 
 THandle openFile(int procesId, std::string fullFilePath, size_t flags)
 {
-	if (!containRoot(fullFilePath)) {
-		fullFilePath = getAbsolutePathFromRelative(procesId, fullFilePath);
-		if (!containRoot(fullFilePath)) {
-			SetLastError(errorBadPath);
-			std::cout << "Bad path of file " << fullFilePath << "\n";
-			return NULL;
-		}
-	}
-	
-	std::vector<std::string> partsOfPath = parsePath(fullFilePath);
+	std::vector<std::string> partsOfPath = checkPath(procesId, fullFilePath);
+	if (partsOfPath.size() == 0)
+		return (THandle)-1;
 
 	Folder *tmpFolder = rootFolder;
 	for (int i = 1; i < partsOfPath.size(); i++) {
-		if (partsOfPath[i] == "..") {
-			if (tmpFolder->parentFolder != nullptr) {
-				tmpFolder = tmpFolder->parentFolder;
-				continue;
-			}
-			SetLastError(errorBadPath);
-			std::cout << "Bad path of folder " << fullFilePath << "\n";
-			return false;
-		}
+		
 		if (i == (partsOfPath.size() - 1)) {
 			if (tmpFolder->containFile(partsOfPath[i])) {
 				std::cout << "Soubor nalezen: " << partsOfPath[i] << "\n";
 				File *foundedFile = tmpFolder->getFileByName(partsOfPath[i]);
 				if (!canOpen(fullFilePath, flags)) {
 					SetLastError(errorFileIsUsed);
-					std::cout << "FILE IS OPENED EXCEPTION (PERMISSION FAILED)\n";
-					return nullptr;
+					std::cout << "FILE IS OPENED EXCEPTION3 (PERMISSION FAILED)\n";
+					return (THandle)-1;
 				}
 				foundedFile->setOpened();
 				THandle newFileDescriptor = putFileIntoFDTable(foundedFile, flags);
@@ -64,7 +49,7 @@ THandle openFile(int procesId, std::string fullFilePath, size_t flags)
 	SetLastError(errorFileNotFound);
 	std::cout << "FILE NOT FOUND!\n";
 	
-	return nullptr;
+	return (THandle)-1;
 }
 
 THandle createFile(int procesId, std::string fullFilePath, size_t flags)
@@ -75,33 +60,17 @@ THandle createFile(int procesId, std::string fullFilePath, size_t flags)
 	else if (fullFilePath == "CONIN$") {
 		return getStdIn();
 	}
-	if (!containRoot(fullFilePath)) {
-		fullFilePath = getAbsolutePathFromRelative(procesId, fullFilePath);
-		if (!containRoot(fullFilePath)) {
-			SetLastError(errorBadPath);
-			std::cout << "Bad path of file " << fullFilePath << "\n";
-			return NULL;
-		}
-	}
-
-	std::cout << "Vytvarim soubor: " << fullFilePath << "\n";
-	std::vector<std::string> partsOfPath = parsePath(fullFilePath);
+	std::vector<std::string> partsOfPath = checkPath(procesId, fullFilePath);
+	if (partsOfPath.size() == 0)
+		return (THandle)-1;
 
 	Folder *tmpFolder = rootFolder;
 	for (int i = 1; i < partsOfPath.size(); i++) {
-		if (partsOfPath[i] == "..") {
-			if (tmpFolder->parentFolder != nullptr) {
-				tmpFolder = tmpFolder->parentFolder;
-				continue;
-			}
-			SetLastError(errorBadPath);
-			std::cout << "Bad path of folder " << fullFilePath << "\n";
-			return false;
-		}
+		
 		if (i == (partsOfPath.size() - 1)) {
 			if (containColon(partsOfPath[i])) {
 				SetLastError(errorBadPath);
-				std::cout << "FILE "<< partsOfPath[i]  <<" CONTAIN : character!\n";
+				std::cout << "FILE "<< partsOfPath[i]  <<" CONTAIN ':' character!\n";
 				return NULL;
 			}
 				
@@ -111,7 +80,7 @@ THandle createFile(int procesId, std::string fullFilePath, size_t flags)
 				File *foundFile = tmpFolder->getFileByName(partsOfPath[i]);
 				if (!canOpen(fullFilePath, flags)) {
 					SetLastError(errorFileIsUsed);
-					std::cout << "FILE IS OPENED EXCEPTION (PERMISSION FAILED)\n";
+					std::cout << "FILE IS OPENED EXCEPTION2 (PERMISSION FAILED)\n";
 					return nullptr;
 				}
 				foundFile->setOpened();
@@ -186,7 +155,7 @@ std::string readFile(THandle file)
 		std::string str(tmpFile->read());
 		return str;
 	}
-	std::cout << "FILE " << tmpFile->name << " HAS NOT READ PERMESSION FOR THIS PROCESS - UNABLE TO WRITE\n";
+	std::cout << "FILE " << tmpFile->name << " HAS NOT READ PERMESSION FOR THIS PROCESS1 - UNABLE TO WRITE\n";
 	SetLastError(errorIO);
 	return NULL;
 	
@@ -197,35 +166,22 @@ std::string readFile(THandle file)
 bool closeFile(THandle file)
 {
 	File *tmpFile = removeFileFromFDTable(file);
-	
+	if (tmpFile == NULL) {
+		return false;
+	}
 	return tmpFile->setClosed();
 }
 
 THandle createFolder(int procesId, std::string fullFolderPath)
 {
-	if (!containRoot(fullFolderPath)) {
-		fullFolderPath = getAbsolutePathFromRelative(procesId, fullFolderPath);
-		if (!containRoot(fullFolderPath)) {
-			SetLastError(errorBadPath);
-			std::cout << "Bad path of folder " << fullFolderPath << "\n";
-			return NULL;
-		}
-	}
-	std::vector<std::string> partsOfPath = parsePath(fullFolderPath);
+	std::vector<std::string> partsOfPath = checkPath(procesId, fullFolderPath);
+	if (partsOfPath.size() == 0)
+		return (THandle)-1;
 
-	
 	Folder *tmpFolder = rootFolder;
 
 	for (int i = 1; i < partsOfPath.size(); i++) {
-		if (partsOfPath[i] == "..") {
-			if (tmpFolder->parentFolder != nullptr) {
-				tmpFolder = tmpFolder->parentFolder;
-				continue;
-			}
-			SetLastError(errorBadPath);
-			std::cout << "Bad path of folder " << fullFolderPath << "\n";
-			return false;
-		}
+		
 		if (i == (partsOfPath.size() - 1)) {
 			if (tmpFolder->containFolder(partsOfPath[i])) {
 				SetLastError(errorAlreadyExist);
@@ -233,7 +189,7 @@ THandle createFolder(int procesId, std::string fullFolderPath)
 				Folder *foundFolder = tmpFolder->getFolderByName(partsOfPath[i]);
 				//tmpFolder->printChildren();
 				
-				return false;
+				return foundFolder;
 			}
 			else {
 				Folder* newFolder = new Folder(partsOfPath[i], tmpFolder);
@@ -248,38 +204,22 @@ THandle createFolder(int procesId, std::string fullFolderPath)
 		else {
 			SetLastError(errorBadPath);
 			std::cout << "BAD PATH\n";
-			return false;
+			return (THandle)-1;
 		}
 	}
 
-	return false;
+	return (THandle)-1;
 }
 
 bool deleteFolderByPath(int procesId, std::string fullFolderPath)
 {
-	if (!containRoot(fullFolderPath)) {
-		fullFolderPath = getAbsolutePathFromRelative(procesId, fullFolderPath);
-		if (!containRoot(fullFolderPath)) {
-			SetLastError(errorBadPath);
-			std::cout << "Bad path of folder " << fullFolderPath << "\n";
-			return NULL;
-		}
-	}
-	std::vector<std::string> partsOfPath = parsePath(fullFolderPath);
+	std::vector<std::string> partsOfPath = checkPath(procesId, fullFolderPath);
+	if (partsOfPath.size() == 0)
+		return false;
 
-	
 	Folder *tmpFolder = rootFolder;
 
 	for (int i = 1; i < partsOfPath.size(); i++) {
-		if (partsOfPath[i] == "..") {
-			if (tmpFolder->parentFolder != nullptr) {
-				tmpFolder = tmpFolder->parentFolder;
-				continue;
-			}
-			SetLastError(errorBadPath);
-			std::cout << "Bad path of folder " << fullFolderPath << "\n";
-			return false;
-		}
 		if (i == (partsOfPath.size() - 1)) {
 			if (tmpFolder->containFolder(partsOfPath[i])) {
 				bool a = tmpFolder->removeFolder(partsOfPath[i]);
@@ -324,28 +264,12 @@ bool deleteFolder(int procesId, THandle folder)
 }
 
 bool deleteFileByPath(int procesId, std::string fullFilePath){
-	if (!containRoot(fullFilePath)) {
-		fullFilePath = getAbsolutePathFromRelative(procesId, fullFilePath);
-		if (!containRoot(fullFilePath)) {
-			SetLastError(errorBadPath);
-			std::cout << "Bad path of file " << fullFilePath << "\n";
-			return NULL;
-		}
-	}
-	
-	std::vector<std::string> partsOfPath = parsePath(fullFilePath);
+	std::vector<std::string> partsOfPath = checkPath(procesId, fullFilePath);
+	if (partsOfPath.size() == 0)
+		return false;
 
 	Folder *tmpFolder = rootFolder;
 	for (int i = 1; i < partsOfPath.size(); i++) {
-		if (partsOfPath[i] == "..") {
-			if (tmpFolder->parentFolder != nullptr) {
-				tmpFolder = tmpFolder->parentFolder;
-				continue;
-			}
-			SetLastError(errorBadPath);
-			std::cout << "Bad path of folder " << fullFilePath << "\n";
-			return false;
-		}
 		if (i == (partsOfPath.size() - 1)) {
 			if (tmpFolder->containFile(partsOfPath[i])) {
 				return tmpFolder->removeFile(partsOfPath[i]);
@@ -394,6 +318,45 @@ std::vector<std::string> parsePath(std::string path) {
 	return arrayOfPartsOfPath;
 }
 
+std::vector<std::string> correctPath(std::vector<std::string> pathParts)
+{
+	if (pathParts.size() > 1) {
+		if (pathParts[1] == UPPER_DIRECTORY) {
+			SetLastError(errorBadPath);
+			return std::vector<std::string>();
+		}
+	}
+	for (int i = 1; i < (pathParts.size() - 1); i++) {
+		if (pathParts[i+1] == UPPER_DIRECTORY) {
+			pathParts.erase(pathParts.begin() + (i + 1));
+			pathParts.erase(pathParts.begin() + i);
+			i -= 2;
+		}
+	}
+	return pathParts;
+}
+
+std::vector<std::string> checkPath(int proces_id, std::string fullPath)
+{
+	std::vector<std::string> partsOfPath;
+	if (!containRoot(fullPath)) {
+		fullPath = getAbsolutePathFromRelative(proces_id, fullPath);
+		partsOfPath = parsePath(fullPath);
+		partsOfPath = correctPath(partsOfPath);
+		if (partsOfPath.size() == 0) {
+			SetLastError(errorBadPath);
+			std::cout << "Bad path of File " << fullPath << "\n";
+			return std::vector<std::string>();
+		}
+		if (partsOfPath[0] != ROOT_FOLDER) {
+			SetLastError(errorBadPath);
+			std::cout << "Bad path of folder " << fullPath << "\n";
+			return std::vector<std::string>();
+		}
+	}
+	return partsOfPath;
+}
+
 void printFSTree()
 {
 	recursePrintTree(rootFolder, "");
@@ -414,29 +377,27 @@ void recursePrintTree(Folder * startNode, std::string prefix)
 
 std::string printFolder(int procesId, std::string fullFolderPath)
 {
+	std::vector<std::string> partsOfPath;
 	if (!containRoot(fullFolderPath)) {
 		fullFolderPath = getAbsolutePathFromRelative(procesId, fullFolderPath);
-		if (!containRoot(fullFolderPath)) {
+		partsOfPath = parsePath(fullFolderPath);
+		partsOfPath = correctPath(partsOfPath);
+		if (partsOfPath.size() == 0) {
 			SetLastError(errorBadPath);
 			std::cout << "Bad path of folder " << fullFolderPath << "\n";
-			return NULL;
+			return false;
+		}
+		if (partsOfPath[0] != ROOT_FOLDER) {
+			SetLastError(errorBadPath);
+			std::cout << "Bad path of folder " << fullFolderPath << "\n";
+			return false;
 		}
 	}
-	std::vector<std::string> partsOfPath = parsePath(fullFolderPath);
 
 
 	Folder *tmpFolder = rootFolder;
 
 	for (int i = 1; i < partsOfPath.size(); i++) {
-		if(partsOfPath[i] == "..") {
-			if (tmpFolder->parentFolder != nullptr) {
-				tmpFolder = tmpFolder->parentFolder;
-				continue;
-			}
-			SetLastError(errorBadPath);
-			std::cout << "Bad path of folder " << fullFolderPath << "\n";
-			return false;
-		}
 		if (i == (partsOfPath.size() - 1)) {
 			if (tmpFolder->containFolder(partsOfPath[i])) {
 				Folder *foundFolder = tmpFolder->getFolderByName(partsOfPath[i]);
@@ -463,56 +424,44 @@ std::string printFolder(int procesId, std::string fullFolderPath)
 
 bool changeWorkDirectory(int procesId, std::string fullFolderPath)
 {
+	std::vector<std::string> partsOfPath;
 	if (!containRoot(fullFolderPath)) {
 		fullFolderPath = getAbsolutePathFromRelative(procesId, fullFolderPath);
-		if (!containRoot(fullFolderPath)) {
+		partsOfPath = parsePath(fullFolderPath);
+		partsOfPath = correctPath(partsOfPath);
+		if (partsOfPath.size() == 0) {
+			SetLastError(errorBadPath);
+			std::cout << "Bad path of folder " << fullFolderPath << "\n";
+			return false;
+		}
+		if (partsOfPath[0] != ROOT_FOLDER) {
 			SetLastError(errorBadPath);
 			std::cout << "Bad path of folder " << fullFolderPath << "\n";
 			return false;
 		}
 	}
-	std::vector<std::string> partsOfPath = parsePath(fullFolderPath);
-
-	std::string absolutePath = "";
+	
 	Folder *tmpFolder = rootFolder;
 
+	if (partsOfPath.size() == 1) {
+		int id_shell = get_active_thread_by_type(SHELL);
+		std::string str = ROOT_FOLDER;
+		str += FILE_SEPARATOR;
+		int return_value = change_thread_current_folder(id_shell, &(std::string(str)));
+		return !return_value;
+	}
+
 	for (int i = 1; i < partsOfPath.size(); i++) {
-		if (partsOfPath[i] == "..") {
-			if (tmpFolder->parentFolder != nullptr) {
-				tmpFolder = tmpFolder->parentFolder;
-				if (i != (partsOfPath.size() - 1)) {
-					continue;
-				}
-					
-			}
-			else {
-				SetLastError(errorBadPath);
-				std::cout << "Bad path of folder " << fullFolderPath << "\n";
-				return false;
-			}
-			
-		}
 		if (i == (partsOfPath.size() - 1)) {
-			if (tmpFolder->containFolder(partsOfPath[i]) || partsOfPath[i] == "..") {
+			if (tmpFolder->containFolder(partsOfPath[i])) {
 				Folder *foundFolder = tmpFolder->getFolderByName(partsOfPath[i]);
 				std::string absolutePath = "";
-				for (int j = 0; j < partsOfPath.size(); j++) {
-					if (j != (partsOfPath.size() - 1)) {
-						if (partsOfPath[j+1] != "..") {
-							absolutePath += partsOfPath[j] + FILE_SEPARATOR;
-						}
-						else {
-							j++;
-						}
-						
-					}
-					else {
-						absolutePath += partsOfPath[j] + FILE_SEPARATOR;
-					}
+				for (std::string name : partsOfPath) {
+					absolutePath += name;
+					absolutePath += FILE_SEPARATOR;
 				}
-				int id_shell = get_active_thread_by_type(SHELL);	
+				int id_shell = get_active_thread_by_type(SHELL);
 				int return_value = change_thread_current_folder(id_shell, &(std::string(absolutePath)));
-				
 				return !return_value;
 			}
 			else {
@@ -531,7 +480,7 @@ bool changeWorkDirectory(int procesId, std::string fullFolderPath)
 	SetLastError(errorBadPath);
 	std::cout << "BAD PATH\n";
 	return false;
-}
+	}
 
 bool containRoot(std::string fullFolderPath)
 {

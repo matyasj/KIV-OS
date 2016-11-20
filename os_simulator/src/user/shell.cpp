@@ -33,6 +33,14 @@ size_t __stdcall shell(const CONTEXT &regs) {
 	/* TODO - prozatim, jen at se muze testovat */
 	int id = (int)regs.Rdi;
 	Parser parser;
+
+
+	Create_Folder(id, "s1", FILE_SHARE_READ);
+	Create_Folder(id, "s1\\s2", FILE_SHARE_READ);
+	Create_Folder(id, "s3", FILE_SHARE_READ);
+	Create_Folder(id, "s3\\s4", FILE_SHARE_READ);
+	Create_Folder(id, "s3\\s4\\s5", FILE_SHARE_READ);
+	
 	
 	bool run = true;
 	while (run) {
