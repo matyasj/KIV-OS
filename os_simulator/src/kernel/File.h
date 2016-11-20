@@ -2,6 +2,7 @@
 
 #include <string>
 #include "FileDescriptor.h"
+#include <mutex>
 
 class File : public FileDescriptor
 {
@@ -11,6 +12,7 @@ public:
 	int inFilePosition;
 	FileDescriptor* parrentFolder;
 	std::string path;
+	std::mutex mtx;
 
 	bool setOpened();
 	virtual bool setClosed();

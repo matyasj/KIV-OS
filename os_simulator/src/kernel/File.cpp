@@ -3,6 +3,7 @@
 
 bool File::setOpened()
 {
+	std::unique_lock<std::mutex> lck(mtx);
 	if (this->isOpened) {
 		return false;
 	}
@@ -15,6 +16,7 @@ bool File::setOpened()
 
 bool File::setClosed()
 {
+	std::unique_lock<std::mutex> lck(mtx);
 	this->isOpened = false;
 	this->inFilePosition = -1;
 	return true;
@@ -22,12 +24,14 @@ bool File::setClosed()
 
 std::string File::getContentFromPosition()
 {
+	std::unique_lock<std::mutex> lck(mtx);
 	std::string content(this->content.substr(this->inFilePosition, this->content.size()));
 	return content;
 }
 
 size_t File::write(std::string str, size_t flag)
 {
+	std::unique_lock<std::mutex> lck(mtx);
 	if(this->isOpened) {
 		if(flag == 0){
 			this->content = this->content.insert(this->inFilePosition, str);
@@ -50,6 +54,7 @@ size_t File::write(std::string str, size_t flag)
 
 size_t File::append(std::string str)
 {
+	std::unique_lock<std::mutex> lck(mtx);
 	if (this->isOpened) {
 		this->content.append(str);
 		return str.size();
@@ -63,6 +68,7 @@ size_t File::append(std::string str)
 
 bool File::setPosition(int newPosition)
 {
+	std::unique_lock<std::mutex> lck(mtx);
 	if (this->content.size() > newPosition && this->isOpened) {
 		this->inFilePosition = newPosition;
 		return true;
@@ -74,10 +80,11 @@ bool File::setPosition(int newPosition)
 
 std::string File::read()
 {
+	std::unique_lock<std::mutex> lck(mtx);
 	return this->content+'\0';
 }
 
-File::File(std::string name, FileDescriptor* parent, std::string path)
+File::File(std::string nsame, FileDescriptor* parent, std::string path)
 {
 	this->name = name;
 	this->parrentFolder = parent;
