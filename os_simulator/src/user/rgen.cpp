@@ -26,7 +26,7 @@ void generate(THandle output,int id,int write_flag) {
 		number = ((double)rand() / (double)RAND_MAX);
 		str = std::to_string(number) + "\n";
 		Write_File(id,output, str.c_str(), write_flag, write);
-		std::this_thread::sleep_for(std::chrono::seconds(1));
+		//std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 }
 /*

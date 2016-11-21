@@ -3,6 +3,8 @@
 #include<mutex>
 #include <sstream>
 #include <algorithm>
+#include <iomanip>
+
 std::mutex mutex;
 std::vector<Thread*> threads;
 
@@ -105,17 +107,20 @@ int get_parent_id(int id) {
 std::string print_tcb() {
 	std::lock_guard<std::mutex> guard(mutex);
 	std::stringstream str;
-	str << "id \t typ prikazu \t rodic \t stav \t aktualni slozka \t " << std::endl;
+	str << std::setw(6) << "id "<< std::setw(11) << "prikaz "<< std::setw(6) << "rodic " << 
+		std::setw(5) << "stav " << std::setw(20) <<"aktualni slozka " << std::endl;
 	for (Thread* t : threads) {
-		str << t->id << "\t" << t->name_command << "\t" << t->parent_id << "\t";
+		str << std::setw(5) <<  t->id << std::setw(11) << t->name_command << std::setw(6) << t->parent_id << std::setw(5);
 		switch (t->state) {
-		case RUN: str << "RUN \t";break;
-		case READY: str << "READY \t";break;
-		case WAIT: str << "WAIT \t";break;
-		case EXECUTED: str << "EXECUTED \t";break;
-		case BLOCK: str << "BLOCK \t";break;
+		case INIT:str << "INIT";break;
+		case RUN: str << "RUN";break;
+		case READY: str << "READY";break;
+		case WAIT: str << "WAIT";break;
+		case EXECUTED: str << "EXECUTED";break;
+		case BLOCK: str << "BLOCK";break;
 		}
-		str<< t->current_folder << std::endl;
+
+		str<< std::setw(20) <<t->current_folder << std::endl;
 	}
 	return str.str();
 }
@@ -144,7 +149,6 @@ bool add_filehandler(int id, THandle file_descriptor, Access access) {
 }
 // Odebere z TCB tabulky filehandler vlaku s id
 bool remove_filehandler(int id, THandle file_descriptor) {
-	//TODO: kdyz odstrani, je zavren?
 	std::lock_guard<std::mutex> guard(mutex);
 	auto thread_it = std::find_if(threads.begin(), threads.end(), [id](Thread * f) { return f->id == id; });
 	if (thread_it != std::end(threads)) {

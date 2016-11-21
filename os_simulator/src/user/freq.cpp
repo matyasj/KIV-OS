@@ -1,6 +1,7 @@
 #include "freq.h"
 #include"rtl_error.h"
 #include<sstream>
+#include <iomanip>
 
 
 /*
@@ -14,7 +15,7 @@ size_t __stdcall freq(const CONTEXT &regs) {
 	THandle error = (THandle)regs.Rax;
 	std::string arg = (char *)regs.Rdx;
 	int write_flag = (int)regs.Rsi;
-	std::map<char, int> map;
+	std::map<unsigned char, int> map;
 	std::string buffer;
 	size_t read;
 	if (!arg.empty()) {
@@ -36,7 +37,8 @@ size_t __stdcall freq(const CONTEXT &regs) {
 		std::stringstream streamO;
 		for (auto const& it : map)
 		{
-			streamO << it.first << " : " << it.second << std::endl;
+			streamO << "0x" << std::uppercase << std::setfill('0') << std::setw(4) << std::hex << (unsigned int)it.first;
+			streamO << " : " << it.second << std::endl;
 		}
 		Write_File(id,output, streamO.str().c_str(), write_flag, read);
 	}
