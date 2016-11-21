@@ -31,48 +31,50 @@ size_t __stdcall shell(const CONTEXT &regs) {
 		Write_File(id, std_out, start_text.c_str(), write_flag, written);
 		std::string line = "";
 		Read_File(id, std_in, &line, 0, pocet);
-		std::vector<Command> commands = parser.parse_line(line);
-		if (parser.error_class.has_error) {
-			Write_File(id, error, parser.error_class.print_last_error().c_str(), 0, written);
-			continue;
-		}
-		if (commands.empty()) continue;
-
-
-
-		// PROGRAM MANAGER ################################################################################
-		// projde vsechny prikazy
-		bool end = false;
-		for (int i = 0; i < commands.size(); i++) {
-
-			if (commands[i].type_command == EXIT) {
-				run = false;
-			}
-
-			if (i == commands.size() - 1) {
-				end = true;
+		if (pocet > 0) {
+			unsigned char last = line.back();
+			std::vector<Command> commands;
+			if (last != '\0') {
+				parser.error_class.has_error = false;
+				commands = parser.parse_line(line);
+				if (parser.error_class.has_error) {
+					Write_File(id, error, parser.error_class.print_last_error().c_str(), 0, written);
+					continue;
+				}
 			}
 			else {
-				end = false;
+				Command com;
+				com.name = EXIT_CHAR;
+				com.type_command = EXIT;
+				commands.push_back(com);
 			}
-			Command com = commands[i];
-			bool successs = Start_Program(commands[i], end);
-			if (!successs) {
-				Write_File(id, error, print_error(Get_Last_Error()).c_str(), 0, written);
+			if (commands.empty()) continue;
+
+
+
+			// PROGRAM MANAGER ################################################################################
+			// projde vsechny prikazy
+			bool end = false;
+			for (int i = 0; i < commands.size(); i++) {
+
+				if (commands[i].type_command == EXIT) {
+					run = false;
+				}
+
+				if (i == commands.size() - 1) {
+					end = true;
+				}
+				else {
+					end = false;
+				}
+				Command com = commands[i];
+				bool successs = Start_Program(commands[i], end);
+				if (!successs) {
+					Write_File(id, error, print_error(Get_Last_Error()).c_str(), 0, written);
+				}
 			}
+			// ##################################################################################################		
 		}
-		// ##################################################################################################		
 	}
-
 	return 0;
-}
-
-
-void print(std::string message, bool endl) {
-
-	std::cout << message;
-
-	if (endl) {
-		std::cout << std::endl;
-	}
 }

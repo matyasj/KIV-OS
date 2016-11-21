@@ -183,12 +183,10 @@ Command Parser::isSingleCommand(std::string line) {
 	if (line == EXIT_CHAR) {
 		com.type_command = EXIT;
 		com.name = EXIT_CHAR;
-		return com;
 	}
 	if (line == SHELL_CHAR) {
 		com.type_command = SHELL;
 		com.name = SHELL_CHAR;
-		return com;
 	}
 	return com;
 }
