@@ -38,6 +38,11 @@ bool deleteFolderByPath(int procesId, std::string fullFolderPath);
 /* Smaže soubor podle File-Descriptoru */
 bool deleteFolder(int procesId, THandle folder);
 
+/* Zamyká složku proti pøípadnému smazání */
+bool lockFolder(std::string fullFolderPath);
+/* Odemyká složku */
+bool unLockFolder(std::string fullFolderPath);
+
 std::vector<std::string> parsePath(std::string path);
 std::vector<std::string> correctPath(std::vector<std::string> pathParts);
 std::vector<std::string> checkPath(int proces_id, std::string fullPath);

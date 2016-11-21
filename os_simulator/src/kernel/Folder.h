@@ -19,6 +19,8 @@ public:
 	std::vector<Folder* > folders;
 	/* Pointer na rodièovskou složku */
 	Folder* parentFolder;
+	/* Zámek proti pøípadnému smazání složky */
+	bool isLocked;
 
 	/* Pøidává nový podsoubor */
 	bool addFile(File* file);

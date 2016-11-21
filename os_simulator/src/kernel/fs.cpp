@@ -263,6 +263,74 @@ bool deleteFolder(int procesId, THandle folder)
 	return false;
 }
 
+bool lockFolder(std::string fullFolderPath)
+{
+	std::vector<std::string> partsOfPath = parsePath(fullFolderPath);
+	if (partsOfPath.size() == 0 || !containRoot(fullFolderPath))
+		return false;
+
+	Folder *tmpFolder = rootFolder;
+
+	for (int i = 1; i < partsOfPath.size(); i++) {
+		if (i == (partsOfPath.size() - 1)) {
+			if (tmpFolder->containFolder(partsOfPath[i])) {
+				tmpFolder->getFolderByName(partsOfPath[i])->isLocked = true;
+				return true;
+			}
+			else {
+				SetLastError(errorFileNotFound);
+				std::cout << "FOLDER NOT FOUND";
+				return false;
+			}
+		}
+		else if (tmpFolder->containFolder(partsOfPath[i])) {
+			tmpFolder = tmpFolder->getFolderByName(partsOfPath[i]);
+		}
+		else {
+			SetLastError(errorBadPath);
+			std::cout << "BAD PATH\n";
+			return false;
+		}
+	}
+	SetLastError(errorFileNotFound);
+
+	return false;
+}
+
+bool unLockFolder(std::string fullFolderPath)
+{
+	std::vector<std::string> partsOfPath = parsePath(fullFolderPath);
+	if (partsOfPath.size() == 0 || !containRoot(fullFolderPath))
+		return false;
+
+	Folder *tmpFolder = rootFolder;
+
+	for (int i = 1; i < partsOfPath.size(); i++) {
+		if (i == (partsOfPath.size() - 1)) {
+			if (tmpFolder->containFolder(partsOfPath[i])) {
+				tmpFolder->getFolderByName(partsOfPath[i])->isLocked = false;
+				return true;
+			}
+			else {
+				SetLastError(errorFileNotFound);
+				std::cout << "FOLDER NOT FOUND";
+				return false;
+			}
+		}
+		else if (tmpFolder->containFolder(partsOfPath[i])) {
+			tmpFolder = tmpFolder->getFolderByName(partsOfPath[i]);
+		}
+		else {
+			SetLastError(errorBadPath);
+			std::cout << "BAD PATH\n";
+			return false;
+		}
+	}
+	SetLastError(errorFileNotFound);
+
+	return false;
+}
+
 bool deleteFileByPath(int procesId, std::string fullFilePath) {
 	std::vector<std::string> partsOfPath = checkPath(procesId, fullFilePath);
 	if (partsOfPath.size() == 0)

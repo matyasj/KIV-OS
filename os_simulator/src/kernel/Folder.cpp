@@ -72,13 +72,18 @@ bool Folder::removeFolder(std::string name)
 			std::vector<Folder*>::iterator it = this->folders[i]->folders.begin();
 			int numberOfOpenedFolders = 0;
 			while (it != this->folders[i]->folders.end()) {
+				bool locked = this->folders[i]->getFolderByName((*it)->name)->isLocked;
+				bool success = false;
 				// Rekurzivní mazání podsložek
-				bool success = this->folders[i]->removeFolder((*it)->name);
+				if (!locked) {
+					 success = this->folders[i]->removeFolder((*it)->name);
+				}
+				
 				if (!success) {
 					it++;
 					numberOfOpenedFolders++;
-					// Když jedna podsložka nebude smazána zùstane k ní celá cesta
-					result = (result && success);
+					// Když jedna podsložka nebude smazána zùstane k ní celá cesta + test, zda je složka zamèená proti smazání
+					result = (result && success && locked);
 				}
 				else {
 					it = this->folders[i]->folders.begin();
@@ -201,6 +206,7 @@ Folder::Folder(std::string name, Folder* parent)
 	this->name = name;
 	this->type = FOLDER;
 	this->parentFolder = parent;
+	this->isLocked = false;
 }
 
 /* Destruktor */
