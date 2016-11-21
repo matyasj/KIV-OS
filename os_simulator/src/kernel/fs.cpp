@@ -326,11 +326,18 @@ std::vector<std::string> correctPath(std::vector<std::string> pathParts)
 			return std::vector<std::string>();
 		}
 	}
+	// Uprava cesty pro nadøazenou složku '..'
 	for (int i = 1; i < (pathParts.size() - 1); i++) {
 		if (pathParts[i + 1] == UPPER_DIRECTORY) {
 			pathParts.erase(pathParts.begin() + (i + 1));
 			pathParts.erase(pathParts.begin() + i);
 			i -= 2;
+		}
+	}
+	// Uprava cesty pro souèasnou složku '.'
+	for (int i = 0; i < (pathParts.size() - 1); i++) {
+		if (pathParts[i + 1] == CURRENT_DIRECTORY) {
+			pathParts.erase(pathParts.begin() + (i + 1));
 		}
 	}
 	return pathParts;
@@ -356,6 +363,7 @@ std::vector<std::string> checkPath(int proces_id, std::string fullPath)
 	}
 	else {
 		partsOfPath = parsePath(fullPath);
+		partsOfPath = correctPath(partsOfPath);
 	}
 	return partsOfPath;
 }

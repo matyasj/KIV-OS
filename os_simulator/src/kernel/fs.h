@@ -9,6 +9,7 @@
 #define FILE_SEPARATOR '\\'
 #define ROOT_FOLDER "C:"
 #define UPPER_DIRECTORY ".."
+#define CURRENT_DIRECTORY "."
 
 /* Otevírá soubor a vrací na File-Descriptor, který ho reprezentuje */
 THandle openFile(int procesId, std::string fullFilePath, size_t flags);
