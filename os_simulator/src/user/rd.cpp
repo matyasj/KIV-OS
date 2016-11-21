@@ -18,6 +18,7 @@ size_t __stdcall rd(const CONTEXT &regs) {
 	THandle output = (THandle)regs.Rcx;
 	THandle error = (THandle)regs.Rax;
 	std::string arg = (char *)regs.Rdx;
+	int write_flag = (int)regs.Rsi;
 	size_t written;
 	if (!arg.empty()) {
 		bool success = Delete_Folder(id,arg, 0);

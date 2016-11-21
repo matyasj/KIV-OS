@@ -16,6 +16,7 @@ size_t __stdcall echo(const CONTEXT &regs) {
 	THandle output = (THandle)regs.Rcx;
 	THandle error = (THandle)regs.Rax;
 	std::string arg = (char *)regs.Rdx;
+	int write_flag = (int)regs.Rsi;
 	std::vector<std::string> lines;
 	size_t written;
 	//if (!arg.empty()) {
@@ -23,7 +24,7 @@ size_t __stdcall echo(const CONTEXT &regs) {
 		std::stringstream str;
 		str << arg_str << std::endl;
 		std::string strr = str.str();
-		Write_File(id,output, strr.c_str(), 2, written);
+		Write_File(id,output, strr.c_str(), write_flag, written);
 	//}
 	/*else {
 		Write_File(error, print_error(onlyOn).c_str(), 0, written);

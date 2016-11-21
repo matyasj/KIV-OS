@@ -71,7 +71,7 @@ bool Folder::removeFolder(std::string name)
 			std::vector<File*>::iterator fileIt = this->folders[i]->files.begin();
 			int numberOfOpenedFiles = 0;
 			while (fileIt != this->folders[i]->files.end()) {
-				std::string name((*fileIt)->name);
+				//std::string name((*fileIt)->name);
 				bool success = this->folders[i]->removeFile((*fileIt)->name);
 				if (!success) {
 					result = (result && success);

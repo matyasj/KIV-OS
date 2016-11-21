@@ -40,8 +40,6 @@ std::vector<std::string> sort(std::string buf) {
 	 std::vector<std::string> lines;
 	 if (!arg.empty()) {
 		 THandle file = Open_File(id,arg.c_str(), FILE_SHARE_READ);
-		 std::string buffer;
-		 size_t read;
 		 if (Get_Last_Error() == 0)
 		 {
 			 bool succes = Read_File(id,file, &buffer, 0, read);
@@ -53,7 +51,6 @@ std::vector<std::string> sort(std::string buf) {
 				 if (read > 0) buffer.erase(read - 1);
 				 lines = sort(buffer);
 				 std::string out = sort_vector(lines);
-				 size_t written;
 				 Write_File(id,output, out.c_str(), 0, written);
 			 }
 		 }

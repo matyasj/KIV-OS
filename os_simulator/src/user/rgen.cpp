@@ -15,7 +15,7 @@ void catch_ctrl_z(THandle input,int id) {
 	}
 	run = false;
 }
-void generate(THandle output,int id) {
+void generate(THandle output,int id,int write_flag) {
 	int min = 0;
 	int max = 9;
 
@@ -25,7 +25,7 @@ void generate(THandle output,int id) {
 	while (run) {
 		number = ((double)rand() / (double)RAND_MAX);
 		str = std::to_string(number) + "\n";
-		Write_File(id,output, str.c_str(), 0, write);
+		Write_File(id,output, str.c_str(), write_flag, write);
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 }
@@ -37,10 +37,11 @@ size_t __stdcall rgen(const CONTEXT &regs) {
 	int id = (int)regs.Rdi;
 	THandle input = (THandle)regs.Rbx;
 	THandle output = (THandle)regs.Rcx;
+	int write_flag = (int)regs.Rsi;
 	std::string arg = (char *)regs.Rdx;
 	run = true;
 	std::thread catch_end(catch_ctrl_z, input,id);
-	std::thread gen(generate, output,id);
+	std::thread gen(generate, output,id,write_flag);
 	catch_end.join();
 	gen.join();
 	return 0;

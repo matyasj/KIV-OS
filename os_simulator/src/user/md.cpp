@@ -12,6 +12,7 @@ size_t __stdcall md(const CONTEXT &regs) {
 	THandle output = (THandle)regs.Rcx;
 	THandle error = (THandle)regs.Rax;
 	std::string arg = (char *)regs.Rdx;
+	int write_flag = (int)regs.Rsi;
 	size_t written;
 	if (!arg.empty()) {
 		bool succes = Create_Folder(id,arg, 0);

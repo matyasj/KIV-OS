@@ -33,6 +33,7 @@ void handleProgram(CONTEXT &regs) {
 	// --- INPUT THandle ---
 	int id = create_thread(command);
 	regs.Rdi = (decltype(regs.Rdi))id;
+	regs.Rsi = (decltype(regs.Rsi))2;
 	// prvni program v serii
 	if (first_program) {
 
@@ -49,7 +50,6 @@ void handleProgram(CONTEXT &regs) {
 			}
 			regs.Rbx = (decltype(regs.Rbx))t;
 
-			//std::cout << "Vstup programu je presmerovan ze souboru " << command->redirect_files.name << std::endl;
 		}
 		// vstup je prazdny (cte se z konzole)
 		else {
@@ -75,7 +75,6 @@ void handleProgram(CONTEXT &regs) {
 		if (command->has_redirect_out) {
 			// prepise soubor
 
-			//std::cout << "test: " << command->redirect_files.name << std::endl;
 			if (command->redirect_files_out.type_redirect == RED_OUT) {
 
 				// ziskej THandle na vystupni soubor a uloz ho do fronty
@@ -89,20 +88,21 @@ void handleProgram(CONTEXT &regs) {
 				}
 				regs.Rcx = (decltype(regs.Rcx))t;
 
-				//std::cout << "Vystup programu je presmerovan do souboru " << command->redirect_files_out.name << std::endl;
 			}
 			// vypis na konec souboru
 			else if (command->redirect_files_out.type_redirect == RED_OUT_ADD) {
 
 				// ziskej THandle na vystupni soubor a uloz ho do registru
-				// TODO Append file command->redirect_files.name
-				t = 0;
-				regs.Rcx = (decltype(regs.Rcx))t;
+				t = openFile(id, command->redirect_files_out.name, GENERIC_WRITE);
+				if (t == nullptr) {
+					t = createFile(id, command->redirect_files_out.name, GENERIC_WRITE);
+				}
 				if (t == nullptr) {
 					Set_Error(true, regs);
 					return;
 				}
-				//std::cout << "Vystup programu je presmerovan na konec souboru " << command->redirect_files_out.name << std::endl;
+				regs.Rsi = (decltype(regs.Rsi))0;
+				regs.Rcx = (decltype(regs.Rcx))t;
 			}
 		}
 		// neni vypis do souboru - uloz vystup na konzoli
@@ -122,7 +122,6 @@ void handleProgram(CONTEXT &regs) {
 	regs.Rax = (decltype(regs.Rax))getStdOut();
 	// spousteni programu pomoci Thread Management
 	do_thread(program, regs);
-	//std::cout << "Spousteni programu " << program_name << std::endl;
 
 	// spusteni programu pote co jsou vsechny zpracovany
 	if (end) {

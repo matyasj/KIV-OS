@@ -11,9 +11,12 @@ x   Muze fungovat pro vice souboru - pak vypise souhrnou statistiku - mame jeden
 
 bool count(std::string text, int& lines, int& bytes, int& words) {
 	for (int i = 0;i < text.size();i++) {
-		char ch = text.at(i);
+		unsigned char ch = text.at(i);
 		if (ch == '\0') {
-			lines++;
+			if (i != 0) {
+				unsigned char ch2 = text.at(i - 1);
+				if (ch != '\n')lines++;
+			}
 			return true;
 		}
 		bytes++;
@@ -22,8 +25,11 @@ bool count(std::string text, int& lines, int& bytes, int& words) {
 		}
 		if (isspace(ch))
 		{
-			if (i != 0 && !isspace(text.at(i - 1)))
-				words++;
+			if (i != 0) {
+				unsigned char ch2 = text.at(i - 1);
+					if(!isspace(ch2))words++;
+					
+			}
 		}
 	}
 	return false;
@@ -40,6 +46,7 @@ size_t __stdcall wc(const CONTEXT &regs) {
 	THandle output = (THandle)regs.Rcx;
 	THandle error = (THandle)regs.Rax;
 	std::string arg = (char *)regs.Rdx;
+	int write_flag = (int)regs.Rsi;
 	std::string buffer;
 	size_t read;
 	size_t written;
@@ -56,7 +63,7 @@ size_t __stdcall wc(const CONTEXT &regs) {
 			else {
 				count(buffer,lines,bytes,words);
 				std::string out = print(lines,bytes,words, arg);
-				Write_File(id, output, out.c_str(), 0, written);
+				Write_File(id, output, out.c_str(), write_flag, written);
 			}
 		}
 	}
@@ -68,7 +75,7 @@ size_t __stdcall wc(const CONTEXT &regs) {
 			if (eof) break;			
 		}
 		std::string out = print(lines, bytes, words, "");
-		Write_File(id, output, out.c_str(), 0, written);
+		Write_File(id, output, out.c_str(), write_flag, written);
 	}
 	return 0;
 }

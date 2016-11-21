@@ -27,7 +27,7 @@ std::string Parser::parse_argument(std::string argument) {
 			return "";
 		}
 		std::vector<std::string> data = split_string(argument, delimiters[MARKS_INDEX]); // rozdelit dle uvozovek
-		if (data.size() != 3) {  // spravne dvoje uvozovky => velikost 3
+		if (data.size() != 2) {  // spravne dvoje uvozovky => velikost 2
 			error_class.parser_error(error_class.MORE_MARKS);
 			return "";
 		}

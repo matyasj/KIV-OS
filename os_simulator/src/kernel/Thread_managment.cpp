@@ -76,6 +76,7 @@ rcx output Handler
 rax error
 Rdx - arguments
 Rdi - id_thread;
+Rsi - flag zapisu
 */
 void do_thread(TEntryPoint program, CONTEXT &regs) {
 	Command* comm = ((Command*)regs.Rdx);

@@ -13,6 +13,7 @@ size_t __stdcall freq(const CONTEXT &regs) {
 	THandle output = (THandle)regs.Rcx;
 	THandle error = (THandle)regs.Rax;
 	std::string arg = (char *)regs.Rdx;
+	int write_flag = (int)regs.Rsi;
 	std::map<char, int> map;
 	std::string buffer;
 	size_t read;
@@ -37,7 +38,7 @@ size_t __stdcall freq(const CONTEXT &regs) {
 		{
 			streamO << it.first << " : " << it.second << std::endl;
 		}
-		Write_File(id,output, streamO.str().c_str(), 0, read);
+		Write_File(id,output, streamO.str().c_str(), write_flag, read);
 	}
 	return 0;
 }

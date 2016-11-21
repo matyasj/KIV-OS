@@ -18,11 +18,12 @@ size_t __stdcall cd(const CONTEXT &regs){
 	THandle output = (THandle)regs.Rcx;
 	THandle error = (THandle)regs.Rax;
 	std::string arg = (char *)regs.Rdx;
+	int write_flag = (int)regs.Rsi;
 	size_t written = 0;
 	std::string buffer;
 	if (arg.empty()) {
 		bool success = Print_Folder(id, arg.c_str(), &buffer);
-		Write_File(id,output, buffer.c_str(), (int)0, written);
+		Write_File(id,output, buffer.c_str(), write_flag, written);
 	}
 	else {
 		bool success = Change_Folder(id, arg.c_str());
