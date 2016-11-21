@@ -354,6 +354,9 @@ std::vector<std::string> checkPath(int proces_id, std::string fullPath)
 			return std::vector<std::string>();
 		}
 	}
+	else {
+		partsOfPath = parsePath(fullPath);
+	}
 	return partsOfPath;
 }
 
@@ -377,22 +380,9 @@ void recursePrintTree(Folder * startNode, std::string prefix)
 
 std::string printFolder(int procesId, std::string fullFolderPath)
 {
-	std::vector<std::string> partsOfPath;
-	if (!containRoot(fullFolderPath)) {
-		fullFolderPath = getAbsolutePathFromRelative(procesId, fullFolderPath);
-		partsOfPath = parsePath(fullFolderPath);
-		partsOfPath = correctPath(partsOfPath);
-		if (partsOfPath.size() == 0) {
-			SetLastError(errorBadPath);
-			std::cout << "Bad path of folder " << fullFolderPath << "\n";
-			return std::string();
-		}
-		if (partsOfPath[0] != ROOT_FOLDER) {
-			SetLastError(errorBadPath);
-			std::cout << "Bad path of folder " << fullFolderPath << "\n";
-			return std::string();
-		}
-	}
+	std::vector<std::string> partsOfPath = checkPath(procesId, fullFolderPath);
+	if (partsOfPath.size() == 0)
+		return false;
 
 
 	Folder *tmpFolder = rootFolder;
@@ -424,22 +414,9 @@ std::string printFolder(int procesId, std::string fullFolderPath)
 
 bool changeWorkDirectory(int procesId, std::string fullFolderPath)
 {
-	std::vector<std::string> partsOfPath;
-	if (!containRoot(fullFolderPath)) {
-		fullFolderPath = getAbsolutePathFromRelative(procesId, fullFolderPath);
-		partsOfPath = parsePath(fullFolderPath);
-		partsOfPath = correctPath(partsOfPath);
-		if (partsOfPath.size() == 0) {
-			SetLastError(errorBadPath);
-			std::cout << "Bad path of folder " << fullFolderPath << "\n";
-			return false;
-		}
-		if (partsOfPath[0] != ROOT_FOLDER) {
-			SetLastError(errorBadPath);
-			std::cout << "Bad path of folder " << fullFolderPath << "\n";
-			return false;
-		}
-	}
+	std::vector<std::string> partsOfPath = checkPath(procesId, fullFolderPath);
+	if (partsOfPath.size() == 0)
+		return false;
 
 	Folder *tmpFolder = rootFolder;
 
