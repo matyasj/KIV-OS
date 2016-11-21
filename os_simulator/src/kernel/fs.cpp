@@ -17,7 +17,7 @@ THandle openFile(int procesId, std::string fullFilePath, size_t flags)
 {
 	std::vector<std::string> partsOfPath = checkPath(procesId, fullFilePath);
 	if (partsOfPath.size() == 0)
-		return (THandle)-1;
+		return nullptr;
 
 	Folder *tmpFolder = rootFolder;
 	for (int i = 1; i < partsOfPath.size(); i++) {
@@ -29,7 +29,7 @@ THandle openFile(int procesId, std::string fullFilePath, size_t flags)
 				if (!canOpen(fullFilePath, flags)) {
 					SetLastError(errorFileIsUsed);
 					std::cout << "FILE IS OPENED EXCEPTION3 (PERMISSION FAILED)\n";
-					return (THandle)-1;
+					return nullptr;
 				}
 				foundedFile->setOpened();
 				THandle newFileDescriptor = putFileIntoFDTable(foundedFile, flags);
@@ -49,7 +49,7 @@ THandle openFile(int procesId, std::string fullFilePath, size_t flags)
 	SetLastError(errorFileNotFound);
 	std::cout << "FILE NOT FOUND!\n";
 	
-	return (THandle)-1;
+	return nullptr;
 }
 
 THandle createFile(int procesId, std::string fullFilePath, size_t flags)
@@ -62,7 +62,7 @@ THandle createFile(int procesId, std::string fullFilePath, size_t flags)
 	}
 	std::vector<std::string> partsOfPath = checkPath(procesId, fullFilePath);
 	if (partsOfPath.size() == 0)
-		return (THandle)-1;
+		return nullptr;
 
 	Folder *tmpFolder = rootFolder;
 	for (int i = 1; i < partsOfPath.size(); i++) {
@@ -71,7 +71,7 @@ THandle createFile(int procesId, std::string fullFilePath, size_t flags)
 			if (containColon(partsOfPath[i])) {
 				SetLastError(errorBadPath);
 				std::cout << "FILE "<< partsOfPath[i]  <<" CONTAIN ':' character!\n";
-				return NULL;
+				return nullptr;
 			}
 				
 			if (tmpFolder->containFile(partsOfPath[i])) {
@@ -111,7 +111,7 @@ THandle createFile(int procesId, std::string fullFilePath, size_t flags)
 			std::cout << "BAD PATH\n";
 		} 
 	}
-	return (THandle)-1;
+	return nullptr;
 }
 
 int writeFile(THandle file, std::string buffer, size_t flag)
@@ -127,7 +127,7 @@ int writeFile(THandle file, std::string buffer, size_t flag)
 	}
 	std::cout << "FILE " << tmpFile->name << " HAS NOT WRITE PERMESSION FOR THIS PROCESS - UNABLE TO WRITE\n";
 	SetLastError(errorIO);
-	return NULL;
+	return -1;
 	
 }
 
@@ -157,10 +157,7 @@ std::string readFile(THandle file)
 	}
 	std::cout << "FILE " << tmpFile->name << " HAS NOT READ PERMESSION FOR THIS PROCESS1 - UNABLE TO WRITE\n";
 	SetLastError(errorIO);
-	return NULL;
-	
-	
-	
+	return nullptr;
 }
 
 bool closeFile(THandle file)
@@ -176,7 +173,7 @@ THandle createFolder(int procesId, std::string fullFolderPath)
 {
 	std::vector<std::string> partsOfPath = checkPath(procesId, fullFolderPath);
 	if (partsOfPath.size() == 0)
-		return (THandle)-1;
+		return nullptr;
 
 	Folder *tmpFolder = rootFolder;
 
@@ -204,11 +201,11 @@ THandle createFolder(int procesId, std::string fullFolderPath)
 		else {
 			SetLastError(errorBadPath);
 			std::cout << "BAD PATH\n";
-			return (THandle)-1;
+			return nullptr;
 		}
 	}
 
-	return (THandle)-1;
+	return nullptr;
 }
 
 bool deleteFolderByPath(int procesId, std::string fullFolderPath)
@@ -385,12 +382,12 @@ std::string printFolder(int procesId, std::string fullFolderPath)
 		if (partsOfPath.size() == 0) {
 			SetLastError(errorBadPath);
 			std::cout << "Bad path of folder " << fullFolderPath << "\n";
-			return false;
+			return std::string();
 		}
 		if (partsOfPath[0] != ROOT_FOLDER) {
 			SetLastError(errorBadPath);
 			std::cout << "Bad path of folder " << fullFolderPath << "\n";
-			return false;
+			return std::string();
 		}
 	}
 
@@ -414,12 +411,12 @@ std::string printFolder(int procesId, std::string fullFolderPath)
 		else {
 			SetLastError(errorBadPath);
 			std::cout << "BAD PATH\n";
-			return NULL;
+			return std::string();
 		}
 	}
 	SetLastError(errorBadPath);
 	std::cout << "BAD PATH\n";
-	return NULL;
+	return std::string();
 }
 
 bool changeWorkDirectory(int procesId, std::string fullFolderPath)
@@ -531,11 +528,10 @@ File* removeFileFromFDTable(THandle fileDescriptor) {
 			if (getStdIn() != fileDescriptor && getStdOut() != fileDescriptor) {
 				FileDescriptorTable.erase(FileDescriptorTable.begin() + i);
 			}
-			
 			return file;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 bool canRead(THandle fileDescriptor)
@@ -606,7 +602,7 @@ File* getFileByTHandle(THandle fileDescriptor) {
 			return f->filePointer;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 void init()

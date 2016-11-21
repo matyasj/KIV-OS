@@ -19,23 +19,24 @@ size_t Pipe::write(std::string str, size_t flag)
 std::string Pipe::read()
 {
 	std::unique_lock<std::mutex> lck(mtx);
+	std::string item;
 	while (buffer_occupancy == 0) {
 		if (closed_write) {
 			closed_write = false;
-			std::string a = std::string("") +'\0';
-			return a;
+			item = std::string("") +'\0';
+			return item;
 		}
 		cv.wait(lck);
 	}
-	std::string a = std::string(my_queue.front());
+	item = std::string(my_queue.front());
 	my_queue.pop();
 	buffer_occupancy--;
 	if (closed_write && my_queue.empty()) {
-		a = std::string(a)+'\0';
+		item = std::string(item)+'\0';
 	}
 	else {
-		a = std::string(a);
+		item = std::string(item);
 	}
 	
-	return a;
+	return item;
 }
