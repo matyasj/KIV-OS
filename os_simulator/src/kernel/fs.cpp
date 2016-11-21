@@ -10,7 +10,7 @@
 #include "TCB.h"
 
 
-Folder* rootFolder = new Folder(ROOT_FOLDER,nullptr);
+Folder* rootFolder = new Folder(ROOT_FOLDER, nullptr);
 std::vector<FileDescriptorBlock*> FileDescriptorTable;
 
 THandle openFile(int procesId, std::string fullFilePath, size_t flags)
@@ -21,7 +21,7 @@ THandle openFile(int procesId, std::string fullFilePath, size_t flags)
 
 	Folder *tmpFolder = rootFolder;
 	for (int i = 1; i < partsOfPath.size(); i++) {
-		
+
 		if (i == (partsOfPath.size() - 1)) {
 			if (tmpFolder->containFile(partsOfPath[i])) {
 				std::cout << "Soubor nalezen: " << partsOfPath[i] << "\n";
@@ -37,18 +37,20 @@ THandle openFile(int procesId, std::string fullFilePath, size_t flags)
 			}
 			else {
 				SetLastError(errorFileNotFound);
-				std::cout << "FILE NOT FOUND\n" ;
+				std::cout << "FILE NOT FOUND\n";
 			}
-		}else if(tmpFolder->containFolder(partsOfPath[i])) {
+		}
+		else if (tmpFolder->containFolder(partsOfPath[i])) {
 			tmpFolder = tmpFolder->getFolderByName(partsOfPath[i]);
-		}else {
+		}
+		else {
 			SetLastError(errorBadPath);
 			std::cout << "BAD PATH\n";
 		}
 	}
 	SetLastError(errorFileNotFound);
 	std::cout << "FILE NOT FOUND!\n";
-	
+
 	return nullptr;
 }
 
@@ -60,20 +62,21 @@ THandle createFile(int procesId, std::string fullFilePath, size_t flags)
 	else if (fullFilePath == "CONIN$") {
 		return getStdIn();
 	}
+
 	std::vector<std::string> partsOfPath = checkPath(procesId, fullFilePath);
 	if (partsOfPath.size() == 0)
 		return nullptr;
 
 	Folder *tmpFolder = rootFolder;
 	for (int i = 1; i < partsOfPath.size(); i++) {
-		
+
 		if (i == (partsOfPath.size() - 1)) {
 			if (containColon(partsOfPath[i])) {
 				SetLastError(errorBadPath);
-				std::cout << "FILE "<< partsOfPath[i]  <<" CONTAIN ':' character!\n";
+				std::cout << "FILE " << partsOfPath[i] << " CONTAIN ':' character!\n";
 				return nullptr;
 			}
-				
+
 			if (tmpFolder->containFile(partsOfPath[i])) {
 				SetLastError(errorAlreadyExist);
 				std::cout << "FILE ALREADY EXISTS!\n";
@@ -92,14 +95,14 @@ THandle createFile(int procesId, std::string fullFilePath, size_t flags)
 					std::cout << "Chyba neni mozne takto otevrit soubor \n";
 					return newFileDescriptor;
 				}
-				
+
 			}
 			else {
 				File* newFile = new File(partsOfPath[i], tmpFolder, fullFilePath);
 				newFile->setOpened();
 				tmpFolder->addFile(newFile);
 				THandle newFileDescriptor = putFileIntoFDTable(newFile, flags);
-				
+
 				return newFileDescriptor;
 			}
 		}
@@ -109,7 +112,7 @@ THandle createFile(int procesId, std::string fullFilePath, size_t flags)
 		else {
 			SetLastError(errorBadPath);
 			std::cout << "BAD PATH\n";
-		} 
+		}
 	}
 	return nullptr;
 }
@@ -128,7 +131,7 @@ int writeFile(THandle file, std::string buffer, size_t flag)
 	std::cout << "FILE " << tmpFile->name << " HAS NOT WRITE PERMESSION FOR THIS PROCESS - UNABLE TO WRITE\n";
 	SetLastError(errorIO);
 	return -1;
-	
+
 }
 
 bool setInFilePosition(THandle file, int newPosition)
@@ -178,14 +181,14 @@ THandle createFolder(int procesId, std::string fullFolderPath)
 	Folder *tmpFolder = rootFolder;
 
 	for (int i = 1; i < partsOfPath.size(); i++) {
-		
+
 		if (i == (partsOfPath.size() - 1)) {
 			if (tmpFolder->containFolder(partsOfPath[i])) {
 				SetLastError(errorAlreadyExist);
 				std::cout << "FOLDER ALREADY EXISTS!\n";
 				Folder *foundFolder = tmpFolder->getFolderByName(partsOfPath[i]);
 				//tmpFolder->printChildren();
-				
+
 				return foundFolder;
 			}
 			else {
@@ -252,15 +255,15 @@ bool deleteFolder(int procesId, THandle folder)
 	tmpPath.insert(0, tmpFolder->name);
 	while (tmpFolder->parentFolder != nullptr) {
 		tmpFolder = tmpFolder->parentFolder;
-		tmpPath.insert(0,tmpFolder->name + FILE_SEPARATOR);
+		tmpPath.insert(0, tmpFolder->name + FILE_SEPARATOR);
 	}
-	
+
 	deleteFolderByPath(procesId, tmpPath);
-	
+
 	return false;
 }
 
-bool deleteFileByPath(int procesId, std::string fullFilePath){
+bool deleteFileByPath(int procesId, std::string fullFilePath) {
 	std::vector<std::string> partsOfPath = checkPath(procesId, fullFilePath);
 	if (partsOfPath.size() == 0)
 		return false;
@@ -299,7 +302,7 @@ bool deleteFile(int procesId, THandle file)
 std::vector<std::string> parsePath(std::string path) {
 	std::vector<std::string> arrayOfPartsOfPath;
 	std::string tmp = "";
-	
+
 	for (char charAtPosition : path) {
 		if (charAtPosition == FILE_SEPARATOR) {
 			arrayOfPartsOfPath.push_back(tmp);
@@ -308,10 +311,10 @@ std::vector<std::string> parsePath(std::string path) {
 		else {
 			tmp += charAtPosition;
 		}
-			
+
 	}
 	arrayOfPartsOfPath.push_back(tmp);
-	
+
 	return arrayOfPartsOfPath;
 }
 
@@ -324,7 +327,7 @@ std::vector<std::string> correctPath(std::vector<std::string> pathParts)
 		}
 	}
 	for (int i = 1; i < (pathParts.size() - 1); i++) {
-		if (pathParts[i+1] == UPPER_DIRECTORY) {
+		if (pathParts[i + 1] == UPPER_DIRECTORY) {
 			pathParts.erase(pathParts.begin() + (i + 1));
 			pathParts.erase(pathParts.begin() + i);
 			i -= 2;
@@ -362,14 +365,14 @@ void printFSTree()
 void recursePrintTree(Folder * startNode, std::string prefix)
 {
 	std::cout << "" << prefix << startNode->name << "\n";
-	for(File* tmpFile : startNode->files){
+	for (File* tmpFile : startNode->files) {
 		std::cout << prefix << "|-" << tmpFile->name << "\n";
 	}
 
-	for(Folder* tmpFolder : startNode->folders){
+	for (Folder* tmpFolder : startNode->folders) {
 		recursePrintTree(tmpFolder, prefix + "|-");
 	}
-	
+
 }
 
 std::string printFolder(int procesId, std::string fullFolderPath)
@@ -398,7 +401,7 @@ std::string printFolder(int procesId, std::string fullFolderPath)
 		if (i == (partsOfPath.size() - 1)) {
 			if (tmpFolder->containFolder(partsOfPath[i])) {
 				Folder *foundFolder = tmpFolder->getFolderByName(partsOfPath[i]);
-				
+
 				return foundFolder->printChildren();
 			}
 			else {
@@ -437,7 +440,7 @@ bool changeWorkDirectory(int procesId, std::string fullFolderPath)
 			return false;
 		}
 	}
-	
+
 	Folder *tmpFolder = rootFolder;
 
 	if (partsOfPath.size() == 1) {
@@ -477,7 +480,7 @@ bool changeWorkDirectory(int procesId, std::string fullFolderPath)
 	SetLastError(errorBadPath);
 	std::cout << "BAD PATH\n";
 	return false;
-	}
+}
 
 bool containRoot(std::string fullFolderPath)
 {
@@ -502,7 +505,7 @@ bool containColon(std::string str)
 std::string getAbsolutePathFromRelative(int procesId, std::string relativePath)
 {
 	std::string workDirectory = get_thread_current_folder(procesId);
-	
+
 	return std::string(workDirectory + relativePath);
 }
 
@@ -542,14 +545,14 @@ bool canRead(THandle fileDescriptor)
 			if (f->flags & FILE_SHARE_READ) {
 				return true;
 			}
-			else if(f->flags & GENERIC_READ) {
+			else if (f->flags & GENERIC_READ) {
 				return true;
 			}
 			else {
 				return false;
 			}
 		}
-		
+
 	}
 	return false;
 }
@@ -562,7 +565,7 @@ bool canWrite(THandle fileDescriptor)
 			if (f->flags & FILE_SHARE_WRITE) {
 				return true;
 			}
-			if(f->flags & GENERIC_WRITE) {
+			if (f->flags & GENERIC_WRITE) {
 				return true;
 			}
 			else {
@@ -595,8 +598,8 @@ bool canOpen(std::string fullFilePath, size_t flags)
 
 File* getFileByTHandle(THandle fileDescriptor) {
 	size_t id = (size_t)fileDescriptor;
-	
-	for(FileDescriptorBlock *f : FileDescriptorTable)
+
+	for (FileDescriptorBlock *f : FileDescriptorTable)
 	{
 		if (f->getId() == id) {
 			return f->filePointer;
@@ -637,7 +640,7 @@ bool createPipe(THandle* input, THandle *output)
 	Pipe* newPipe = new Pipe("New-Pipe");
 	*input = putFileIntoFDTable(newPipe, GENERIC_WRITE);
 	*output = putFileIntoFDTable(newPipe, GENERIC_READ);
-	
+
 	return true;
 }
 
@@ -645,6 +648,7 @@ THandle getStdOut() {
 	if (FileDescriptorTable.size() == 0) {
 		init();
 	}
+
 	THandle std_out = (THandle)1;
 
 	return std_out;

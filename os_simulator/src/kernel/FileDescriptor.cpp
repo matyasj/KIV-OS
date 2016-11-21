@@ -1,6 +1,8 @@
 #include "FileDescriptor.h"
 
-// Constructor
+/*
+ * Vrací true, když je FileDescriptor soubor
+ */
 bool FileDescriptor::isFile()
 {
 	if (this->type == FILE) {
@@ -11,7 +13,9 @@ bool FileDescriptor::isFile()
 	}
 }
 
-// Destructor
+/*
+ * Vrací true, když je FileDescriptor složka
+ */
 bool FileDescriptor::isFolder()
 {
 	if (this->type == FOLDER) {
@@ -22,11 +26,12 @@ bool FileDescriptor::isFolder()
 	}
 }
 
+/* Konstruktor */
 FileDescriptor::FileDescriptor()
 {
 }
 
-
+/* Destruktor */
 FileDescriptor::~FileDescriptor()
 {
 }

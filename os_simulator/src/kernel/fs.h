@@ -10,20 +10,31 @@
 #define ROOT_FOLDER "C:"
 #define UPPER_DIRECTORY ".."
 
-//	Pøíklad cesty: C\slozka1\slozka2\soubor.txt   Nazvy slozek a souboru mohou obsahovat napr. i mezery.
+/* Otevírá soubor a vrací na File-Descriptor, který ho reprezentuje */
 THandle openFile(int procesId, std::string fullFilePath, size_t flags);
+/* Vytváøí soubor a vrací na File-Descriptor, který ho reprezentuje. V pøípadì, že soubor existuje nastaví chybu a opìt vrátí File-Descriptor, který ho reprezentuje. */
 THandle createFile(int procesId, std::string fullFilePath, size_t flags);
 
+/* Zapisuje obsah do souboru, podle nastaveného flagu */
 int writeFile(THandle file, std::string buffer, size_t flag);
+/* Nastavuje novou pozici v souboru */
 bool setInFilePosition(THandle file, int newPosition);
+/* Pøípis obsahu do souboru */
 int appendFile(THandle file, std::string buffer);
+/* Pøeète a vrátí obsah souboru */
 std::string readFile(THandle file);
+/* Vrací true pøi úspìšném zavøení souboru */
 bool closeFile(THandle file);
+/* Maže soubor podle cesty k nìmu */
 bool deleteFileByPath(int procesId, std::string fullFilePath);
+/* Maže soubor podle File-Descriptoru */
 bool deleteFile(int procesId, THandle file);
 
+/* Vytvoøí složku a vrátí File-Descriptor */
 THandle createFolder(int procesId, std::string fullFolderPath);
+/* Smaže složku podle cesty */
 bool deleteFolderByPath(int procesId, std::string fullFolderPath);
+/* Smaže soubor podle File-Descriptoru */
 bool deleteFolder(int procesId, THandle folder);
 
 std::vector<std::string> parsePath(std::string path);

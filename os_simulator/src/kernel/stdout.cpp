@@ -1,7 +1,9 @@
 #include "stdout.h"
 #include <iostream>
 
-
+/*
+ * Zapisuje øádku na standardní vıstup
+ */
 size_t Stdout::write(std::string str, size_t flag)
 {
 	std::cout << str;
@@ -9,7 +11,11 @@ size_t Stdout::write(std::string str, size_t flag)
 	return str.size();
 }
 
+/*
+ * Obsluhuje událost uzavøení standardního vıstupu
+ */
 bool Stdout::setClosed()
 {
+	// Pouze ošetøuje pokus o uzavøení standardního vstupu
 	return true;
 }

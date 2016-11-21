@@ -1,6 +1,9 @@
 #include "File.h"
 #include "../common/api.h"
 
+/*
+ * Vrací true, když není soubor otevøen a otevøe ho .
+ */
 bool File::setOpened()
 {
 	std::unique_lock<std::mutex> lck(mtx);
@@ -14,6 +17,9 @@ bool File::setOpened()
 	}
 }
 
+/*
+ * Vrací true, když není soubor zavøen a zavøe ho .
+ */
 bool File::setClosed()
 {
 	std::unique_lock<std::mutex> lck(mtx);
@@ -22,27 +28,29 @@ bool File::setClosed()
 	return true;
 }
 
-std::string File::getContentFromPosition()
-{
-	std::unique_lock<std::mutex> lck(mtx);
-	std::string content(this->content.substr(this->inFilePosition, this->content.size()));
-	return content;
-}
+/*
+ * Zapisuje obsah str do souboru v módu, který urèuje flag (pøepis, pøípis, pøípis/pøepis od pozice).
 
+ * Vrací poèet uložených znakù 
+
+ * flag = 0 // write bude vkladat od nastavene pozice v souboru        |
+ * flag = 1 // write bude prepisovat od nastavene pozice v souboru     |-- Specialni flag ovlivnujici chovani fce write
+ * flag = 2 // write bude nastavovat novy obsah souboru na buffer      |
+ */
 size_t File::write(std::string str, size_t flag)
 {
 	std::unique_lock<std::mutex> lck(mtx);
-	if(this->isOpened) {
-		if(flag == 0){
+	if (this->isOpened) {
+		if (flag == 0) {
 			this->content = this->content.insert(this->inFilePosition, str);
 		}
 		else if (flag == 1) {
-			this->content = this->content.replace(this->inFilePosition,str.size(), str);
+			this->content = this->content.replace(this->inFilePosition, str.size(), str);
 		}
 		else if (flag == 2) {
 			this->content = std::string(str);
 		}
-		
+
 		this->inFilePosition = this->inFilePosition + (int)str.size();
 		return str.size();
 	}
@@ -52,6 +60,10 @@ size_t File::write(std::string str, size_t flag)
 	}
 }
 
+/*
+ * Podobnì jako write ale vždy v módu pro pøípis.
+ * Vrací poèet uložených znakù
+ */
 size_t File::append(std::string str)
 {
 	std::unique_lock<std::mutex> lck(mtx);
@@ -63,9 +75,11 @@ size_t File::append(std::string str)
 		SetLastError(errorFileIsUsed);
 		return -1;
 	}
-	
 }
 
+/*
+ * Nastaví pozici v souboru
+ */
 bool File::setPosition(int newPosition)
 {
 	std::unique_lock<std::mutex> lck(mtx);
@@ -75,19 +89,25 @@ bool File::setPosition(int newPosition)
 	}
 	SetLastError(errorFileIsUsed);
 	return false;
-	
 }
 
+/*
+ * Vrací obsah souboru
+ */
 std::string File::read()
 {
 	std::unique_lock<std::mutex> lck(mtx);
-	return this->content+'\0';
+	return this->content + '\0';
 }
 
-File::File(std::string nsame, FileDescriptor* parent, std::string path)
+/*
+ * Konstruktor
+ */
+File::File(std::string name, FileDescriptor* parent, std::string path)
 {
 	this->name = name;
 	this->parrentFolder = parent;
+	// Pointer na novì vytvoøený string
 	this->content = *(new std::string);
 	this->inFilePosition = 0;
 	this->isOpened = false;
@@ -95,7 +115,9 @@ File::File(std::string nsame, FileDescriptor* parent, std::string path)
 	this->path = path;
 }
 
-
+/*
+ * Destruktor
+ */
 File::~File()
 {
 }

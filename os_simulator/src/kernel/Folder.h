@@ -6,31 +6,45 @@
 #include <string>
 #include "File.h"
 
-/*Trida, co reprezentuje Soubor*/
+/*
+ * Objekty tøídy Folder reprezentují jednotlivé složky Filesystemu.
+ * Dìdí od tøídy FileDescriptor
+ */
 class Folder : public FileDescriptor
 {
 public:
-	// vektor incstanci souboru
+	/* Vektor pointrù na soubory, které složka obsahuje */
 	std::vector<File* > files;
-	// vektor incstanci slozek
+	/* Vektor pointrù na složky, které složka obsahuje */
 	std::vector<Folder* > folders;
-	// Rodicovska slozka
+	/* Pointer na rodièovskou složku */
 	Folder* parentFolder;
-	
+
+	/* Pøidává nový podsoubor */
 	bool addFile(File* file);
+	/* Pøidává novou podsložku */
 	bool addFolder(Folder* file);
 
+	/* Odebere podsoubor podle jména, když není otevøený. Jinak vrací false */
 	bool removeFile(std::string name);
+	/* Odebere podsložku podle jména.Provádí rekurzivní procházení podsložek a postupné mazání. Když narazí na otevøený soubor nesmaže pouze cestu k tomuto souboru.*/
 	bool removeFolder(std::string name);
 
+	/* Vrucí true, když složka obsahuje soubor se jménem */
 	bool containFile(std::string name);
+	/* Vrucí true, když složka obsahuje složku se jménem */
 	bool containFolder(std::string name);
 
+	/* Vrací podsoubor složky podle jména */
 	File* Folder::getFileByName(std::string name);
+	/* Vrací podsložku složky podle jména */
 	Folder* Folder::getFolderByName(std::string name);
 
+	/* Vypíše obsah složky */
 	std::string printChildren();
 
+	/* Konstruktor */
 	Folder(std::string name, Folder* parent);
+	/* Destruktor */
 	~Folder();
 };
