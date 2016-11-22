@@ -31,12 +31,10 @@ bool deleteFileByPath(int procesId, std::string fullFilePath);
 /* Maže soubor podle File-Descriptoru */
 bool deleteFile(int procesId, THandle file);
 
-/* Vytvoøí složku a vrátí File-Descriptor */
-THandle createFolder(int procesId, std::string fullFolderPath);
+/* Vytvoøí složku a v pøípadì úspìchu vrátí true */
+bool createFolder(int procesId, std::string fullFolderPath);
 /* Smaže složku podle cesty */
 bool deleteFolderByPath(int procesId, std::string fullFolderPath);
-/* Smaže soubor podle File-Descriptoru */
-bool deleteFolder(int procesId, THandle folder);
 
 /* Zamyká složku proti pøípadnému smazání */
 bool lockFolder(std::string fullFolderPath);
@@ -47,32 +45,41 @@ bool unLockFolder(std::string fullFolderPath);
 std::vector<std::string> parsePath(std::string path);
 /* Upravuje èásti cesty, když obsahuje symboly pro souèasnou (.) a nadøazenou (..) složku */
 std::vector<std::string> correctPath(std::vector<std::string> pathParts);
-/* Kontroluuje */
+/* Kontroluuje správnost cesty a v pøípadì validní cesty vrací vektor s èastmi cesty */
 std::vector<std::string> checkPath(int proces_id, std::string fullPath);
 
+/* Vrací øetìzec pro výpis obsahu složky - zejména pro proces DIR */
 std::string printFolder(int procesId, std::string fullFolderPath);
+/* Mìní pracovní adresáø procesù podle jejich id */
 bool changeWorkDirectory(int procesId, std::string fullFolderPath);
 
+/* Testuje, zda cesta obsahuje koøenový adresáø */
 bool containRoot(std::string fullFolderPath);
+/* Testuje, zda cesta neobsahuje nevalidní znak ':'  */
 bool containColon(std::string str);
+/* Získá absolutní cestu za pomoci relativní cesty */
 std::string getAbsolutePathFromRelative(int procesId, std::string relativePath);
 
-// File Descriptors
+/* Vloží nový soubor do tabulky filedescriptorù a vrací filedescriptor, který bude soubor reprezentovat */
 THandle putFileIntoFDTable(File* file, size_t flags);
+/* Získá soubor z tabulky filedescriptorù a vrátí ho */
 File* getFileByTHandle(THandle fileDescriptor);
+/* Smaže soubor z tabulky filedescriptorù a vrátí ho */
 File* removeFileFromFDTable(THandle fileDescriptor);
 
-// Testy prav na cteni/zapis
+/* Test, zda je možné soubor èíst */
 bool canRead(THandle fileDescriptor);
+/* Test, zda je možné do souboru zapisovat */
 bool canWrite(THandle fileDescriptor);
+/* Test, zda je možné soubor otevøít */
 bool canOpen(std::string fullFilePath, size_t flags);
 
-
-// Standartni vstupy/vystupy
+/* Vrací standardní výstup, který se chová jako soubor */
 THandle getStdOut();
+/* Vrací standardní vstup, který se chová jako soubor */
 THandle getStdIn();
-void init(); // init metoda
+/* Funkce, která inicializuje potøebné soubory - vytvoøí v tabulce filedescriptorù descriptory pro std_in a std_out */
+void init();
 
-// Create Pipe
+/* Vytvoøí rouru a parametry definuje jako vstup a výstup roury */
 bool createPipe(THandle* input, THandle *output);
-//FileDescriptor getFileByName(char* fileName);

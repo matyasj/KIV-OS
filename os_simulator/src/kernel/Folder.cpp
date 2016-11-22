@@ -8,7 +8,6 @@ bool Folder::addFile(File* file)
 {
 	// Kontrola, zda již soubor se stejným jménem složka neobsahuje
 	if (this->containFile(file->name)) {
-		std::cout << "File with name " << file->name << "  already exists.\n";
 		return false;
 	}
 	else {
@@ -165,21 +164,34 @@ bool Folder::containFolder(std::string name)
 	return false;
 }
 
+/*
+ * Zamkne zámek proti smazání složky 
+ */
 bool Folder::lockFolder()
 {
 	this->lockCounter++;
 	return true;
 }
 
+/*
+ * Odemkne zámek proti smazání složky 
+ */
 bool Folder::unLockFolder()
 {
 	if (this->lockCounter <= 0) {
 		return false;
 	}
 	this->lockCounter--;
+	// Zámek mùže zamknout více procesù
+	if (this->lockCounter == 0) {
+		return true;
+	}
 	return true;
 }
 
+/*
+ * Test, zda je zámek uzamèený 
+ */
 bool Folder::isLock()
 {
 	if (this->lockCounter > 0) {
