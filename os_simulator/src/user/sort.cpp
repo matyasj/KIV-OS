@@ -5,15 +5,8 @@
 #include <sstream>
 
 /*
-void create_sort(std::string name) {
-	//pro test
-	THandle fileHelp = Create_File(name.c_str(), FILE_WRITE_ACCESS);
-	size_t written;
-	std::stringstream str;
-	str << "b" << std::endl << "a" << std::endl << "c";
-	Write_File(fileHelp, str.str().c_str(), 0, written);
-	Close_File(fileHelp);
-}*/
+seradi vector stringu a vrati vysledny string
+*/
 std::string sort_vector(std::vector<std::string> lines) {
 	std::stringstream res;
 	std::sort(lines.begin(), lines.end());
@@ -22,6 +15,9 @@ std::string sort_vector(std::vector<std::string> lines) {
 	}
 	return res.str();
 }
+/*
+rozdeli string podle \n
+*/
 std::vector<std::string> sort(std::string buf) {
 	std::stringstream str;
 	str << std::endl;

@@ -3,12 +3,11 @@
 #include"rtl_error.h"
 #include <sstream>
 #include <iostream>
-/*
-Parametry:
-1   Vypise informace o souboru (pocet bytu, pocet radek, pocet znaku atd.)
-x   Muze fungovat pro vice souboru - pak vypise souhrnou statistiku - mame jeden argument
-*/
 
+
+/*
+pocita statistiky
+*/
 bool count(std::string text, int& lines, int& bytes, int& words) {
 	for (int i = 0;i < text.size();i++) {
 		unsigned char ch = text.at(i);
@@ -39,7 +38,12 @@ std::string print(int& lines, int& bytes, int& words, std::string name) {
 	str << lines << "\t" << words << "\t" << bytes << "\t" << name << std::endl;
 	return str.str();
 }
-
+/*
+Parametry:
+1   Vypise informace o souboru (pocet bytu, pocet radek, pocet znaku atd.)
+	- argumentem muze byt soubor.
+	- pokud nema arg, cte z handleru
+*/
 size_t __stdcall wc(const CONTEXT &regs) {
 	int id = (int)regs.Rdi;
 	THandle input = (THandle)regs.Rbx;

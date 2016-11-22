@@ -1,6 +1,11 @@
 #include "dir.h"
 #include"rtl_error.h"
 
+/*
+Vypise strukturu adresare
+v argumentech muze byt cesta.
+	- pokud neni - vypise pracovni adresar	
+*/
 size_t __stdcall dir(const CONTEXT &regs) {
 	int id = (int)regs.Rdi;
 	THandle input = (THandle)regs.Rbx;

@@ -9,8 +9,6 @@ Parametry:
 1   Zmeni pracovni adresar dle zadane cesty
 
 Prepinace
-/D  Zmeni aktualni jednotku (to se nas asi netyka)
-
 */
 size_t __stdcall cd(const CONTEXT &regs){
 	int id = (int)regs.Rdi;

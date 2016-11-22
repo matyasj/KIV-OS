@@ -8,11 +8,7 @@
 /*
 Parametry:
 1   Zobrazi obsah textoveho souboru
-rdx Command
-rbx input Handler
-rcx output Handler
-rax error
-rdi  id thread
+	- musi mit argumet
 */
 
 size_t __stdcall type(const CONTEXT &regs) {

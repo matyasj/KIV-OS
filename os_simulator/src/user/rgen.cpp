@@ -4,6 +4,9 @@
 #include <chrono>
 
 std::atomic<bool> run;
+/*
+zachytava ctrl+z
+*/
 void catch_ctrl_z(THandle input,int id) {
 	std::string buffer;
 	size_t read;
@@ -15,6 +18,9 @@ void catch_ctrl_z(THandle input,int id) {
 	}
 	run = false;
 }
+/*
+generuje cisla a zapisuje do souboru
+*/
 void generate(THandle output,int id,int write_flag) {
 	int min = 0;
 	int max = 9;
