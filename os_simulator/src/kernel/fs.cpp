@@ -24,11 +24,11 @@ THandle openFile(int procesId, std::string fullFilePath, size_t flags)
 
 		if (i == (partsOfPath.size() - 1)) {
 			if (tmpFolder->containFile(partsOfPath[i])) {
-				std::cout << "Soubor nalezen: " << partsOfPath[i] << "\n";
+
 				File *foundedFile = tmpFolder->getFileByName(partsOfPath[i]);
 				if (!canOpen(fullFilePath, flags)) {
 					SetLastError(errorFileIsUsed);
-					std::cout << "FILE IS OPENED EXCEPTION3 (PERMISSION FAILED)\n";
+
 					return nullptr;
 				}
 				foundedFile->setOpened();
@@ -37,7 +37,7 @@ THandle openFile(int procesId, std::string fullFilePath, size_t flags)
 			}
 			else {
 				SetLastError(errorFileNotFound);
-				std::cout << "FILE NOT FOUND\n";
+				return nullptr;
 			}
 		}
 		else if (tmpFolder->containFolder(partsOfPath[i])) {
@@ -45,11 +45,9 @@ THandle openFile(int procesId, std::string fullFilePath, size_t flags)
 		}
 		else {
 			SetLastError(errorBadPath);
-			std::cout << "BAD PATH\n";
 		}
 	}
 	SetLastError(errorFileNotFound);
-	std::cout << "FILE NOT FOUND!\n";
 
 	return nullptr;
 }
@@ -73,17 +71,17 @@ THandle createFile(int procesId, std::string fullFilePath, size_t flags)
 		if (i == (partsOfPath.size() - 1)) {
 			if (containColon(partsOfPath[i])) {
 				SetLastError(errorBadPath);
-				std::cout << "FILE " << partsOfPath[i] << " CONTAIN ':' character!\n";
+
 				return nullptr;
 			}
 
 			if (tmpFolder->containFile(partsOfPath[i])) {
 				SetLastError(errorAlreadyExist);
-				std::cout << "FILE ALREADY EXISTS!\n";
+
 				File *foundFile = tmpFolder->getFileByName(partsOfPath[i]);
 				if (!canOpen(fullFilePath, flags)) {
 					SetLastError(errorFileIsUsed);
-					std::cout << "FILE IS OPENED EXCEPTION2 (PERMISSION FAILED)\n";
+
 					return nullptr;
 				}
 				foundFile->setOpened();
@@ -92,7 +90,7 @@ THandle createFile(int procesId, std::string fullFilePath, size_t flags)
 					return newFileDescriptor;
 				}
 				else {
-					std::cout << "Chyba neni mozne takto otevrit soubor \n";
+					SetLastError(errorIO);
 					return newFileDescriptor;
 				}
 
@@ -111,9 +109,10 @@ THandle createFile(int procesId, std::string fullFilePath, size_t flags)
 		}
 		else {
 			SetLastError(errorBadPath);
-			std::cout << "BAD PATH\n";
+			return nullptr;
 		}
 	}
+	SetLastError(errorBadPath);
 	return nullptr;
 }
 
@@ -123,13 +122,12 @@ int writeFile(THandle file, std::string buffer, size_t flag)
 	if (canWrite(file)) {
 		int numberOfBytes = (int)tmpFile->write(buffer, flag);
 		if (numberOfBytes < 0) {
-			std::cout << "FILE " << tmpFile->name << " IS NOT OPENED - UNABLE TO WRITE\n";
-			SetLastError(errorIO);
+			SetLastError(errorFileIsUsed);
 		}
 		return numberOfBytes;
 	}
-	std::cout << "FILE " << tmpFile->name << " HAS NOT WRITE PERMESSION FOR THIS PROCESS - UNABLE TO WRITE\n";
-	SetLastError(errorIO);
+
+	SetLastError(errorFilePermission);
 	return -1;
 
 }
@@ -143,12 +141,16 @@ bool setInFilePosition(THandle file, int newPosition)
 int appendFile(THandle file, std::string buffer)
 {
 	File *tmpFile = getFileByTHandle(file);
-	int numberOfBytes = (int)tmpFile->append(buffer);
-	if (numberOfBytes < 0) {
-		std::cout << "FILE " << tmpFile->name << " IS NOT OPENED - UNABLE TO WRITE\n";
-		SetLastError(errorIO);
+	if (canWrite(file)) {
+		int numberOfBytes = (int)tmpFile->append(buffer);
+		if (numberOfBytes < 0) {
+			SetLastError(errorFileIsUsed);
+		}
+		return numberOfBytes;
 	}
-	return numberOfBytes;
+
+	SetLastError(errorFilePermission);
+	return -1;
 }
 
 std::string readFile(THandle file)
@@ -158,8 +160,8 @@ std::string readFile(THandle file)
 		std::string str(tmpFile->read());
 		return str;
 	}
-	std::cout << "FILE " << tmpFile->name << " HAS NOT READ PERMESSION FOR THIS PROCESS1 - UNABLE TO WRITE\n";
-	SetLastError(errorIO);
+
+	SetLastError(errorFilePermission);
 	return nullptr;
 }
 
@@ -185,16 +187,14 @@ THandle createFolder(int procesId, std::string fullFolderPath)
 		if (i == (partsOfPath.size() - 1)) {
 			if (tmpFolder->containFolder(partsOfPath[i])) {
 				SetLastError(errorAlreadyExist);
-				std::cout << "FOLDER ALREADY EXISTS!\n";
 				Folder *foundFolder = tmpFolder->getFolderByName(partsOfPath[i]);
-				//tmpFolder->printChildren();
 
 				return foundFolder;
 			}
 			else {
 				Folder* newFolder = new Folder(partsOfPath[i], tmpFolder);
 				tmpFolder->addFolder(newFolder);
-				//tmpFolder->printChildren();
+
 				return newFolder;
 			}
 		}
@@ -203,7 +203,6 @@ THandle createFolder(int procesId, std::string fullFolderPath)
 		}
 		else {
 			SetLastError(errorBadPath);
-			std::cout << "BAD PATH\n";
 			return nullptr;
 		}
 	}
@@ -227,7 +226,6 @@ bool deleteFolderByPath(int procesId, std::string fullFolderPath)
 			}
 			else {
 				SetLastError(errorFileNotFound);
-				std::cout << "FOLDER NOT FOUND";
 				return false;
 			}
 		}
@@ -236,7 +234,6 @@ bool deleteFolderByPath(int procesId, std::string fullFolderPath)
 		}
 		else {
 			SetLastError(errorBadPath);
-			std::cout << "BAD PATH\n";
 			return false;
 		}
 	}
@@ -282,7 +279,6 @@ bool lockFolder(std::string fullFolderPath)
 		}
 		else {
 			SetLastError(errorBadPath);
-			std::cout << "BAD PATH\n";
 			return false;
 		}
 	}
@@ -302,7 +298,13 @@ bool unLockFolder(std::string fullFolderPath)
 	for (int i = 0; i < partsOfPath.size(); i++) {
 		if (i == (partsOfPath.size() - 1)) {
 			if (tmpFolder->name == partsOfPath[i]) {
-				return tmpFolder->unLockFolder();
+				if (tmpFolder->unLockFolder()) {
+					return true;
+				}
+				else {
+					SetLastError(folderIsLock);
+					return false;
+				}
 			}
 		}
 		else if (tmpFolder->containFolder(partsOfPath[i + 1])) {
@@ -310,11 +312,10 @@ bool unLockFolder(std::string fullFolderPath)
 		}
 		else {
 			SetLastError(errorBadPath);
-			std::cout << "BAD PATH\n";
 			return false;
 		}
 	}
-	SetLastError(errorFileNotFound);
+	SetLastError(folderIsLock);
 
 	return false;
 }
@@ -332,7 +333,7 @@ bool deleteFileByPath(int procesId, std::string fullFilePath) {
 			}
 			else {
 				SetLastError(errorFileNotFound);
-				std::cout << "FILE NOT FOUND\n";
+				return false;
 			}
 		}
 		else if (tmpFolder->containFolder(partsOfPath[i])) {
@@ -340,7 +341,6 @@ bool deleteFileByPath(int procesId, std::string fullFilePath) {
 		}
 		else {
 			SetLastError(errorBadPath);
-			std::cout << "BAD PATH\n";
 			return false;
 		}
 	}
@@ -372,7 +372,7 @@ std::vector<std::string> parsePath(std::string path) {
 	if (tmp != "") {
 		arrayOfPartsOfPath.push_back(tmp);
 	}
-	
+
 
 	return arrayOfPartsOfPath;
 }
@@ -411,12 +411,10 @@ std::vector<std::string> checkPath(int proces_id, std::string fullPath)
 		partsOfPath = correctPath(partsOfPath);
 		if (partsOfPath.size() == 0) {
 			SetLastError(errorBadPath);
-			std::cout << "Bad path of File " << fullPath << "\n";
 			return std::vector<std::string>();
 		}
 		if (partsOfPath[0] != ROOT_FOLDER) {
 			SetLastError(errorBadPath);
-			std::cout << "Bad path of folder " << fullPath << "\n";
 			return std::vector<std::string>();
 		}
 	}
@@ -425,24 +423,6 @@ std::vector<std::string> checkPath(int proces_id, std::string fullPath)
 		partsOfPath = correctPath(partsOfPath);
 	}
 	return partsOfPath;
-}
-
-void printFSTree()
-{
-	recursePrintTree(rootFolder, "");
-}
-
-void recursePrintTree(Folder * startNode, std::string prefix)
-{
-	std::cout << "" << prefix << startNode->name << "\n";
-	for (File* tmpFile : startNode->files) {
-		std::cout << prefix << "|-" << tmpFile->name << "\n";
-	}
-
-	for (Folder* tmpFolder : startNode->folders) {
-		recursePrintTree(tmpFolder, prefix + "|-");
-	}
-
 }
 
 std::string printFolder(int procesId, std::string fullFolderPath)
@@ -460,17 +440,15 @@ std::string printFolder(int procesId, std::string fullFolderPath)
 				return tmpFolder->printChildren();
 			}
 		}
-		else if (tmpFolder->containFolder(partsOfPath[i+1])) {
-			tmpFolder = tmpFolder->getFolderByName(partsOfPath[i+1]);
+		else if (tmpFolder->containFolder(partsOfPath[i + 1])) {
+			tmpFolder = tmpFolder->getFolderByName(partsOfPath[i + 1]);
 		}
 		else {
 			SetLastError(errorBadPath);
-			std::cout << "BAD PATH\n";
 			return std::string();
 		}
 	}
 	SetLastError(errorBadPath);
-	std::cout << "BAD PATH\n";
 	return std::string();
 }
 
@@ -512,21 +490,19 @@ bool changeWorkDirectory(int procesId, std::string fullFolderPath)
 		}
 		else {
 			SetLastError(errorBadPath);
-			std::cout << "BAD PATH\n";
 			return false;
 		}
 	}
 	SetLastError(errorBadPath);
-	std::cout << "BAD PATH\n";
 	return false;
 }
 
 bool containRoot(std::string fullFolderPath)
 {
 	std::vector<std::string> partsOfPath = parsePath(fullFolderPath);
-	if (partsOfPath.size() > 0 ) {
+	if (partsOfPath.size() > 0) {
 		if (partsOfPath[0] != ROOT_FOLDER) {
-			//SetLastError(errorBadPath);
+			
 			return false;
 		}
 		else {

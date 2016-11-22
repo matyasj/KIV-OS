@@ -43,12 +43,13 @@ bool lockFolder(std::string fullFolderPath);
 /* Odemyká složku */
 bool unLockFolder(std::string fullFolderPath);
 
+/* Parsuje cestu - vrací vektor s èástmi cesty (soubory a složky) */
 std::vector<std::string> parsePath(std::string path);
+/* Upravuje èásti cesty, když obsahuje symboly pro souèasnou (.) a nadøazenou (..) složku */
 std::vector<std::string> correctPath(std::vector<std::string> pathParts);
+/* Kontroluuje */
 std::vector<std::string> checkPath(int proces_id, std::string fullPath);
 
-void printFSTree();
-void recursePrintTree(Folder* startNode, std::string prefix);
 std::string printFolder(int procesId, std::string fullFolderPath);
 bool changeWorkDirectory(int procesId, std::string fullFolderPath);
 

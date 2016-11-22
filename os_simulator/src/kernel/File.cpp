@@ -54,10 +54,8 @@ size_t File::write(std::string str, size_t flag)
 		this->inFilePosition = this->inFilePosition + (int)str.size();
 		return str.size();
 	}
-	else {
-		SetLastError(errorFileIsUsed);
-		return -1;
-	}
+	return -1;
+	
 }
 
 /*
@@ -71,10 +69,8 @@ size_t File::append(std::string str)
 		this->content.append(str);
 		return str.size();
 	}
-	else {
-		SetLastError(errorFileIsUsed);
-		return -1;
-	}
+	return -1;
+	
 }
 
 /*
