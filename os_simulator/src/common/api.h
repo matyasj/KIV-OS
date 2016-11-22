@@ -122,7 +122,7 @@ const __int8 onlyOn = 8;
 // slozka je zamcena proti smazani
 const __int8 folderIsLock = 9;
 // soubour nelze otevrit s temito flagy/pravy
-const __int8 errorFilePermission = 9;
+const __int8 errorFilePermission = 10;
 
 
 constexpr __int16 Compose_AX(const __int8 ah, const __int8 al) {
