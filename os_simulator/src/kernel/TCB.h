@@ -7,17 +7,15 @@
 
 
 /*
+vlozi novy udaj do tcb
 type_command - typ prikazu
+name - nazev programu
 current_folder - vychozi adresar
-parrent_id - id rodicovskeho thread
+state - stav vlakna
+parrent_id - id rodicovskeho threa
 return id vytvoreneho vlakna
 */
 int add_thread(int type_command, std::string name_command, std::string current_folder, Thread_State state, int parent_id);
-/*
-id - id hledaneho procesu
-pokud nenajde, vrati nullptr
-*/
-//Thread* get_thread(int id);
 /*
 najde running thread podle jeho typu
 */
@@ -39,12 +37,15 @@ folder - nova aktualni slozka
 vrati cislo chyby. Vse ok == 0
 */
 int change_thread_current_folder(int id, std::string* folder);
+//vypise obsah tabulky TCB
 std::string print_tcb();
 int get_parent_id(int id);
+/*
+ukonci shell s id
+*/
 void exit_shell(int id);
 
 
-/* TODO: by maty*/
 // Ziska string soucasny pracovni adresar procesu/vlakna podle id
 std::string get_thread_current_folder(int id);
 // Prida do TCB tabulky novy filehandler vlaknu s id

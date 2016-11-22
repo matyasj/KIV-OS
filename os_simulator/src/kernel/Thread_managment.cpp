@@ -6,6 +6,10 @@
 
 
 std::vector<Thread_ready> thread_ready;
+
+/*
+handle thread.
+*/
 void handleThread(CONTEXT &regs) {
 	switch (Get_AL((__int16)regs.Rax)) {
 	case scPs: {
@@ -23,16 +27,14 @@ void handleThread(CONTEXT &regs) {
 	}break;
 	}
 }
-
-
-
-
+/*
+metoda pro kazde vlakno
+*/
 void thread(TEntryPoint program, CONTEXT &regs, Thread_ready t) {
 	
 	int id = t.id;
 	std::string str = (t.arg);
 	regs.Rdx = (decltype(t.regs.Rdx))(str.c_str());
-	//int type_command = com->type_command;
 	GetThreadContext(GetCurrentThread(), &regs);
 	change_thread_state(id, RUN);
 	if (program) {
@@ -51,6 +53,12 @@ void thread(TEntryPoint program, CONTEXT &regs, Thread_ready t) {
 	}
 	execute_thread(id);
 }
+/*
+vytvori vlakno
+ulozi do tcb se stavem init
+@param comm - command
+@return id v tcb
+*/
 int create_thread(Command* comm) {
 	int parrent_id = get_active_thread_by_type(SHELL);
 	std::string current_folder = "C:\\";
@@ -62,23 +70,7 @@ int create_thread(Command* comm) {
 	return add_thread(comm->type_command, comm->name, current_folder, INIT, parrent_id);
 }
 /*
-rax Command, rbx input, rcx output, rdx arguments
-pøedám ti program a regs ... z regs si vytáhneš Handlery a nastavíš práva, z regs rax si z command vytáhneš typ abys to mohl uložit do TCB, 
-jinak s regs nic nedìláš a pošleš je programu pomocí thread(program, regs), uložíš si do TCB a všechny ty vìci kolem
-
-vstup
-rdx argument
-rbx input Handler
-rcx output Handler
-rax error
-
-vystup
-rbx input Handler
-rcx output Handler
-rax error
-Rdx - arguments
-Rdi - id_thread;
-Rsi - flag zapisu
+spusti pripravene programy
 */
 void do_thread(TEntryPoint program, CONTEXT &regs) {
 	Command* comm = ((Command*)regs.Rdx);
@@ -97,12 +89,14 @@ void do_thread(TEntryPoint program, CONTEXT &regs) {
 		arg = (comm->arguments.at(0));
 	}
 	t.arg = arg;
-	t.com = *comm;
 	t.id = id;
 	t.program = program;
 	t.regs = regs;
 	thread_ready.push_back(t);
 }
+/*
+spusti pripravene programy
+*/
 void start() {
 	std::vector<std::thread> threads;
 	for (Thread_ready t : thread_ready) {			
@@ -113,7 +107,9 @@ void start() {
 	for (auto& th : threads)
 		th.join();
 }
-
+/*
+ukonci vlakno s danym id
+*/
 void execute_thread(int id) {
 	std::string current_folder = get_thread_current_folder(id);
 	unLockFolder(current_folder);

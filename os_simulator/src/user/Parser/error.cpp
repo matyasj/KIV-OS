@@ -9,7 +9,7 @@ Error::Error()
 Error::~Error()
 {
 }
-
+//ulozi chybu parseru
 int Error::parser_error(int error) {
 	if (!this->has_error) {
 		this->last_error = error;
@@ -17,6 +17,7 @@ int Error::parser_error(int error) {
 	}
 	return ERROR_INSTRUCTION;
 }
+//vytiskne ulozenou chybovou hlasku
 std::string Error::print_last_error() {
 	std::string str;
 	switch (this->last_error) {
@@ -52,11 +53,12 @@ std::string Error::print_last_error() {
 	}
 	return str+"\n";
 }
+//vyresetuje aktualni nastaveni
 void Error::reset_parser_error()
 {
 	this->has_error = false;
 }
-
+// ma parsesr chybu?
 bool Error::parser_has_error()
 {
 	return this->has_error;

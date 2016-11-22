@@ -47,41 +47,12 @@ std::string Parser::parse_argument(std::string argument) {
 }
 
 /*
-rozparsuje presmerovani - ve str je: 
+parsuje prikaz
+nastavi typ instrukce a argument.
+redukuje <code>instruciton<\code> o rozeznany substring
 */
-/*
-Command Parser::parse_redirect(std::string str) {
-	Command command;
-	std::vector<std::string> add = split_first_string_more(str, { RED_OUT_ADD_CHAR,RED_IN_CHAR,RED_OUT_CHAR});
-	/*prvni je argument*/
-	/*std::string old = add.at(add.size()-1);
-	std::string return_value = parse_argument(add.at(0));
-	if (error_class.parser_has_error()) {
-		error_class.parser_error(error_class.COUNT_OF_ARGUMENT);
-		return command;
-	}
-	command.add_argument(return_value);
-	while (old != "") {
-		/* dale jen soubory*/
-		/*add = split_first_string_more(add.at(1), { RED_OUT_ADD_CHAR,RED_IN_CHAR,RED_OUT_CHAR });
-		return_value = parse_argument(add.at(0));
-		if (error_class.parser_has_error()) {
-			error_class.parser_error(error_class.REDIRECT_ERROR);
-			return command;
-		}
-		bool was_added = command.add_redirect_file(return_value, old);
-		if (!was_added){
-			error_class.parser_error(error_class.TOO_MANY_REDIRECT);
-			return command;
-		}
-		old = add.at(add.size() - 1);
-	}
-	return command;
-}*/
-
 Command Parser::parse_instruction_arg(std::string& instruction) {
 	size_t pos = 0;
-	//std::vector<std::string> data = split_first_string(instruction, delimiters[SPACE_INDEX]); // rozdelit podle prvni mezery => prikaz a zbytek
 	std::vector<std::string> data = split_first_string_more(instruction, { delimiters[SPACE_INDEX],RED_OUT_ADD_CHAR,RED_IN_CHAR,RED_OUT_CHAR }); // rozdelit podle prvni mezery => prikaz a zbytek
 	int command_type = error_class.ERROR_INSTRUCTION;
 	const std::string com = data.at(0);
@@ -131,13 +102,12 @@ Command Parser::parse_instruction_arg(std::string& instruction) {
 	}
 	Command comand;
 	if (data.size() == 3) {  // delka 'data' muze byt pouze 2 - instrukce + argument + delimiter
-		//comand = parse_argument(data.at(1));
-		//comand.add_argument(parse_argument(data.at(1)));
 		instruction = trim(data.at(2)+data.at(1));
 	}
 	comand.set_values(com,command_type);
 	return comand;
 }
+/*prevede typ presmerovani na int*/
 int get_integer_by_charakter(std::string type_redirect) {
 	int i=-1;
 	if (type_redirect == RED_OUT_ADD_CHAR) i = RED_OUT_ADD;
@@ -145,6 +115,9 @@ int get_integer_by_charakter(std::string type_redirect) {
 	if (type_redirect == RED_OUT_CHAR) i = RED_OUT;
 	return i;
 }
+/*
+rozparsuje redirect
+*/
 std::vector<Redirect_file> Parser::parse_redirect(std::string str, Command& command) {
 	std::vector<std::string> add = split_first_string_more(str, { RED_OUT_ADD_CHAR,RED_IN_CHAR,RED_OUT_CHAR });
 	std::vector<Redirect_file> files;
@@ -177,6 +150,9 @@ std::vector<Redirect_file> Parser::parse_redirect(std::string str, Command& comm
 	}
 	return files;
 	}
+/*
+shell a exit bez argumentu, pipe a redirect
+*/
 Command Parser::isSingleCommand(std::string line) {
 	Command com;
 	com.type_command = this->error_class.ERROR_INSTRUCTION;
@@ -190,7 +166,14 @@ Command Parser::isSingleCommand(std::string line) {
 	}
 	return com;
 }
+/*
+* rozparsuje zadany string
+* @param line co se bude parsovat
+* @return vector prikazu, zleva do prava
+* prikaz "cd | dir | echo" varti vector v poradi: {cd,dir,echo}
+*/
 std::vector<Command> Parser::parse_line(std::string line) {
+	this->error_class.reset_parser_error();
 	std::vector<Command> commands;
 	line = trim(line);
 	if (line.empty())return commands;
@@ -248,8 +231,6 @@ std::vector<Command> Parser::parse_line(std::string line) {
 
 Parser::Parser()
 {
-
-	
 }
 
 Parser::~Parser()

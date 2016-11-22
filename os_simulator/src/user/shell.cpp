@@ -35,7 +35,6 @@ size_t __stdcall shell(const CONTEXT &regs) {
 			unsigned char last = line.back();
 			std::vector<Command> commands;
 			if (last != '\0') {
-				parser.error_class.has_error = false;
 				commands = parser.parse_line(line);
 				if (parser.error_class.has_error) {
 					Write_File(id, error, parser.error_class.print_last_error().c_str(), 0, written);

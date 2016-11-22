@@ -5,9 +5,16 @@
 #include <algorithm>
 #include <iomanip>
 
+/*mutex pro osetreni KS*/
 std::mutex mutex;
+/*
+reprezentuje tabulku tcb
+*/
 std::vector<Thread*> threads;
 
+/*
+zavre vsechny handlery daneho vlakna
+*/
 void closeFiles(Thread* t) {
 	for (Handle_TCB h : t->handles) {
 		if (h.handle != nullptr) {
@@ -15,7 +22,15 @@ void closeFiles(Thread* t) {
 		}
 	}
 }
-
+/*
+vlozi novy udaj do tcb
+type_command - typ prikazu
+name - nazev programu
+current_folder - vychozi adresar
+state - stav vlakna
+parrent_id - id rodicovskeho threa
+return id vytvoreneho vlakna
+*/
 int add_thread(int type_command, std::string name_command ,std::string current_folder, Thread_State state, int parent_id)
 {
 	Thread* thread = new Thread(type_command,name_command, current_folder, state, parent_id);
@@ -23,15 +38,9 @@ int add_thread(int type_command, std::string name_command ,std::string current_f
 	threads.push_back(thread);
 	return thread->id;
 }
-
-Thread* get_thread(int id)
-{
-	std::lock_guard<std::mutex> guard(mutex);
-	auto thread_it = std::find_if(threads.begin(), threads.end(), [id](Thread*  f) { return f->id == id; });
-	if (thread_it != std::end(threads)) return (*thread_it);
-	SetLastError(threadNotFound);
-	return nullptr;
-}
+/*
+najde running thread podle jeho typu. A vrati jeho id
+*/
 int get_active_thread_by_type(int type_command) {
 	std::lock_guard<std::mutex> guard(mutex);
 	auto thread_it = std::find_if(threads.begin(), threads.end(), [type_command](Thread*  f) { return ((f->type_command == type_command) && (f->state == RUN)); });
@@ -41,6 +50,9 @@ int get_active_thread_by_type(int type_command) {
 	SetLastError(threadNotFound);
 	return -1;
 }
+/*
+ukonci vlakno s danym id bez osetreni KS. Nutno osetrit pred volanim
+*/
 int execute_thread_tcb_lock_manually(int id){
 	int index = -1;
 	bool find = false;
@@ -57,12 +69,20 @@ int execute_thread_tcb_lock_manually(int id){
 	}
 	return 0;
 }
+/*
+ukonci vlakno s danem id
+*/
 int execute_thread_tcb(int id)
 {
 	std::lock_guard<std::mutex> guard(mutex);
 	return execute_thread_tcb_lock_manually(id);
 }
-
+/*
+zmeni se stav vlakna bez osetreni KS
+id - id hledaneho procesu
+state - novy stav vlakna
+vrati cislo chyby. Vse ok == 0
+*/
 int change_thread_state_lock_manually(int id, Thread_State state)
 {
 	auto thread_it = std::find_if(threads.begin(), threads.end(), [id](Thread*  f) { return f->id == id; });
@@ -73,12 +93,21 @@ int change_thread_state_lock_manually(int id, Thread_State state)
 	SetLastError(threadNotFound);
 	return threadNotFound;
 }
+/*
+zmeni stav vlakna
+id - id hledaneho procesu
+state - novy stav vlakna
+vrati cislo chyby. Vse ok == 0
+*/
 int change_thread_state(int id, Thread_State state)
 {
 	std::lock_guard<std::mutex> guard(mutex);
 	return change_thread_state_lock_manually(id, state);
 	
 }
+/*
+ukonci shell s id
+*/
 void exit_shell(int id) {
 	std::lock_guard<std::mutex> guard(mutex);
 	int parrent_id = get_parent_id(id);
@@ -88,6 +117,12 @@ void exit_shell(int id) {
 		execute_thread_tcb_lock_manually(id);
 	}
 }
+/*
+zmeni slozku daneho vlakna
+id - id hledaneho procesu
+folder - nova aktualni slozka
+vrati cislo chyby. Vse ok == 0
+*/
 int change_thread_current_folder(int id, std::string* folder)
 {
 	std::lock_guard<std::mutex> guard(mutex);
@@ -104,6 +139,9 @@ int get_parent_id(int id) {
 	if (thread_it != std::end(threads)) return (*thread_it)->parent_id;
 	return -1;
 }
+/*
+vypise obsah tabulky TCB
+*/
 std::string print_tcb() {
 	std::lock_guard<std::mutex> guard(mutex);
 	std::stringstream str;
@@ -124,6 +162,7 @@ std::string print_tcb() {
 	}
 	return str.str();
 }
+// Ziska string soucasny pracovni adresar procesu/vlakna podle id
 std::string get_thread_current_folder(int id) {
 	std::lock_guard<std::mutex> guard(mutex);
 	for (Thread* t : threads) {
