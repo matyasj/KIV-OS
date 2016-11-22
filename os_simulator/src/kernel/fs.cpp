@@ -274,8 +274,7 @@ bool lockFolder(std::string fullFolderPath)
 	for (int i = 1; i < partsOfPath.size(); i++) {
 		if (i == (partsOfPath.size() - 1)) {
 			if (tmpFolder->containFolder(partsOfPath[i])) {
-				tmpFolder->getFolderByName(partsOfPath[i])->isLocked = true;
-				return true;
+				return tmpFolder->getFolderByName(partsOfPath[i])->lockFolder();
 			}
 			else {
 				SetLastError(errorFileNotFound);
@@ -308,8 +307,7 @@ bool unLockFolder(std::string fullFolderPath)
 	for (int i = 1; i < partsOfPath.size(); i++) {
 		if (i == (partsOfPath.size() - 1)) {
 			if (tmpFolder->containFolder(partsOfPath[i])) {
-				tmpFolder->getFolderByName(partsOfPath[i])->isLocked = false;
-				return true;
+				return tmpFolder->getFolderByName(partsOfPath[i])->unLockFolder();;
 			}
 			else {
 				SetLastError(errorFileNotFound);

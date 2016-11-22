@@ -20,7 +20,7 @@ public:
 	/* Pointer na rodièovskou složku */
 	Folder* parentFolder;
 	/* Zámek proti pøípadnému smazání složky */
-	bool isLocked;
+	int lockCounter;
 
 	/* Pøidává nový podsoubor */
 	bool addFile(File* file);
@@ -36,6 +36,13 @@ public:
 	bool containFile(std::string name);
 	/* Vrucí true, když složka obsahuje složku se jménem */
 	bool containFolder(std::string name);
+
+	/* Zamyká složku */
+	bool lockFolder();
+	/* Odemyká složku */
+	bool unLockFolder();
+	/* Testuje, jestli je složka zamèená true = zamèeno */
+	bool isLock();
 
 	/* Vrací podsoubor složky podle jména */
 	File* Folder::getFileByName(std::string name);

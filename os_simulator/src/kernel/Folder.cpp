@@ -72,7 +72,7 @@ bool Folder::removeFolder(std::string name)
 			std::vector<Folder*>::iterator it = this->folders[i]->folders.begin();
 			int numberOfOpenedFolders = 0;
 			while (it != this->folders[i]->folders.end()) {
-				bool locked = this->folders[i]->getFolderByName((*it)->name)->isLocked;
+				bool locked = this->folders[i]->getFolderByName((*it)->name)->isLock();
 				bool success = false;
 				// Rekurzivní mazání podsložek
 				if (!locked) {
@@ -165,6 +165,29 @@ bool Folder::containFolder(std::string name)
 	return false;
 }
 
+bool Folder::lockFolder()
+{
+	this->lockCounter++;
+	return true;
+}
+
+bool Folder::unLockFolder()
+{
+	if (this->lockCounter <= 0) {
+		return false;
+	}
+	this->lockCounter--;
+	return true;
+}
+
+bool Folder::isLock()
+{
+	if (this->lockCounter > 0) {
+		return true;
+	}
+	return false;
+}
+
 /*
  * Vrací podsoubor složky podle jména
  */
@@ -206,7 +229,7 @@ Folder::Folder(std::string name, Folder* parent)
 	this->name = name;
 	this->type = FOLDER;
 	this->parentFolder = parent;
-	this->isLocked = false;
+	this->lockCounter = 0;
 }
 
 /* Destruktor */
