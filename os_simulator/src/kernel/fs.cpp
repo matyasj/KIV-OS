@@ -454,19 +454,14 @@ std::string printFolder(int procesId, std::string fullFolderPath)
 
 	Folder *tmpFolder = rootFolder;
 
-	for (int i = 1; i < partsOfPath.size(); i++) {
+	for (int i = 0; i < partsOfPath.size(); i++) {
 		if (i == (partsOfPath.size() - 1)) {
-			if (tmpFolder->containFolder(partsOfPath[i])) {
-				Folder *foundFolder = tmpFolder->getFolderByName(partsOfPath[i]);
-
-				return foundFolder->printChildren();
-			}
-			else {
+			if (tmpFolder->name == partsOfPath[i]) {
 				return tmpFolder->printChildren();
 			}
 		}
-		else if (tmpFolder->containFolder(partsOfPath[i])) {
-			tmpFolder = tmpFolder->getFolderByName(partsOfPath[i]);
+		else if (tmpFolder->containFolder(partsOfPath[i+1])) {
+			tmpFolder = tmpFolder->getFolderByName(partsOfPath[i+1]);
 		}
 		else {
 			SetLastError(errorBadPath);
@@ -529,12 +524,18 @@ bool changeWorkDirectory(int procesId, std::string fullFolderPath)
 bool containRoot(std::string fullFolderPath)
 {
 	std::vector<std::string> partsOfPath = parsePath(fullFolderPath);
-
-	if (partsOfPath[0] != ROOT_FOLDER) {
-		//SetLastError(errorBadPath);
+	if (partsOfPath.size() > 0 ) {
+		if (partsOfPath[0] != ROOT_FOLDER) {
+			//SetLastError(errorBadPath);
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+	else {
 		return false;
 	}
-	return true;
 }
 
 bool containColon(std::string str)
