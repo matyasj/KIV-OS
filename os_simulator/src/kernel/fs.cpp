@@ -271,19 +271,14 @@ bool lockFolder(std::string fullFolderPath)
 
 	Folder *tmpFolder = rootFolder;
 
-	for (int i = 1; i < partsOfPath.size(); i++) {
+	for (int i = 0; i < partsOfPath.size(); i++) {
 		if (i == (partsOfPath.size() - 1)) {
-			if (tmpFolder->containFolder(partsOfPath[i])) {
-				return tmpFolder->getFolderByName(partsOfPath[i])->lockFolder();
-			}
-			else {
-				SetLastError(errorFileNotFound);
-				std::cout << "FOLDER NOT FOUND";
-				return false;
+			if (tmpFolder->name == partsOfPath[i]) {
+				return tmpFolder->lockFolder();
 			}
 		}
-		else if (tmpFolder->containFolder(partsOfPath[i])) {
-			tmpFolder = tmpFolder->getFolderByName(partsOfPath[i]);
+		else if (tmpFolder->containFolder(partsOfPath[i + 1])) {
+			tmpFolder = tmpFolder->getFolderByName(partsOfPath[i + 1]);
 		}
 		else {
 			SetLastError(errorBadPath);
@@ -304,19 +299,14 @@ bool unLockFolder(std::string fullFolderPath)
 
 	Folder *tmpFolder = rootFolder;
 
-	for (int i = 1; i < partsOfPath.size(); i++) {
+	for (int i = 0; i < partsOfPath.size(); i++) {
 		if (i == (partsOfPath.size() - 1)) {
-			if (tmpFolder->containFolder(partsOfPath[i])) {
-				return tmpFolder->getFolderByName(partsOfPath[i])->unLockFolder();;
-			}
-			else {
-				SetLastError(errorFileNotFound);
-				std::cout << "FOLDER NOT FOUND";
-				return false;
+			if (tmpFolder->name == partsOfPath[i]) {
+				return tmpFolder->unLockFolder();
 			}
 		}
-		else if (tmpFolder->containFolder(partsOfPath[i])) {
-			tmpFolder = tmpFolder->getFolderByName(partsOfPath[i]);
+		else if (tmpFolder->containFolder(partsOfPath[i + 1])) {
+			tmpFolder = tmpFolder->getFolderByName(partsOfPath[i + 1]);
 		}
 		else {
 			SetLastError(errorBadPath);
@@ -379,7 +369,10 @@ std::vector<std::string> parsePath(std::string path) {
 		}
 
 	}
-	arrayOfPartsOfPath.push_back(tmp);
+	if (tmp != "") {
+		arrayOfPartsOfPath.push_back(tmp);
+	}
+	
 
 	return arrayOfPartsOfPath;
 }

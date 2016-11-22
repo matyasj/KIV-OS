@@ -126,13 +126,13 @@ bool Folder::removeFolder(std::string name)
  */
 std::string Folder::printChildren()
 {
-	std::string printSTR = "";
+	std::string printSTR = "Vypis adresare ";
 	printSTR += this->name + "\n";
 	for (int i = 0; i != this->folders.size(); i++) {
-		printSTR += "|- FOLDER::" + this->folders[i]->name + "\n";
+		printSTR += "|- <DIR>     " + this->folders[i]->name + "\n";
 	}
 	for (int i = 0; i != this->files.size(); i++) {
-		printSTR += "|- FILE::" + this->files[i]->name + "\n";
+		printSTR += "|- <FILE>    " + this->files[i]->name + "\n";
 	}
 	return printSTR;
 }
