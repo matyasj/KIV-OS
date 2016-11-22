@@ -1,5 +1,6 @@
 #include"Thread_managment.h"
 #include "..\common\command.h"
+#include"fs.h"
 #include<thread>
 #include<iostream>
 
@@ -57,6 +58,7 @@ int create_thread(Command* comm) {
 	{
 		current_folder = get_thread_current_folder(parrent_id);
 	}
+	lockFolder(current_folder);
 	return add_thread(comm->type_command, comm->name, current_folder, INIT, parrent_id);
 }
 /*
@@ -113,6 +115,8 @@ void start() {
 }
 
 void execute_thread(int id) {
+	std::string current_folder = get_thread_current_folder(id);
+	unLockFolder(current_folder);
 	execute_thread_tcb(id);
 }
 
