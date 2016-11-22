@@ -55,9 +55,6 @@ void Run_VM() {
 		regs.Rbx = true;		// je posledni
 		regs.Rdx = (decltype(regs.Rdx))&com;
 		handleProgram(regs);
-		/*GetThreadContext(GetCurrentThread(), &regs);  //ale pak bude jeden z registru ukazovat na nejaky startup info blok
-		add_first();	// TODO zatim - predelat...
-		shell(regs);*/
 	}
 	
 	Shutdown_Kernel();
