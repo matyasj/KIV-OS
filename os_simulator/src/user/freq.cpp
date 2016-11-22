@@ -38,7 +38,7 @@ size_t __stdcall freq(const CONTEXT &regs) {
 		for (auto const& it : map)
 		{
 			streamO << "0x" << std::uppercase << std::setfill('0') << std::setw(4) << std::hex << (unsigned int)it.first;
-			streamO << " : " << it.second << std::endl;
+			streamO << " : " << std::dec << it.second << std::endl;
 		}
 		Write_File(id,output, streamO.str().c_str(), write_flag, read);
 	}

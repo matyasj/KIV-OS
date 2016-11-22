@@ -42,10 +42,10 @@ std::string Error::print_last_error() {
 		str = "Zadal jste k jednomu prikazu prilis presmerovani. Je dovoleno jen jedno vstupni a jedno vystupni";
 		break;
 	case EXIT_IN_PIPE:
-		str = "EXIT nemze byt v pipe";
+		str = "EXIT nemuze byt v pipe ani byt presmerovan";
 		break;
 	case SHELL_IN_PIPE:
-		str = "SHELL nemze byt v pipe";
+		str = "SHELL nemuze byt v pipe ani byt presmerovan";
 		break;
 	default:
 		str = "Nespecifikovana chyba";

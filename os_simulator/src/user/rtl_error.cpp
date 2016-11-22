@@ -32,7 +32,7 @@ std::string print_error(size_t type_error) {
 		text = "Prikaz je pouze out";
 		break;
 	default:
-		text = "neznama chyba";
+		text = "Nespecifikovana chyba";
 		break;
 	}
 	return text+"\n";

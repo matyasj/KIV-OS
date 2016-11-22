@@ -22,7 +22,7 @@ size_t __stdcall cd(const CONTEXT &regs){
 	size_t written = 0;
 	std::string buffer;
 	if (arg.empty()) {
-		bool success = Print_Folder(id, arg.c_str(), &buffer);
+		bool success = printf_current_folder(id, &buffer);
 		Write_File(id,output, buffer.c_str(), write_flag, written);
 	}
 	else {
