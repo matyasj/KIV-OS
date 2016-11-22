@@ -141,11 +141,6 @@ std::vector<Redirect_file> Parser::parse_redirect(std::string str, Command& comm
 		file.name = return_value;
 		file.type_redirect = get_integer_by_charakter(old);
 		files.push_back(file);
-		/*bool was_added = command.add_redirect_file(return_value, old);
-		if (!was_added){
-			error_class.parser_error(error_class.TOO_MANY_REDIRECT);
-			return;
-		}*/
 		old = add.at(add.size() - 1);
 	}
 	return files;

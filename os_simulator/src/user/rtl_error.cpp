@@ -31,6 +31,12 @@ std::string print_error(size_t type_error) {
 	case onlyOn:
 		text = "Prikaz je pouze out";
 		break;
+	case folderIsLock:
+		text = "Slozka je pouzivana. Nelze smazat!";
+		break;
+	case errorFilePermission:
+		text = "Soubor nelze otevrit s temito flagy/pravy";
+		break;
 	default:
 		text = "Nespecifikovana chyba";
 		break;
