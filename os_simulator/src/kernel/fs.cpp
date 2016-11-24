@@ -274,6 +274,9 @@ bool deleteFolderByPath(int procesId, std::string fullFolderPath)
 				if (!tmpFolder->getFolderByName(partsOfPath[i])->isLock()) {
 					result = tmpFolder->removeFolder(partsOfPath[i]);
 				}
+				else {
+					SetLastError(folderIsLock);
+				}
 
 				return result;
 			}
