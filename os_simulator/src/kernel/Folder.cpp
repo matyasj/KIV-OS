@@ -6,11 +6,13 @@
  */
 bool Folder::addFile(File* file)
 {
+	
 	// Kontrola, zda již soubor se stejným jménem složka neobsahuje
 	if (this->containFile(file->name)) {
 		return false;
 	}
 	else {
+		std::unique_lock<std::mutex> lck(filesMtx);
 		this->files.push_back(file);
 		file->parrentFolder = this;
 
@@ -25,10 +27,10 @@ bool Folder::addFolder(Folder* folder)
 {
 	// Kontrola, zda již složku se stejným jménem složka neobsahuje
 	if (this->containFolder(folder->name)) {
-		std::cout << "File with name " << folder->name << "  already exists.\n";
 		return false;
 	}
 	else {
+		std::unique_lock<std::mutex> lck(foldersMtx);
 		folder->parentFolder = this;
 		this->folders.push_back(folder);
 		return true;
@@ -40,13 +42,13 @@ bool Folder::addFolder(Folder* folder)
  */
 bool Folder::removeFile(std::string name)
 {
+	std::unique_lock<std::mutex> lck(filesMtx);
 	// Prochází všechny podsoubory
 	for (int i = 0; i < this->files.size(); i++) {
 		// Když narazí na soubor s požadovaným jménem tak ho smaže
 		if (this->files[i]->name == name) {
 			//Kontrola, jestli není soubor otevøen
 			if (this->files[i]->isOpened) {
-				std::cout << "FILE IS NOT CLOSED. YOU HAVE TO CLOSE FILE BEFORE DELETE!\n";
 				return false;
 			}
 			else {
@@ -55,7 +57,6 @@ bool Folder::removeFile(std::string name)
 			}
 		}
 	}
-	std::cout << "FILE NOT FOUND\n";
 	return false;
 }
 
@@ -65,6 +66,7 @@ bool Folder::removeFile(std::string name)
  */
 bool Folder::removeFolder(std::string name)
 {
+	std::unique_lock<std::mutex> lck(foldersMtx);
 	bool result = true;
 	for (int i = 0; i != this->folders.size(); i++) {
 		if (this->folders[i]->name == name) {
@@ -127,12 +129,16 @@ std::string Folder::printChildren()
 {
 	std::string printSTR = "Vypis adresare ";
 	printSTR += this->name + "\n";
+	foldersMtx.lock();
 	for (int i = 0; i != this->folders.size(); i++) {
 		printSTR += "|- <DIR>     " + this->folders[i]->name + "\n";
 	}
+	foldersMtx.unlock();
+	filesMtx.lock();
 	for (int i = 0; i != this->files.size(); i++) {
 		printSTR += "|- <FILE>    " + this->files[i]->name + "\n";
 	}
+	filesMtx.unlock();
 	return printSTR;
 }
 
@@ -141,6 +147,7 @@ std::string Folder::printChildren()
  */
 bool Folder::containFile(std::string name)
 {
+	std::unique_lock<std::mutex> lck(filesMtx);
 	// Prochází všechny podsoubory a kontroluje podle požadovaného jména
 	for (int i = 0; i < this->files.size(); i++) {
 		if (this->files[i]->name == name) {
@@ -155,6 +162,7 @@ bool Folder::containFile(std::string name)
  */
 bool Folder::containFolder(std::string name)
 {
+	std::unique_lock<std::mutex> lck(foldersMtx);
 	// Prochází všechny podsložky a kontroluje podle požadovaného jména
 	for (int i = 0; i < this->folders.size(); i++) {
 		if (this->folders[i]->name == name) {
@@ -169,6 +177,7 @@ bool Folder::containFolder(std::string name)
  */
 bool Folder::lockFolder()
 {
+	std::unique_lock<std::mutex> lck(lockCounterMtx);
 	this->lockCounter++;
 	return true;
 }
@@ -178,6 +187,7 @@ bool Folder::lockFolder()
  */
 bool Folder::unLockFolder()
 {
+	std::unique_lock<std::mutex> lck(lockCounterMtx);
 	if (this->lockCounter <= 0) {
 		return false;
 	}
@@ -194,6 +204,7 @@ bool Folder::unLockFolder()
  */
 bool Folder::isLock()
 {
+	std::unique_lock<std::mutex> lck(lockCounterMtx);
 	if (this->lockCounter > 0) {
 		return true;
 	}

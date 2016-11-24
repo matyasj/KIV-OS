@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <string>
+#include <mutex>
 #include "File.h"
 
 /*
@@ -21,6 +22,13 @@ public:
 	Folder* parentFolder;
 	/* Zámek proti pøípadnému smazání složky */
 	int lockCounter;
+
+	/* Mutex pro lockCounter */
+	std::mutex lockCounterMtx;
+	/* Mutex pro vektor souborù */
+	std::mutex filesMtx;
+	/* Mutex pro vektor složek */
+	std::mutex foldersMtx;
 
 	/* Pøidává nový podsoubor */
 	bool addFile(File* file);
