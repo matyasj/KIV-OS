@@ -561,9 +561,15 @@ bool changeWorkDirectory(int procesId, std::string fullFolderPath)
 				int id_shell = get_active_thread_by_type(SHELL);
 				// nastavení pracovního adresáøe aktuálnì aktivního shelu
 				int return_value = change_thread_current_folder(id_shell, &(std::string(absolutePath)));
-				return !return_value;
+				if (return_value == 0) {
+					return true;
+				}
+				SetLastError(return_value);
+				
+				
 			}
 			else {
+				SetLastError(errorBadPath);
 				return false;
 			}
 		}
