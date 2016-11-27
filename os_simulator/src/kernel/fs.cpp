@@ -800,6 +800,28 @@ void init()
 	FileDescriptorTable.push_back(std_outFD);
 }
 
+void destroyFS()
+{
+	recurseDeleteFSTree(rootFolder);
+	
+	for (FileDescriptorBlock *tmpBlock : FileDescriptorTable) {
+		delete tmpBlock;
+	}
+	FileDescriptorTable.clear();
+}
+
+void recurseDeleteFSTree(Folder* startNode)
+{
+	for (File* tmpFile : startNode->files) {
+		delete tmpFile;
+	}
+
+	for (Folder* tmpFolder : startNode->folders) {
+		recurseDeleteFSTree(tmpFolder);
+	}
+	delete startNode;
+}
+
 /*
  * Vytvoøí rouru a parametry definuje jako vstup a vıstup roury
  */

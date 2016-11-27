@@ -26,6 +26,7 @@ void Initialize_Kernel() {
 
 void Shutdown_Kernel() {
 	FreeLibrary(User_Programs);
+	destroyFS();
 }
 
 void SysCall(CONTEXT &regs) {

@@ -80,6 +80,9 @@ THandle getStdOut();
 THandle getStdIn();
 /* Funkce, která inicializuje potøebné soubory - vytvoøí v tabulce filedescriptorù descriptory pro std_in a std_out */
 void init();
+/* Funkce, která prochází celý filesystem a dealokuje pùjèené zdroje */
+void destroyFS();
+void recurseDeleteFSTree(Folder* startNode);
 
 /* Vytvoøí rouru a parametry definuje jako vstup a výstup roury */
 bool createPipe(THandle* input, THandle *output);
